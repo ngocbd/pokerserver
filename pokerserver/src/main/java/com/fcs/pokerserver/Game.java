@@ -54,6 +54,32 @@ public class Game {
 		
 		
 	}
+	
+	
+	public void preflop()
+	{
+		assert this.listPlayer.size() >=2;
+		
+		
+		this.status=GameStatus.PREFLOP;
+		
+		this.deck.dealCard();
+		// deal 2 card for each player // unordered // begin from master // need to fix 
+		for( int i=0;i<2;i++)
+		{
+			for (Player player : listPlayer) {
+				Card card = this.deck.dealCard();
+				player.getPlayerHand().addCard(card);
+				
+			}
+			
+		}
+		
+		
+		
+		
+		
+	}
 	public Deck getDeck() {
 		return deck;
 	}

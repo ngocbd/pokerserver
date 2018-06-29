@@ -23,11 +23,20 @@ THE SOFTWARE.
 */
 package com.fcs.pokerserver;
 
+import com.fcs.pokerserver.holder.CardHolder;
+import com.fcs.pokerserver.holder.Hand;
+
 public class Player {
 	private long balance;
 	private long globalBalance;
 	private String name;
 	private String id;
+	
+	
+	private CardHolder playerHand = new CardHolder();
+	
+	
+	
 	public long getBalance() {
 		return balance;
 	}
@@ -57,6 +66,12 @@ public class Player {
 	}
 	public void setCurrentGameID(long currentGameID) {
 		this.currentGameID = currentGameID;
+	}
+	public CardHolder getPlayerHand() {
+		return playerHand;
+	}
+	void setPlayerHand(Hand playerHand) {
+		this.playerHand = playerHand;
 	}
 	private long currentGameID = -1;
 	

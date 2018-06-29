@@ -48,9 +48,29 @@ public class GameTest {
 		Game game = room.createNewGame();
 		Deck deck = new Deck();
 		deck.initDeck();
+		Player player2 = new Player();
 		
+		game.addPlayer(player2);
 		game.startGame();
 		
+
+	}
+	@Test
+	public void testGamePreFlop() {
+		Game game = room.createNewGame();
+		Deck deck = new Deck();
+		deck.initDeck();
+		Player player2 = new Player();
+		
+		game.addPlayer(player2);
+		game.startGame();
+		
+		
+		game.preflop();
+		
+		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 2);
+		
+		//game.getListPlayer().get(0).getc
 
 	}
 

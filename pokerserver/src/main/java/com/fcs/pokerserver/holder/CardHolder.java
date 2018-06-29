@@ -24,26 +24,38 @@ THE SOFTWARE.
 package com.fcs.pokerserver.holder;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Logger;
 
 import com.fcs.pokerserver.Card;
-import com.google.common.collect.Iterators;
 
 /**
  * A container designed for storing cards.
  */
 public class CardHolder implements Serializable {
 
+	Logger log = Logger.getLogger(CardHolder.class.getName());
 	private static final long serialVersionUID = -6289334212535961129L;
 
-	private final Card[] cards;
+	List<Card> cards = new ArrayList<Card>();
 
 	protected CardHolder(Card... cards) {
 		super();
-		this.cards = cards;
+		this.cards.addAll(Arrays.asList(cards));
 	}
-
+	public CardHolder()
+	{
+		
+		
+	}
+	public void addCard(Card... cards)
+	{
+		this.cards.addAll(Arrays.asList(cards));
+		log.warning("card added to holder :"+cards.toString());
+	}
 	/**
 	 * Returns a card at particular index.
 	 * 
@@ -51,7 +63,7 @@ public class CardHolder implements Serializable {
 	 * @return a card at position index
 	 */
 	public Card getCard(int index) {
-		return cards[index];
+		return cards.get(index);
 	}
 
 	/**
@@ -60,7 +72,7 @@ public class CardHolder implements Serializable {
 	 * @return the number of cards
 	 */
 	public int getCardNumber() {
-		return cards.length;
+		return cards.size();
 	}
 
 	/**
@@ -69,12 +81,9 @@ public class CardHolder implements Serializable {
 	 * @return unmodifiable card iterator
 	 */
 	public Iterator<Card> iterator() {
-		return Iterators.forArray(cards);
+		return cards.iterator();
 	}
 
-	@Override
-	public String toString() {
-		return Arrays.toString(cards);
-	}
+	
 
 }
