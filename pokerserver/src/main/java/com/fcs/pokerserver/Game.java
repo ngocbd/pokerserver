@@ -33,14 +33,51 @@ public class Game {
 	private long id ;
 	private long potBalance;
 	private Room room;
+	GameStatus status ; 
 	public Game(Room room)
 	{
 		this.room=room;
 		this.setId(System.currentTimeMillis());
 		this.deck=new Deck();
 		this.deck.initDeck();
+		this.deck.shuffleDeck();
+		this.status=GameStatus.NOT_STARTED;
 		
 	}
+	public void startGame()
+	{
+		assert this.listPlayer.size() >=2;
+		
+		// setting postion of player 
+		this.status=GameStatus.SEATING;
+		
+		
+		
+	}
+	public Deck getDeck() {
+		return deck;
+	}
+
+	public void setDeck(Deck deck) {
+		this.deck = deck;
+	}
+
+	public long getPotBalance() {
+		return potBalance;
+	}
+
+	public void setPotBalance(long potBalance) {
+		this.potBalance = potBalance;
+	}
+
+	public Room getRoom() {
+		return room;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+
 	public void addPlayer(Player p)
 	{
 		this.listPlayer.add(p);
