@@ -23,11 +23,15 @@ THE SOFTWARE.
 */
 package com.fcs.pokerserver;
 
+import com.fcs.pokerserver.events.PlayerAction;
+import com.fcs.pokerserver.events.PlayerEvent;
+import com.fcs.pokerserver.events.PlayerListenner;
 import com.fcs.pokerserver.holder.CardHolder;
 import com.fcs.pokerserver.holder.Hand;
 
 public class Player {
 	private long balance;
+	private long lastBet;
 	private long globalBalance;
 	private String name;
 	private String id;
@@ -35,8 +39,18 @@ public class Player {
 	
 	private CardHolder playerHand = new CardHolder();
 	
+	private PlayerListenner listenner;
 	
-	
+	public void bet(long amount)
+	{
+		
+		assert amount<balance;
+		this.lastBet=amount;
+		this.balance=this.balance-amount;
+		
+		if(this.getListenner()!=null) getListenner().actionPerformed(new PlayerEvent(this, PlayerAction.BET));
+		
+	}
 	public long getBalance() {
 		return balance;
 	}
@@ -72,6 +86,18 @@ public class Player {
 	}
 	void setPlayerHand(Hand playerHand) {
 		this.playerHand = playerHand;
+	}
+	public long getLastBet() {
+		return lastBet;
+	}
+	public void setLastBet(long lastBet) {
+		this.lastBet = lastBet;
+	}
+	public PlayerListenner getListenner() {
+		return listenner;
+	}
+	public void setListenner(PlayerListenner listenner) {
+		this.listenner = listenner;
 	}
 	private long currentGameID = -1;
 	
