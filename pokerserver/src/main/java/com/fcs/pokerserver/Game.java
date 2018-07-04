@@ -33,7 +33,7 @@ public class Game {
 	private long id ;
 	private long potBalance;
 	private Room room;
-	GameStatus status ; 
+	private GameStatus status ; 
 	public Game(Room room)
 	{
 		this.room=room;
@@ -41,15 +41,16 @@ public class Game {
 		this.deck=new Deck();
 		this.deck.initDeck();
 		this.deck.shuffleDeck();
-		this.status=GameStatus.NOT_STARTED;
+		this.setStatus(GameStatus.NOT_STARTED);
 		
 	}
+	
 	public void startGame()
 	{
 		assert this.listPlayer.size() >=2;
 		
 		// setting postion of player 
-		this.status=GameStatus.SEATING;
+		this.setStatus(GameStatus.SEATING);
 		
 		
 		
@@ -61,7 +62,7 @@ public class Game {
 		assert this.listPlayer.size() >=2;
 		
 		
-		this.status=GameStatus.PREFLOP;
+		this.setStatus(GameStatus.PREFLOP);
 		
 		this.deck.dealCard();
 		// deal 2 card for each player // unordered // begin from master // need to fix 
@@ -120,6 +121,12 @@ public class Game {
 	}
 	private void setId(long id) {
 		this.id = id;
+	}
+	public GameStatus getStatus() {
+		return status;
+	}
+	private void setStatus(GameStatus status) {
+		this.status = status;
 	}
 	
 }

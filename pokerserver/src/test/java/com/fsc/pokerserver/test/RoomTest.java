@@ -26,6 +26,8 @@ public class RoomTest {
 		Room room = new Room(master,BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 		
+		
+		
 		assertEquals(game.getListPlayer().size(),1);
 		
 		

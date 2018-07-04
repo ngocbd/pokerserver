@@ -35,7 +35,7 @@ public class Player {
 	private long globalBalance;
 	private String name;
 	private String id;
-	
+	 
 	
 	private CardHolder playerHand = new CardHolder();
 	

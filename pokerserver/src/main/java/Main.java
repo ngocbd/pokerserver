@@ -1,9 +1,17 @@
+import com.fcs.pokerserver.Player;
 
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		System.out.println("aaaa");
+		Library lib = new Library();
+		Player p = new Player();
+		p.setName("Kuki");
+		p.setBalance(50000);
+		
+		p.setListenner(lib);
+		p.bet(100);
+		
+		
 	}
 
 }
