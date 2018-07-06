@@ -79,6 +79,7 @@ public class Room {
 	{
 		this.currentGame = new Game(this);
 		this.currentGame.addPlayer(this.master);
+		
 		return this.currentGame;
 	}
 	

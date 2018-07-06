@@ -42,7 +42,6 @@ public class Game {
 		this.deck.initDeck();
 		this.deck.shuffleDeck();
 		this.setStatus(GameStatus.NOT_STARTED);
-		
 	}
 	
 	public void startGame()
