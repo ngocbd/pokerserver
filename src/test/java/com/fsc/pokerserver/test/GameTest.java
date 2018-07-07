@@ -424,12 +424,151 @@ public class GameTest {
 		/*
 		 * If Player 1 is dealer then :
 		 * - Player 2 is SmallBlind
-		 * - Player 3 is SmallBlind
+		 * - Player 3 is BigBlind
 		 * - Player 4 is UNDER THE GUN , he must be start bet first 
 		 * */
 		
 		
 		assertEquals(player4.getBalance(), 800);
+		
+		
+
+	}
+	@Test
+	public void testGameBetPotBalance() {
+		Game game = room.createNewGame();
+		game.startGame();
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		
+
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(master);
+		
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+		
+		
+		
+		game.preflop();
+		player4.bet(200);
+		
+		/*
+		 * If Player 1 is dealer then :
+		 * - Player 2 is SmallBlind
+		 * - Player 3 is BigBlind
+		 * - Player 4 is UNDER THE GUN , he must be start bet first 
+		 * pot must be equal small + big + bet = 230
+		 * */
+		
+		
+		assertEquals(game.getPotBalance(), 230);
+		
+		
+
+	}
+	
+	
+	/* Test action next player turn when previous player bet*/
+	@Test
+	public void testGameNextBet() {
+		Game game = room.createNewGame();
+		game.startGame();
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		
+
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(master);
+		
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+		
+		
+		
+		game.preflop();
+		player4.bet(200);
+		
+		/*
+		 * If Player 1 is dealer then :
+		 * - Player 2 is SmallBlind
+		 * - Player 3 is BigBlind
+		 * - Player 4 is UNDER THE GUN , he must be start bet first 
+		 * Then Player 5 will next turn after Player 4
+		 * */
+		
+		
+		assertEquals(game.getCurrentPlayer(),player5);
+		
+		
+
+	}
+	
+	/* Test action next player turn when previous player bet*/
+	@Test
+	public void testGameNextBet2Time() {
+		Game game = room.createNewGame();
+		game.startGame();
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		
+
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(master);
+		
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+		
+		
+		
+		game.preflop();
+		player4.bet(200);
+		player5.bet(200);
+		
+		/*
+		 * If Player 1 is dealer then :
+		 * - Player 2 is SmallBlind
+		 * - Player 3 is BigBlind
+		 * - Player 4 is UNDER THE GUN , he must be start bet first 
+		 * Then Player 5 will next turn after Player 4
+		 * Then master will next turn after Player 5
+		 * */
+		
+		
+		assertEquals(game.getCurrentPlayer(),master);
 		
 		
 

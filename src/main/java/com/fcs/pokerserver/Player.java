@@ -61,6 +61,30 @@ public class Player {
 		
 		
 	}
+	public void fold()
+	{
+		
+		
+		
+		PlayerEvent pe = new PlayerEvent(this, PlayerAction.FOLD);
+		
+		this.fireEvent(pe);
+		
+		
+		
+	}
+	public void check()
+	{
+		
+		
+		
+		PlayerEvent pe = new PlayerEvent(this, PlayerAction.CHECK);
+		
+		this.fireEvent(pe);
+		
+		
+		
+	}
 	private void fireEvent(PlayerEvent pe)
 	{
 		for (Iterator iterator = this.listeners.iterator(); iterator.hasNext();) {

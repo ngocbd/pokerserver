@@ -33,6 +33,7 @@ import java.util.concurrent.RejectedExecutionException;
 import com.fcs.pokerserver.events.GameAction;
 import com.fcs.pokerserver.events.GameEvent;
 import com.fcs.pokerserver.events.GameListener;
+import com.fcs.pokerserver.events.PlayerAction;
 import com.fcs.pokerserver.events.PlayerEvent;
 import com.fcs.pokerserver.events.PlayerListener;
 import com.fcs.pokerserver.holder.Board;
@@ -85,7 +86,7 @@ public class Game implements PlayerListener {
 		long betSmallBlind = this.getRoom().getBlindLevel().getSmallBlind();
 		this.getBigBlind().bet(betBigBlind);
 		this.getSmallBlind().bet(betSmallBlind);
-		this.potBalance += betBigBlind + betSmallBlind;
+		//this.potBalance += (betBigBlind + betSmallBlind);
 
 		//this.deck.dealCard();
 		// deal 2 card for each player // unordered // begin from master // need to fix to begin from dealer
@@ -165,6 +166,7 @@ public class Game implements PlayerListener {
 		if(this.startTime==null || Duration.between(this.startTime  , LocalDateTime.now()).getSeconds()<=15 )
 		{
 			this.listPlayer.add(p);
+			p.addPlayerListenner(this);
 		}
 		else
 		{
@@ -300,7 +302,21 @@ public class Game implements PlayerListener {
 
 	@Override
 	public void actionPerformed(PlayerEvent event) {
+		Player p = event.getSource();
 		
+		if(listPlayer.contains(p))
+		{
+			if(event.getAction()==PlayerAction.BET)
+			{
+				this.potBalance+=p.getLastBet();
+				
+				Player next = this.getNextPlayer(p);
+				if(next!=null)
+				{
+					this.setCurrentPlayer(next);
+				}
+			}
+		}
 		
 	}
 
