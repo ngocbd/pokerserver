@@ -32,17 +32,12 @@ import java.util.List;
 public class Deck {
 	private List<Card> cards;
 	
-	/**
-	 * Construct a standard shuffled playing card deck.
-	 */
+
 	public Deck(){
 		this(true);
 	}
 	
-	/**
-	 * Create a standard deck of playing cards
-	 * @param shuffle true for shuffled deck.  False for not shuffled.
-	 */
+
 	public Deck(boolean shuffle){
 		initDeck();
 		if(shuffle){
@@ -50,10 +45,7 @@ public class Deck {
 		}
 	}
 	
-	/**
-	 * Initialize a deck using a pre existing list of cards
-	 * @param cards List of cards, assumed correctly shuffled
-	 */
+
 	public Deck(List<Card> cards){
 		//this.cards = new LinkedList<Card>();
 		//this.cards.addAll(cards);
@@ -69,18 +61,12 @@ public class Deck {
 		Collections.shuffle(cards);
 	}
 	
-	/**
-	 * Returns the top card from the deck.  Removes the card from the deck.
-	 * @return {@link Card}
-	 */
+
 	public Card dealCard(){
 		return cards.remove(0);
 	}
 	
-	/**
-	 * Get the cards in the deck in the form of a list
-	 * @return
-	 */
+
 	public List<Card> exportDeck(){
 		return cards;
 	}

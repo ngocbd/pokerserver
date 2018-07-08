@@ -37,10 +37,14 @@ import com.fcs.pokerserver.holder.Hand;
 
 public class Player {
 	private long balance;
-	private long lastBet;
+	private long roundBet=0;
+	private long gameBet=0;
+	
 	private long globalBalance;
 	private String name;
 	private String id;
+	private boolean sittingOut;
+	
 	 
 	
 	private CardHolder playerHand = new CardHolder();
@@ -50,16 +54,34 @@ public class Player {
 	public void bet(long amount)
 	{
 		
-		assert amount<balance;
-		this.lastBet=amount;
+		assert amount<this.balance;
+		this.setRoundBet(this.getRoundBet() + amount);
+		this.gameBet+=amount;
 		this.balance=this.balance-amount;
 		
 		PlayerEvent pe = new PlayerEvent(this, PlayerAction.BET);
+		
+		pe.agruments.put("amount", amount);
+		pe.agruments.put("roundBet", this.getRoundBet());
+		pe.agruments.put("gameBet", this.gameBet);
 		
 		this.fireEvent(pe);
 		
 		
 		
+	}
+	public void addPlayerListener(PlayerListener pl)
+	{
+		this.listeners.add(pl);
+	}
+	public void nextRound()
+	{
+		this.setRoundBet(0);
+	}
+	public void newGame()
+	{
+		this.setRoundBet(0);
+		this.gameBet=0;
 	}
 	public void fold()
 	{
@@ -69,6 +91,7 @@ public class Player {
 		PlayerEvent pe = new PlayerEvent(this, PlayerAction.FOLD);
 		
 		this.fireEvent(pe);
+		this.sittingOut=true;
 		
 		
 		
@@ -124,31 +147,39 @@ public class Player {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public long getCurrentGameID() {
-		return currentGameID;
-	}
-	public void setCurrentGameID(long currentGameID) {
-		this.currentGameID = currentGameID;
-	}
+
 	public CardHolder getPlayerHand() {
 		return playerHand;
 	}
 	void setPlayerHand(Hand playerHand) {
 		this.playerHand = playerHand;
 	}
-	public long getLastBet() {
-		return lastBet;
+	
+	public long getGameBet() {
+		return gameBet;
 	}
-	public void setLastBet(long lastBet) {
-		this.lastBet = lastBet;
+	public void setGameBet(long gameBet) {
+		this.gameBet = gameBet;
 	}
-	public List<PlayerListener> getListenner() {
-		return this.listeners;
+	public long getRoundBet() {
+		return roundBet;
 	}
-	public void addPlayerListenner(PlayerListener listener) {
-		this.listeners.add(listener);
+	public void setRoundBet(long roundBet) {
+		this.roundBet = roundBet;
 	}
-	private long currentGameID = -1;
+	public boolean isSittingOut() {
+		return sittingOut;
+	}
+	public void setSittingOut(boolean sittingOut) {
+		this.sittingOut = sittingOut;
+	}
+	public Game getCurrentGame() {
+		return currentGame;
+	}
+	public void setCurrentGame(Game currentGame) {
+		this.currentGame = currentGame;
+	}
+	private Game currentGame = null;
 	
 	
 }

@@ -20,7 +20,7 @@ THE SOFTWARE.
 package com.fcs.pokerserver;
 /**
  * Enum that represents the possible types of poker hands.
- * <br /><br />
+ * 
  * The ordering here corresponds to the handtypes defined by the highest order
  * bit in the two plus two hand evaluation score.
  * 

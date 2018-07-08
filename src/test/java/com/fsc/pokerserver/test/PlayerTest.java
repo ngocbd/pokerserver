@@ -23,7 +23,7 @@ public class PlayerTest implements PlayerListener  {
 		p.setName("Kuki");
 		p.setBalance(50000);
 		
-		p.addPlayerListenner(this);
+		p.addPlayerListener(this);
 		p.bet(100);
 		assertEquals(p.getBalance(), 50000-100);
 		
@@ -34,7 +34,7 @@ public class PlayerTest implements PlayerListener  {
 		if(event.getAction()==PlayerAction.BET)
 		{
 			
-			System.out.println(event.getSource().getName()+" bet "+event.getSource().getLastBet());
+			System.out.println(event.getSource().getName()+" bet "+event.getSource().getRoundBet());
 		}
 		
 	}

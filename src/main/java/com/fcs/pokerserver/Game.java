@@ -47,6 +47,8 @@ public class Game implements PlayerListener {
 	private Deck deck = null;
 	private long id;
 	private long potBalance = 0;
+	private long currentRoundBet = 0;
+	
 	private Room room;
 	private GameStatus status;
 	private Player dealer;
@@ -70,11 +72,12 @@ public class Game implements PlayerListener {
 	}
 
 	public void startGame() {
-		// assert this.listPlayer.size() >=2;
+		assert this.listPlayer.size() >=2;
 
 		// setting postion of player
 		this.setStatus(GameStatus.SEATING);
 		this.startTime = LocalDateTime.now();
+		
 		
 	}
 	
@@ -84,8 +87,10 @@ public class Game implements PlayerListener {
 		this.setStatus(GameStatus.PREFLOP);
 		long betBigBlind = this.getRoom().getBlindLevel().getBigBlind();
 		long betSmallBlind = this.getRoom().getBlindLevel().getSmallBlind();
-		this.getBigBlind().bet(betBigBlind);
 		this.getSmallBlind().bet(betSmallBlind);
+		this.getBigBlind().bet(betBigBlind);
+		
+		
 		//this.potBalance += (betBigBlind + betSmallBlind);
 
 		//this.deck.dealCard();
@@ -115,6 +120,7 @@ public class Game implements PlayerListener {
 		}
 		GameEvent gameEvent=  new GameEvent(this, GameAction.FLOP);
 		this.fireEvent(gameEvent);
+		this.setStatus(GameStatus.FLOP);
 
 	}
 
@@ -124,6 +130,7 @@ public class Game implements PlayerListener {
 		getBoard().addCard(card);
 		GameEvent gameEvent=  new GameEvent(this, GameAction.TURN);
 		this.fireEvent(gameEvent);
+		this.setStatus(GameStatus.TURN);
 
 	}
 
@@ -133,7 +140,12 @@ public class Game implements PlayerListener {
 		getBoard().addCard(card);
 		GameEvent gameEvent=  new GameEvent(this, GameAction.RIVER);
 		this.fireEvent(gameEvent);
+		this.setStatus(GameStatus.RIVER);
 
+	}
+	public void endGame()
+	{
+		this.setStatus(GameStatus.END_HAND);
 	}
 
 	public Deck getDeck() {
@@ -166,7 +178,8 @@ public class Game implements PlayerListener {
 		if(this.startTime==null || Duration.between(this.startTime  , LocalDateTime.now()).getSeconds()<=15 )
 		{
 			this.listPlayer.add(p);
-			p.addPlayerListenner(this);
+			p.addPlayerListener(this);
+			
 		}
 		else
 		{
@@ -231,7 +244,9 @@ public class Game implements PlayerListener {
 		// kt dk neeu add 1 thang mat day ko co trong playerlist thi error
 
 		if (listPlayer.contains(dealer)) {
+
 			this.dealer = dealer;
+			
 
 
 			int sizeofPlayerList = this.getListPlayer().size();
@@ -252,6 +267,8 @@ public class Game implements PlayerListener {
 					indexOfSmallBlind = indexOfDealer + 1;
 					indexOfBigBlind = indexOfSmallBlind + 1;
 				}
+				
+				//TODO change to use setter method 
 				this.bigBlind = listPlayer.get(indexOfBigBlind);
 				this.smallBlind = listPlayer.get(indexOfSmallBlind);
 
@@ -308,8 +325,9 @@ public class Game implements PlayerListener {
 		{
 			if(event.getAction()==PlayerAction.BET)
 			{
-				this.potBalance+=p.getLastBet();
-				
+				assert p.getRoundBet()>=this.currentRoundBet;
+				this.potBalance+= (long)event.agruments.get("amount");
+				this.currentRoundBet=p.getRoundBet(); // set current bet equal to this bet amount
 				Player next = this.getNextPlayer(p);
 				if(next!=null)
 				{
@@ -328,6 +346,14 @@ public class Game implements PlayerListener {
 		this.currentPlayer = p;
 		this.currentPlayer.myTurn();
 		
+	}
+
+	public long getCurrentBet() {
+		return currentRoundBet;
+	}
+
+	public void setCurrentBet(long currentBet) {
+		this.currentRoundBet = currentBet;
 	}
 
 }
