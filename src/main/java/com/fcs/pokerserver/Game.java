@@ -23,6 +23,7 @@ THE SOFTWARE.
 */
 package com.fcs.pokerserver;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,6 +31,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fcs.pokerserver.events.GameAction;
 import com.fcs.pokerserver.events.GameEvent;
 import com.fcs.pokerserver.events.GameListener;
@@ -48,7 +52,7 @@ public class Game implements PlayerListener {
 	private long id;
 	private long potBalance = 0;
 	private long currentRoundBet = 0;
-	
+	private short round=0;
 	private Room room;
 	private GameStatus status;
 	private Player dealer;
@@ -127,7 +131,7 @@ public class Game implements PlayerListener {
 	public void turn() {
 
 		Card card = this.deck.dealCard();
-		getBoard().addCard(card);
+		this.getBoard().addCard(card);
 		GameEvent gameEvent=  new GameEvent(this, GameAction.TURN);
 		this.fireEvent(gameEvent);
 		this.setStatus(GameStatus.TURN);
@@ -137,7 +141,7 @@ public class Game implements PlayerListener {
 	public void river() {
 
 		Card card = this.deck.dealCard();
-		getBoard().addCard(card);
+		this.getBoard().addCard(card);
 		GameEvent gameEvent=  new GameEvent(this, GameAction.RIVER);
 		this.fireEvent(gameEvent);
 		this.setStatus(GameStatus.RIVER);
@@ -146,6 +150,9 @@ public class Game implements PlayerListener {
 	public void endGame()
 	{
 		this.setStatus(GameStatus.END_HAND);
+		GameEvent gameEvent=  new GameEvent(this, GameAction.ENDED);
+		this.fireEvent(gameEvent);
+		
 	}
 
 	public Deck getDeck() {
@@ -316,7 +323,52 @@ public class Game implements PlayerListener {
 			
 		}
 	}
+	
+	public boolean isNextRoundReady()
+	{
+		//TODO need more test and code review
+		return !this.listPlayer.stream()
+				.filter(x->!x.isSittingOut())		
+				.filter(x -> x.getRoundBet() != this.getCurrentBet() || x.getRound() != this.getRound())
+				.findAny().isPresent();
+		
+			
+			
+		
+	}
+	public Player getPlayerHasProblem()
+	{
+		//TODO need more test and code review
+		return this.listPlayer.stream()
+				.filter(x->!x.isSittingOut())		
+				.filter(x -> x.getRoundBet() != this.getCurrentBet() || x.getRound() != this.getRound())
+				.findAny().orElse(null);
+		
+			
+			
+		
+	}
+	public String dumpListPlayer()
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		
 
+
+		String jsonInString ="Error when dump Object";
+		try {
+			 jsonInString = mapper.writeValueAsString(this.listPlayer);
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonInString;
+	}
 	@Override
 	public void actionPerformed(PlayerEvent event) {
 		Player p = event.getSource();
@@ -328,11 +380,25 @@ public class Game implements PlayerListener {
 				assert p.getRoundBet()>=this.currentRoundBet;
 				this.potBalance+= (long)event.agruments.get("amount");
 				this.currentRoundBet=p.getRoundBet(); // set current bet equal to this bet amount
-				Player next = this.getNextPlayer(p);
-				if(next!=null)
+				
+				
+				//TODO Temporary set check next round for game
+				// if next round ready then next Player will be left person of dealer
+				if(isNextRoundReady())
 				{
-					this.setCurrentPlayer(next);
+					 this.getNextPlayer(this.getDealer());
 				}
+				else
+				{
+				
+				
+					Player next = this.getNextPlayer(p);
+					if(next!=null)
+					{
+						this.setCurrentPlayer(next);
+					}				
+				}
+				
 			}
 		}
 		
@@ -354,6 +420,14 @@ public class Game implements PlayerListener {
 
 	public void setCurrentBet(long currentBet) {
 		this.currentRoundBet = currentBet;
+	}
+
+	public short getRound() {
+		return round;
+	}
+
+	public void setRound(short round) {
+		this.round = round;
 	}
 
 }

@@ -23,10 +23,14 @@ THE SOFTWARE.
 */
 package com.fcs.pokerserver;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fcs.pokerserver.events.GameEvent;
 import com.fcs.pokerserver.events.GameListener;
 import com.fcs.pokerserver.events.PlayerAction;
@@ -39,14 +43,21 @@ public class Player {
 	private long balance;
 	private long roundBet=0;
 	private long gameBet=0;
-	
+	private short round=0;
 	private long globalBalance;
 	private String name;
 	private String id;
-	private boolean sittingOut;
+	private boolean sittingOut=false;
 	
 	 
-	
+	public Player()
+	{
+		
+	}
+	public Player(String name)
+	{
+		this.name=name;
+	}
 	private CardHolder playerHand = new CardHolder();
 	
 	private List<PlayerListener> listeners = new ArrayList<PlayerListener>();
@@ -77,11 +88,13 @@ public class Player {
 	public void nextRound()
 	{
 		this.setRoundBet(0);
+		this.round++;
 	}
 	public void newGame()
 	{
 		this.setRoundBet(0);
 		this.gameBet=0;
+		this.round=0;
 	}
 	public void fold()
 	{
@@ -110,8 +123,8 @@ public class Player {
 	}
 	private void fireEvent(PlayerEvent pe)
 	{
-		for (Iterator iterator = this.listeners.iterator(); iterator.hasNext();) {
-			PlayerListener listener = (PlayerListener) iterator.next();
+		for (Iterator<PlayerListener> iterator = this.listeners.iterator(); iterator.hasNext();) {
+			PlayerListener listener =  iterator.next();
 			listener.actionPerformed(pe);
 			
 			
@@ -179,7 +192,34 @@ public class Player {
 	public void setCurrentGame(Game currentGame) {
 		this.currentGame = currentGame;
 	}
+	public short getRound() {
+		return round;
+	}
+	public void setRound(short round) {
+		this.round = round;
+	}
 	private Game currentGame = null;
 	
+	public String toString()
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		
+
+
+		String jsonInString ="Error when dump Object";
+		try {
+			 jsonInString = mapper.writeValueAsString(this);
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonInString;
+	}
 	
 }
