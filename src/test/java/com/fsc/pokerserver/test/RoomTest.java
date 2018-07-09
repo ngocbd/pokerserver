@@ -27,7 +27,6 @@ public class RoomTest {
 		Game game = room.createNewGame();
 		
 		
-		
 		assertEquals(game.getListPlayer().size(),1);
 		
 		
