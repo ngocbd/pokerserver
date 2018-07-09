@@ -71,7 +71,8 @@ public class Room {
 	public Room(Player master,BlindLevel blindLevel)
 	{
 		this.master=master;
-		this.blindLevel=blindLevel; ; 
+		this.blindLevel=blindLevel; ;
+		this.RoomID=System.currentTimeMillis();
 		
 		
 	}

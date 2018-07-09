@@ -13,6 +13,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.joda.time.DateTime;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -23,18 +24,32 @@ import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
-
+/*
+ * This class is for testing not for production
+ * */
 public class GameServer implements MqttCallback {
 
 	private List<Player> listPlayer = new ArrayList<Player>();
+	private List<Room> listRoom = new ArrayList<Room>();
 	Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 	Algorithm algorithm = Algorithm.HMAC256("thisstringisverysecret");
-
+	Sender sender;
 	public void addPlayer(Player p) {
 		this.listPlayer.add(p);
 
 	}
+	public void addRoom(Room r) {
+		this.listRoom.add(r);
 
+	}
+	public Player getPlayerByName(String name)
+	{
+		return this.listPlayer.stream().filter(x -> name.equals(x.getName())).findFirst().orElse(null);
+	}
+	public Room getRoomByID(long id)
+	{
+		return this.listRoom.stream().filter(x -> x.getRoomID()==id).findFirst().orElse(null);
+	}
 	public static Map<String, String> getQueryMap(String query) {
 		String[] params = query.split("&");
 		Map<String, String> map = new HashMap<String, String>();
@@ -60,15 +75,14 @@ public class GameServer implements MqttCallback {
 	public static void main(String[] args) {
 		GameServer gameServer = new GameServer();
 
-		// System.setProperty("GOOGLE_APPLICATION_CREDENTIALS",
-		// "E:\\Users\\Daika\\eclipse\\project\\texttospeech\\src\\main\\java\\cec\\Crazy
-		// English Community-bb5cce5d6589.json");
+		System.out.println("GameServer starting...");
 		try {
 			gameServer.run();
 		} catch (MqttException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("GameServer started at "+DateTime.now().toLocalDateTime().toString());
 	}
 
 	/**
@@ -85,12 +99,15 @@ public class GameServer implements MqttCallback {
 
 		connOpt.setCleanSession(true);
 		connOpt.setKeepAliveInterval(30);
+		
 
 		// Connect to Broker
 		try {
-			myClient = new MqttClient(BROKER_URL, "pokerserver");
+			myClient = new MqttClient(BROKER_URL, "pokerserver"+System.currentTimeMillis());
 			myClient.setCallback(this);
 			myClient.connect(connOpt);
+			this.sender= new Sender(myClient);
+			
 		} catch (MqttException e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -143,8 +160,8 @@ public class GameServer implements MqttCallback {
 			        .sign(algorithm);
 			    datastore.put(Entity.newBuilder(retrievedUser).set("token", token).build());
 			    
-				String sendToClient = "token=" + token;
-				myClient.publish("/pokerserver/user/" + p.getName(), new MqttMessage(sendToClient.getBytes()));
+				String sendToClient = "cmd=login&token=" + token;
+				this.sender.add("/pokerserver/user/" + username, sendToClient);
 			}
 
 			return;
@@ -161,8 +178,61 @@ public class GameServer implements MqttCallback {
 			        .build(); //Reusable verifier instance
 			    DecodedJWT jwt = verifier.verify(token);
 			    
+			    
+			    
+			    /*
+			     * Create room with mqtt maybe not good option
+			     * */
+			    if (queryMap.get("cmd").equals("createRoom"))
+			    {
+			    	Player master = this.getPlayerByName(username);
+			    	
+			    	//TODO fix with blind level // default 10-20
+			    	Room room = new Room(master, BlindLevel.BLIND_10_20);
+			    	this.addRoom(room);
+			    	room.addPlayer(master);
+			    	Key key = datastore.newKeyFactory().setKind("rooms").newKey(room.getRoomID());
+
+			    	 Entity entity = Entity.newBuilder(key)
+			    		        .set("master", username)
+			    		        .build();
+			    	 datastore.put(entity);
+			    	String sendToClient = "cmd=room&id=" + room.getRoomID();
+			    	this.sender.add("/pokerserver/room/" + room.getRoomID(), sendToClient);
+			    	return ;
+			    	
+			    }
+			    /*
+			     * Create room with mqtt maybe not good option
+			     * */
+			    if (queryMap.get("cmd").equals("joinRoom"))
+			    {
+			    	Player player = this.getPlayerByName(username);
+			    	long roomID = Integer.parseInt(queryMap.get("id"));
+			    	
+			    	
+			    	//TODO Check room not exists
+			    
+			    	Room room = this.getRoomByID(roomID);
+			    	
+			    	
+			    	room.addPlayer(player);
+			    	
+			    	String sendToClient = "cmd=join&player=" +username;
+			    	this.sender.add("/pokerserver/room/" + roomID, sendToClient);
+			    	
+			    	return ;
+			    	
+			    }
+			    
+			    
+			    
+			    
 			} catch (JWTVerificationException exception){
-			   
+				exception.printStackTrace();
+				String sendToClient = "cmd=error&msg=" + exception.getMessage();
+		    	myClient.publish("/pokerserver/user/" +username, new MqttMessage(sendToClient.getBytes()));
+		    	return;
 			}
 			
 			
