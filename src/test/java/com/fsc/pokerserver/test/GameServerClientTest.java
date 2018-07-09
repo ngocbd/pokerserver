@@ -8,6 +8,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,10 +22,12 @@ public class GameServerClientTest implements MqttCallback {
 	static final String BROKER_URL = "tcp://broker.hivemq.com:1883";
 	static final String SERVER_TOPIC = "/pokerserver/server";
 	static final String USER_TOPIC = "/pokerserver/user/";
+	static final String ROOM_TOPIC = "/pokerserver/room/";
 	static final String USERNAME = "daica";
 	static final String PASSWORD = "123456";
 	static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImRhaWNhIn0.n3ETnk6P6Hw42xjx78iRYGBJc93rbHWCfW3KiZe-LmI";
 	String lastUserResponse ="";
+	String lastRoommResponse ="";
 	Sender sender;
 	@Before
 	public void setUp() throws Exception {
@@ -36,7 +39,7 @@ public class GameServerClientTest implements MqttCallback {
 
 		// Connect to Broker
 		try {
-			myClient = new MqttClient(BROKER_URL, "pokerclient"+System.currentTimeMillis());
+			myClient = new MqttClient(BROKER_URL, "pokerclient"+System.currentTimeMillis(),new MemoryPersistence());
 			myClient.setCallback(this);
 			myClient.connect(connOpt);
 			this.sender= new Sender(myClient);
@@ -47,14 +50,15 @@ public class GameServerClientTest implements MqttCallback {
 		}
 
 		int subQoS = 0;
-		myClient.subscribe(USER_TOPIC+"#", subQoS);
+		myClient.subscribe(USER_TOPIC+USERNAME, subQoS);
+		myClient.subscribe(ROOM_TOPIC+"#", subQoS);
 	}
 
 	@Test
 	public void testLogin() {
 		sender.add(SERVER_TOPIC, "cmd=login&username="+USERNAME+"&password="+PASSWORD);
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,13 +73,26 @@ public class GameServerClientTest implements MqttCallback {
 	public void testCreateRoom() {
 		sender.add(SERVER_TOPIC, "cmd=createRoom&username="+USERNAME+"&token="+TOKEN);
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		assertTrue(lastUserResponse.startsWith("cmd=room&id="));
+		assertTrue(lastRoommResponse.startsWith("cmd=room&id="));
+		
+	}
+	@Test
+	public void testJoinRoom() {
+		sender.add(SERVER_TOPIC, "cmd=joinRoom&username="+USERNAME+"&token="+TOKEN);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		assertTrue(lastRoommResponse.startsWith("cmd=room&id="));
 		
 	}
 
@@ -91,8 +108,14 @@ public class GameServerClientTest implements MqttCallback {
 		if(topic.equals(USER_TOPIC+USERNAME))
 		{
 			lastUserResponse=new String(message.getPayload());
+			return;
 		}
-		System.out.println(new String(message.getPayload()));
+		if(topic.startsWith(ROOM_TOPIC))
+		{
+			lastRoommResponse=new String(message.getPayload());
+		}
+		
+		
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.joda.time.DateTime;
 
 import com.auth0.jwt.JWT;
@@ -103,7 +104,7 @@ public class GameServer implements MqttCallback {
 
 		// Connect to Broker
 		try {
-			myClient = new MqttClient(BROKER_URL, "pokerserver"+System.currentTimeMillis());
+			myClient = new MqttClient(BROKER_URL, "pokerserver"+System.currentTimeMillis(), new MemoryPersistence());
 			myClient.setCallback(this);
 			myClient.connect(connOpt);
 			this.sender= new Sender(myClient);
