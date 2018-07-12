@@ -61,6 +61,7 @@ public class Game implements PlayerListener {
 	private Player currentPlayer = null;
 	
 	
+	
 	private LocalDateTime startTime = null; // meaning not started  
 	
 	private List<GameListener> listeners= new ArrayList<GameListener>();
@@ -115,10 +116,19 @@ public class Game implements PlayerListener {
 		// current player is very hard to assign base on number of player
 		
 		this.setCurrentPlayer(getNextPlayer(this.getBigBlind()));
+		this.setRound((short) 1);
+		
 
 	}
 
 	public void flop() {
+		
+		assert this.isNextRoundReady();
+		for (Player player : listPlayer) {
+			
+			player.nextRound();
+			
+		}
 		Card ignoreCard = this.deck.dealCard(); // ignore top card 
 		for (int i = 0; i < 3; i++) {
 			Card card = this.deck.dealCard();
@@ -127,17 +137,29 @@ public class Game implements PlayerListener {
 		GameEvent gameEvent=  new GameEvent(this, GameAction.FLOP);
 		this.fireEvent(gameEvent);
 		this.setStatus(GameStatus.FLOP);
-
+		
+		this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+		this.setCurrentBet(0);
+		
+		this.setRound((short) 2);
 	}
 
 	public void turn() {
-
+		assert this.isNextRoundReady();
+		for (Player player : listPlayer) {
+			assert player.didCommandThisTurn();
+			player.nextRound();
+		}
 		Card card = this.deck.dealCard();
 		this.getBoard().addCard(card);
 		GameEvent gameEvent=  new GameEvent(this, GameAction.TURN);
 		this.fireEvent(gameEvent);
 		this.setStatus(GameStatus.TURN);
-
+		//TODO need to check before current player fold or not
+		this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+		this.setCurrentBet(0);
+		
+		//this.setRound((short) 3);
 	}
 
 	public void river() {
@@ -147,13 +169,15 @@ public class Game implements PlayerListener {
 		GameEvent gameEvent=  new GameEvent(this, GameAction.RIVER);
 		this.fireEvent(gameEvent);
 		this.setStatus(GameStatus.RIVER);
-
+		
+		//this.setRound((short) 4);
 	}
 	public void endGame()
 	{
 		this.setStatus(GameStatus.END_HAND);
 		GameEvent gameEvent=  new GameEvent(this, GameAction.ENDED);
 		this.fireEvent(gameEvent);
+		
 		
 	}
 
@@ -331,7 +355,8 @@ public class Game implements PlayerListener {
 		//TODO need more test and code review
 		return !this.listPlayer.stream()
 				.filter(x->!x.isSittingOut())		
-				.filter(x -> x.getRoundBet() != this.getCurrentBet() || x.getRound() != this.getRound())
+				//.filter(x -> x.getRoundBet() != this.getCurrentRoundBet() || x.getRound() != this.getRound())
+				.filter(x -> x.getRoundBet() != this.getCurrentRoundBet() )
 				.findAny().isPresent();
 		
 			
@@ -343,7 +368,7 @@ public class Game implements PlayerListener {
 		//TODO need more test and code review
 		return this.listPlayer.stream()
 				.filter(x->!x.isSittingOut())		
-				.filter(x -> x.getRoundBet() != this.getCurrentBet() || x.getRound() != this.getRound())
+				.filter(x -> x.getRoundBet() != this.getCurrentRoundBet() || x.getRound() != this.getRound())
 				.findAny().orElse(null);
 		
 			
@@ -374,13 +399,14 @@ public class Game implements PlayerListener {
 	@Override
 	public void actionPerformed(PlayerEvent event) {
 		Player p = event.getSource();
-		
+		assert p==this.getCurrentPlayer();
+//		System.out.println(event.getAction());
 		if(listPlayer.contains(p))
 		{
 			if(event.getAction()==PlayerAction.BET)
 			{
 				assert p.getRoundBet()>=this.currentRoundBet;
-				assert p==this.getCurrentPlayer();
+				
 				
 				this.potBalance+= (long)event.agruments.get("amount");
 				this.currentRoundBet=p.getRoundBet(); // set current bet equal to this bet amount
@@ -404,6 +430,16 @@ public class Game implements PlayerListener {
 				}
 				
 			}
+			
+			if(event.getAction()==PlayerAction.FOLD)
+			{
+				this.setCurrentPlayer(this.getNextPlayer(p));
+			}
+			
+			if(event.getAction()==PlayerAction.CHECK)
+			{
+				this.setCurrentPlayer(this.getNextPlayer(p));
+			}
 		}
 		
 	}
@@ -418,7 +454,7 @@ public class Game implements PlayerListener {
 		
 	}
 
-	public long getCurrentBet() {
+	public long getCurrentRoundBet() {
 		return currentRoundBet;
 	}
 

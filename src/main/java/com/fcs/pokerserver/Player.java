@@ -48,6 +48,8 @@ public class Player {
 	private String name;
 	private String id;
 	private boolean sittingOut=false;
+	private boolean commandThisTurn=false;
+	
 	
 	 
 	public Player()
@@ -77,7 +79,7 @@ public class Player {
 		pe.agruments.put("gameBet", this.gameBet);
 		
 		this.fireEvent(pe);
-		
+		this.setCommandThisTurn(true);
 		
 		
 	}
@@ -89,16 +91,18 @@ public class Player {
 	{
 		this.setRoundBet(0);
 		this.round++;
+		this.setCommandThisTurn(false);
 	}
 	public void newGame()
 	{
 		this.setRoundBet(0);
 		this.gameBet=0;
 		this.round=0;
+		this.setCommandThisTurn(false);
 	}
 	public void fold()
 	{
-		
+		this.setCommandThisTurn(true);
 		
 		
 		PlayerEvent pe = new PlayerEvent(this, PlayerAction.FOLD);
@@ -112,10 +116,10 @@ public class Player {
 	public void check()
 	{
 		
-		
+		this.setCommandThisTurn(true);
 		
 		PlayerEvent pe = new PlayerEvent(this, PlayerAction.CHECK);
-		
+//		System.out.println("No check anh oi");
 		this.fireEvent(pe);
 		
 		
@@ -220,6 +224,12 @@ public class Player {
 			e.printStackTrace();
 		}
 		return jsonInString;
+	}
+	public boolean didCommandThisTurn() {
+		return commandThisTurn;
+	}
+	public void setCommandThisTurn(boolean commandThisTurn) {
+		this.commandThisTurn = commandThisTurn;
 	}
 	
 }
