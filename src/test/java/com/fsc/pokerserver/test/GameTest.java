@@ -116,7 +116,7 @@ public class GameTest {
 	}
 
 	@Test
-	public void testSetDealerAndBig() {
+	public void testSetDealerAndBig() {  
 		Game game = room.createNewGame();
 		
 		Player player2 = new Player();
@@ -388,43 +388,7 @@ public class GameTest {
 		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 2);
 
 	}
-	
-//	
-//	@Test(expected = AssertionError.class)
-//	public void testGamePreFlopNotPlayerInGame() {
-//		Game game = room.createNewGame();
-//
-//		Player player2 = new Player();
-//		game.addPlayer(player2);
-//		Player player3 = new Player();
-////		game.addPlayer(player3);
-//		Player player4 = new Player();
-//		game.addPlayer(player4);
-//		Player player5 = new Player();
-//		game.addPlayer(player5);
-//
-//		game.setDealer(player5);
-//
-//		master.setBalance(1000);
-//		player2.setBalance(1000);
-//		player3.setBalance(1000);
-//		player4.setBalance(1000);
-//		player5.setBalance(1000);
-//
-//		game.startGame();
-//		
-//		game.preflop();
-//		
-//		player3.bet(20);
-//		player4.bet(20);
-//		player5.bet(20);
-//		master.bet(10);
-//		
-//		game.flop();
-//
-////		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 2);
-//
-//	}
+
 	
 	/*
 	 * 5 players: master, player2(p2), player3(p3), player4(p4), player5(p5)
@@ -730,6 +694,51 @@ public class GameTest {
 	}
 	
 	
+	@Test(expected = AssertionError.class)
+	public void testChangePlayerAfterFlopAndBeforeTurn() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(30);
+		player4.bet(30);
+		player5.bet(30);
+		master.bet(20);
+		player2.bet(10);
+		
+		game.flop();
+
+		//change turn of player2 to master 
+		player2.check();
+		master.check();
+		
+		player3.check();
+		player4.check();
+		player5.check();
+		
+		game.turn();
+		
+//		assertEquals(game.getCurrentPlayer(), master);
+	}
+	
 	@Test
 	public void testCurrentPlayerAfterFlopAndBeforeTurn() {
 		Game game = room.createNewGame();
@@ -779,52 +788,6 @@ public class GameTest {
 		
 		assertEquals(game.getCurrentPlayer(), master);
 	}
-	
-	@Test(expected = AssertionError.class)
-	public void testChangePlayerAfterFlopAndBeforeTurn() {
-		Game game = room.createNewGame();
-
-		Player player2 = new Player();
-		game.addPlayer(player2);
-		Player player3 = new Player();
-		game.addPlayer(player3);
-		Player player4 = new Player();
-		game.addPlayer(player4);
-		Player player5 = new Player();
-		game.addPlayer(player5);
-
-		game.setDealer(player5);
-
-		master.setBalance(1000);
-		player2.setBalance(1000);
-		player3.setBalance(1000);
-		player4.setBalance(1000);
-		player5.setBalance(1000);
-
-		game.startGame();
-		
-		game.preflop();
-		player3.bet(30);
-		player4.bet(30);
-		player5.bet(30);
-		master.bet(20);
-		player2.bet(10);
-		
-		game.flop();
-
-		//change turn of player2 to master 
-		player2.check();
-		master.check();
-		
-		player3.check();
-		player4.check();
-		player5.check();
-		
-		game.turn();
-		
-//		assertEquals(game.getCurrentPlayer(), master);
-	}
-	
 	
 	@Test(expected = AssertionError.class)
 	public void testBetNotEqualtBetweenPlayersAndMaster() {
