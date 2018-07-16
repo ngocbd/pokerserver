@@ -8,6 +8,8 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+
+
 class MessageQueue 
 {	
 	public MessageQueue(String topic, String content) {
@@ -43,7 +45,7 @@ public class Sender extends Thread{
 	public void add(String topic,String content)
 	{
 		queue.add(new MessageQueue(topic, content));
-		System.out.println("queue.size:"+queue.size());
+		
 		
 	}
 	
@@ -58,7 +60,7 @@ public class Sender extends Thread{
 				{
 					//Thread.sleep(1);
 					//System.out.println(mq.getTopic()+":"+mq.getContent());
-					client.publish(mq.getTopic(), mq.getContent().getBytes(), 0, false);
+					client.publish(mq.getTopic(), mq.getContent().getBytes(), 2, false);
 				}
 				
 			}

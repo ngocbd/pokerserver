@@ -27,7 +27,7 @@ public class GameServerClientTest implements MqttCallback {
 	static final String PASSWORD = "123456";
 	static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImRhaWNhIn0.n3ETnk6P6Hw42xjx78iRYGBJc93rbHWCfW3KiZe-LmI";
 	String lastUserResponse ="";
-	String lastRoommResponse ="";
+	String lastRoomResponse ="";
 	Sender sender;
 	@Before
 	public void setUp() throws Exception {
@@ -35,6 +35,8 @@ public class GameServerClientTest implements MqttCallback {
 
 		connOpt.setCleanSession(true);
 		connOpt.setKeepAliveInterval(30);
+		connOpt.setAutomaticReconnect(true);
+		
 		
 
 		// Connect to Broker
@@ -58,7 +60,7 @@ public class GameServerClientTest implements MqttCallback {
 	public void testLogin() {
 		sender.add(SERVER_TOPIC, "cmd=login&username="+USERNAME+"&password="+PASSWORD);
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,6 +70,19 @@ public class GameServerClientTest implements MqttCallback {
 		
 	}
 	
+	@Test
+	public void testJoinRoom() {
+		sender.add(SERVER_TOPIC, "id=1531136573350&cmd=joinRoom&username="+USERNAME+"&token="+TOKEN);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		assertTrue(lastRoomResponse.startsWith("cmd=join&player=daica"));
+		
+	}
 	
 	@Test
 	public void testCreateRoom() {
@@ -79,22 +94,10 @@ public class GameServerClientTest implements MqttCallback {
 			e.printStackTrace();
 		}
 		
-		assertTrue(lastRoommResponse.startsWith("cmd=room&id="));
+		assertTrue(lastRoomResponse.startsWith("cmd=room&id="));
 		
 	}
-	@Test
-	public void testJoinRoom() {
-		sender.add(SERVER_TOPIC, "cmd=joinRoom&username="+USERNAME+"&token="+TOKEN);
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		assertTrue(lastRoommResponse.startsWith("cmd=room&id="));
-		
-	}
+	
 
 	@Override
 	public void connectionLost(Throwable cause) {
@@ -105,6 +108,7 @@ public class GameServerClientTest implements MqttCallback {
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println(new String(message.getPayload()));
 		if(topic.equals(USER_TOPIC+USERNAME))
 		{
 			lastUserResponse=new String(message.getPayload());
@@ -112,8 +116,9 @@ public class GameServerClientTest implements MqttCallback {
 		}
 		if(topic.startsWith(ROOM_TOPIC))
 		{
-			lastRoommResponse=new String(message.getPayload());
+			lastRoomResponse=new String(message.getPayload());
 		}
+		
 		
 		
 	}
