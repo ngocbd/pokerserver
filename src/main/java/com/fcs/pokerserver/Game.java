@@ -260,15 +260,22 @@ public class Game implements PlayerListener {
 	}
 	public Player getNextPlayer(Player p)
 	{
-		
+		Player temp = null;
 		for(int i = 0; i < this.getListPlayer().size(); i++){
 			//Find the player we are starting at
 			if(this.getListPlayer().get(i).equals(p)){
 				//The next player is either the next in the list, or the first in the list if startPlayer is at the end
-				return (i == this.getListPlayer().size() - 1) ? this.getListPlayer().get(0) : this.getListPlayer().get(i+1);
+				temp = (i == this.getListPlayer().size() - 1) ? this.getListPlayer().get(0) : this.getListPlayer().get(i+1);
+				break;
 			}
 		}
-		return null;
+		if(temp.isSittingOut())
+		{
+			return getNextPlayer(temp);
+		}
+		else
+			
+		return temp;
 		
 	}
 
@@ -433,6 +440,7 @@ public class Game implements PlayerListener {
 			
 			if(event.getAction()==PlayerAction.FOLD)
 			{
+				p.setSittingOut(true);
 				this.setCurrentPlayer(this.getNextPlayer(p));
 			}
 			
