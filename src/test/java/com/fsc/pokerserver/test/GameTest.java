@@ -53,13 +53,12 @@ public class GameTest {
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-
 		game.addPlayer(player2);
-
 		Player player3 = new Player();
-
 		game.addPlayer(player3);
+		
 		game.setDealer(player2);
+		
 		game.startGame();
 
 	}
@@ -69,13 +68,12 @@ public class GameTest {
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-
 		game.addPlayer(player2);
-
 		Player player3 = new Player();
-
 		game.addPlayer(player3);
+		
 		game.setDealer(player2);
+		
 		game.startGame();
 
 		assertSame("Same Player", game.getDealer(), player2);
@@ -83,20 +81,37 @@ public class GameTest {
 	}
 
 	@Test
+	public void testDealerOtherPlayer() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		game.setDealer(player5);
+		
+		game.startGame();
+
+		assertSame("New Dealer", game.getDealer(), player5);
+
+	}
+	
+	
+	
+	@Test(expected = AssertionError.class)
 	public void testDealerNotIngame() {
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-
-		game.addPlayer(player2);
-
+//		game.addPlayer(player2);
 		Player player3 = new Player();
-
 		game.addPlayer(player3);
+		
 		game.setDealer(player2);
-		game.startGame();
-
-		assertSame("Same Player", game.getDealer(), player2);
 
 	}
 
@@ -105,13 +120,12 @@ public class GameTest {
 		Game game = room.createNewGame();
 		
 		Player player2 = new Player();
-
 		game.addPlayer(player2);
-
 		Player player3 = new Player();
-
 		game.addPlayer(player3);
+		
 		game.setDealer(master);
+		
 		game.startGame();
 
 		assertSame("Same Player", game.getBigBlind(), player3);
@@ -123,47 +137,46 @@ public class GameTest {
 		Game game = room.createNewGame();
 		
 		Player player2 = new Player();
-
 		game.addPlayer(player2);
-
 		Player player3 = new Player();
-
 		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		
 		game.setDealer(master);
 		game.startGame();
 
 		assertSame("Same Player", game.getSmallBlind(), player2);
 
 	}
-
+	
+	
 	@Test
 	public void testSetDealerAndSmallCheck() {
 		Game game = room.createNewGame();
 		
 		Player player2 = new Player();
-
 		game.addPlayer(player2);
-
 		Player player3 = new Player();
-
 		game.addPlayer(player3);
+		
 		game.setDealer(player3);
+		
 		game.startGame();
 
 		assertSame("Same Player", game.getSmallBlind(), master);
 
 	}
 
+	
+
 	@Test
 	public void testSetDealerAndSmallCheckFalse() {
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-
 		game.addPlayer(player2);
-
 		Player player3 = new Player();
-
 		game.addPlayer(player3);
 
 		game.setDealer(player3);
@@ -180,37 +193,33 @@ public class GameTest {
 		
 		Player player2 = new Player();
 		game.addPlayer(player2);
-
 		Player player3 = new Player();
 		game.addPlayer(player3);
-
 		Player player4 = new Player();
 		game.addPlayer(player4);
+		
 		game.setDealer(player3);
+		
 		game.startGame();
 
 		assertSame(game.getSmallBlind(), player4);
 
 	}
-
+	
 	@Test
-	public void testBigBlindBet() {
+	public void tesSmallBlindBet() {
 		Game game = room.createNewGame();
 		
 
 		Player player2 = new Player();
-
 		game.addPlayer(player2);
-
 		Player player3 = new Player();
 		game.addPlayer(player3);
-
 		Player player4 = new Player();
 		game.addPlayer(player4);
-
 		Player player5 = new Player();
 		game.addPlayer(player5);
-
+		
 		game.setDealer(player5);
 
 		master.setBalance(1000);
@@ -228,22 +237,48 @@ public class GameTest {
 	}
 
 	@Test
+	public void testBigBlindBet() {
+		Game game = room.createNewGame();
+		
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+
+		game.preflop();
+
+		assertEquals(player2.getBalance(), 980);
+
+	}
+
+	@Test
 	public void testPotFreFlop() {
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-
 		game.addPlayer(player2);
-
 		Player player3 = new Player();
 		game.addPlayer(player3);
-
 		Player player4 = new Player();
 		game.addPlayer(player4);
-
 		Player player5 = new Player();
 		game.addPlayer(player5);
-
+		
 		game.setDealer(player5);
 
 		master.setBalance(1000);
@@ -259,6 +294,37 @@ public class GameTest {
 		assertEquals(game.getPotBalance(), 30);
 
 	}
+	
+	@Test
+	public void testPotFreFlopAfterUnderTheGunBet() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+
+		game.preflop();
+		
+		player3.bet(70);
+
+		assertEquals(game.getPotBalance(), 100);
+
+	}
 
 	@Test
 	public void testSetDealerAndSmallFivePlayer() {
@@ -266,13 +332,10 @@ public class GameTest {
 
 		Player player2 = new Player();
 		game.addPlayer(player2);
-
 		Player player3 = new Player();
 		game.addPlayer(player3);
-
 		Player player4 = new Player();
 		game.addPlayer(player4);
-
 		Player player5 = new Player();
 		game.addPlayer(player5);
 
@@ -296,13 +359,10 @@ public class GameTest {
 
 		Player player2 = new Player();
 		game.addPlayer(player2);
-
 		Player player3 = new Player();
 		game.addPlayer(player3);
-
 		Player player4 = new Player();
 		game.addPlayer(player4);
-
 		Player player5 = new Player();
 		game.addPlayer(player5);
 
@@ -315,14 +375,244 @@ public class GameTest {
 		player5.setBalance(1000);
 
 		game.startGame();
+		
 		game.preflop();
+		
+		player3.bet(20);
+		player4.bet(20);
+		player5.bet(20);
+		master.bet(10);
+		
+		game.flop();
 
 		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 2);
 
 	}
+	
+//	
+//	@Test(expected = AssertionError.class)
+//	public void testGamePreFlopNotPlayerInGame() {
+//		Game game = room.createNewGame();
+//
+//		Player player2 = new Player();
+//		game.addPlayer(player2);
+//		Player player3 = new Player();
+////		game.addPlayer(player3);
+//		Player player4 = new Player();
+//		game.addPlayer(player4);
+//		Player player5 = new Player();
+//		game.addPlayer(player5);
+//
+//		game.setDealer(player5);
+//
+//		master.setBalance(1000);
+//		player2.setBalance(1000);
+//		player3.setBalance(1000);
+//		player4.setBalance(1000);
+//		player5.setBalance(1000);
+//
+//		game.startGame();
+//		
+//		game.preflop();
+//		
+//		player3.bet(20);
+//		player4.bet(20);
+//		player5.bet(20);
+//		master.bet(10);
+//		
+//		game.flop();
+//
+////		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 2);
+//
+//	}
+	
+	/*
+	 * 5 players: master, player2(p2), player3(p3), player4(p4), player5(p5)
+	 * Dealer is p5. So, SB is master, BB is p2, UTG is the p3. 
+	 * In preflop, the first call is p3.  
+	 * 
+	 * */
+	@Test(expected = AssertionError.class)
+	public void testTurnGameInPreFlopPlayer3AndPlayer4() {
+		Game game = room.createNewGame();
 
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+//		it's error when player4 bet before player3
+		player4.bet(20);
+		player3.bet(20);
+		player5.bet(20);
+		master.bet(10);
+		
+		game.flop();
+
+	}
+
+	
+	@Test(expected = AssertionError.class)
+	public void testTurnGameInPreFlopPlayer3AndPlayer5() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+//		it's error when player5 bet before player3
+		player5.bet(20);
+		player3.bet(20);
+		player4.bet(20);
+		master.bet(10);
+		
+		game.flop();
+
+	}
+	
+	@Test
+	public void testBetEqualtBetweenPlayersMoreTimesInPreFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(20);
+		player4.bet(20);
+		player5.bet(20);
+		//master bet more 10 than players. Not equals. So, can't call flop function
+		master.bet(20);
+		player2.bet(10);
+		player3.bet(10);
+		player4.bet(10);
+		player5.bet(10);
+		
+		game.flop();
+//		After flop, the SB is starter if SB don't fold. So, the current player is player2
+		assertEquals(game.getCurrentPlayer(), master);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void testBetNotEqualtBetweenPlayersAndMaster() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(20);
+		player4.bet(20);
+		player5.bet(20);
+		//master bet more 10 than players. Not equals. So, can't call flop function
+		master.bet(20);
+		
+		game.flop();
+
+	}
+	
+	@Test(expected = AssertionError.class)
+	public void testBetEqualtBetweenPlayersAndMasterMoreTimes() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+//		it's error when player4 bet before player3
+		player4.bet(20);
+		player3.bet(20);
+		player5.bet(20);
+		master.bet(20);
+		
+		game.flop();
+
+	}
+	
+	
+	
 	// TODO Write more method to test other cases for current and next Player
-	// !!!importance
+	// !!!+-
+	 
 
 	@Test
 	public void testGameAfterPreFlopCurrentPlayer() {
@@ -347,15 +637,53 @@ public class GameTest {
 		player3.setBalance(1000);
 		player4.setBalance(1000);
 		player5.setBalance(1000);
+		
 		game.startGame();
 		game.preflop();
 
 		/*
 		 * If Player 1 is dealer then : - Player 2 is SmallBlind - Player 3 is
-		 * SmallBlind - Player 4 is UNDER THE GUN , he must be start bet first
+		 * BigBlind - Player 4 is UNDER THE GUN , he must be start bet first
 		 */
 
 		assertEquals(game.getCurrentPlayer(), player4);
+
+	}
+	
+	@Test
+	public void testGameAfterPreFlopCurrentPlayerEndRound() {
+		Game game = room.createNewGame();
+		
+		Player player2 = new Player();
+		game.addPlayer(player2);
+
+		Player player3 = new Player();
+		game.addPlayer(player3);
+
+		Player player4 = new Player();
+		game.addPlayer(player4);
+
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(master);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+		
+		game.startGame();
+		game.preflop();
+		//set player4 bet more coin => current player have to be player5
+		player4.bet(20);
+		/*
+		 * If Player 1 is dealer then : - Player 2 is SmallBlind - Player 3 is
+		 * BigBlind - Player 4 is UNDER THE GUN , he must be start bet first
+		 */
+
+		assertSame(game.getCurrentPlayer(), player5);
 
 	}
 
@@ -577,7 +905,7 @@ public class GameTest {
 		
 		master.bet(20);
 		player2.bet(10);
-		System.out.println(game.dumpListPlayer());
+		//System.out.println(game.dumpListPlayer());
 		assertTrue(game.isNextRoundReady());
 		
 

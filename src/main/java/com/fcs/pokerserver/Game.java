@@ -91,7 +91,9 @@ public class Game implements PlayerListener {
 		this.setStatus(GameStatus.PREFLOP);
 		long betBigBlind = this.getRoom().getBlindLevel().getBigBlind();
 		long betSmallBlind = this.getRoom().getBlindLevel().getSmallBlind();
+		this.setCurrentPlayer(this.getSmallBlind());
 		this.getSmallBlind().bet(betSmallBlind);
+		this.setCurrentPlayer(this.getBigBlind());
 		this.getBigBlind().bet(betBigBlind);
 		
 		
@@ -378,6 +380,8 @@ public class Game implements PlayerListener {
 			if(event.getAction()==PlayerAction.BET)
 			{
 				assert p.getRoundBet()>=this.currentRoundBet;
+				assert p==this.getCurrentPlayer();
+				
 				this.potBalance+= (long)event.agruments.get("amount");
 				this.currentRoundBet=p.getRoundBet(); // set current bet equal to this bet amount
 				
@@ -386,7 +390,7 @@ public class Game implements PlayerListener {
 				// if next round ready then next Player will be left person of dealer
 				if(isNextRoundReady())
 				{
-					 this.getNextPlayer(this.getDealer());
+					this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
 				}
 				else
 				{
