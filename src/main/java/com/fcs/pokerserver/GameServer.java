@@ -1,12 +1,19 @@
 package com.fcs.pokerserver;
 
-import java.net.URL;
+import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import javax.servlet.DispatcherType;
+
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -21,6 +28,11 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fsc.pokerserver.web.RoomServlet;
+import com.fsc.pokerserver.web.LoginServlet;
+import com.fsc.pokerserver.web.ObjectifyWebFilter;
+import com.fsc.pokerserver.web.PokerTokenFilter;
+import com.fsc.pokerserver.web.RegisterServlet;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
@@ -30,26 +42,93 @@ import com.google.cloud.datastore.Key;
  * */
 public class GameServer implements MqttCallback {
 
+	
+	private static  GameServer instance =null;
+	
+	static Logger logger = Logger.getLogger(GameServer.class.getName());
+	
+	private  GameServer() {
+		ServletHolder loginServlet = new ServletHolder(LoginServlet.class);
+		ServletHolder registerServlet = new ServletHolder(RegisterServlet.class);
+		ServletHolder createRoomServlet = new ServletHolder(RoomServlet.class);
+
+		
+        Server server = new Server(8080);
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        server.setHandler(context);
+        
+        context.addFilter(ObjectifyWebFilter.class, "/*",
+                EnumSet.of(DispatcherType.REQUEST));
+        
+        context.addFilter(PokerTokenFilter.class, "/api/room",EnumSet.of(DispatcherType.REQUEST));
+        
+        
+        
+        context.addServlet(loginServlet, "/api/login");
+        context.addServlet(registerServlet, "/api/register");
+        context.addServlet(createRoomServlet, "/api/room");
+        
+        
+        logger.warning("GameServer starting..."+ ManagementFactory.getRuntimeMXBean().getName());
+        try {
+			server.start();
+			 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+       
+		try {
+			this.run();
+		} catch (MqttException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		logger.warning("GameServer started at "+DateTime.now().toLocalDateTime().toString());
+
+	}
+	public static GameServer getInstance()
+	{
+		
+		
+		if(instance==null)  
+		{
+			instance = new GameServer();
+		}
+		
+		return instance;
+	}
+	public static void main(String[] args) {
+		GameServer gameServer = GameServer.getInstance();
+		
+		
+		
+		
+		
+       
+	}
+	
 	private List<Player> listPlayer = new ArrayList<Player>();
 	private List<Room> listRoom = new ArrayList<Room>();
 	Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 	Algorithm algorithm = Algorithm.HMAC256("thisstringisverysecret");
 	Sender sender;
 	public void addPlayer(Player p) {
-		this.listPlayer.add(p);
+		this.getListPlayer().add(p);
 
 	}
 	public void addRoom(Room r) {
-		this.listRoom.add(r);
+		this.getListRoom().add(r);
 
 	}
 	public Player getPlayerByName(String name)
 	{
-		return this.listPlayer.stream().filter(x -> name.equals(x.getName())).findFirst().orElse(null);
+		return this.getListPlayer().stream().filter(x -> name.equals(x.getName())).findFirst().orElse(null);
 	}
 	public Room getRoomByID(long id)
 	{
-		return this.listRoom.stream().filter(x -> x.getRoomID()==id).findFirst().orElse(null);
+		return this.getListRoom().stream().filter(x -> x.getRoomID()==id).findFirst().orElse(null);
 	}
 	public static Map<String, String> getQueryMap(String query) {
 		String[] params = query.split("&");
@@ -73,18 +152,7 @@ public class GameServer implements MqttCallback {
 	 * MAIN
 	 * 
 	 */
-	public static void main(String[] args) {
-		GameServer gameServer = new GameServer();
-
-		System.out.println("GameServer starting...");
-		try {
-			gameServer.run();
-		} catch (MqttException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("GameServer started at "+DateTime.now().toLocalDateTime().toString());
-	}
+	
 
 	/**
 	 * 
@@ -219,15 +287,15 @@ public class GameServer implements MqttCallback {
 					    
 					    	Room room = this.getRoomByID(roomID);
 					    	
-					    	if(room==null&&this.listRoom.size()>0)
+					    	if(room==null&&this.getListRoom().size()>0)
 					    	{
 					    		//TODO random room at BlindLEVEL
-					    		room = this.listRoom.get(0);
+					    		room = this.getListRoom().get(0);
 					    	}
 					    	else
 					    	{
-					    		 this.listRoom.add(new Room(player, BlindLevel.BLIND_10_20));
-					    		 room = this.listRoom.get(0);
+					    		 this.getListRoom().add(new Room(player, BlindLevel.BLIND_10_20));
+					    		 room = this.getListRoom().get(0);
 					    	}
 					    	
 					    	room.addPlayer(player);
@@ -267,5 +335,18 @@ public class GameServer implements MqttCallback {
 		// TODO Auto-generated method stub
 
 	}
+	public List<Room> getListRoom() {
+		return listRoom;
+	}
+	public void setListRoom(List<Room> listRoom) {
+		this.listRoom = listRoom;
+	}
+	public List<Player> getListPlayer() {
+		return listPlayer;
+	}
+	public void setListPlayer(List<Player> listPlayer) {
+		this.listPlayer = listPlayer;
+	}
+	
 
 }

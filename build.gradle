@@ -9,6 +9,7 @@
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java'
 
+
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use jcenter for resolving your dependencies.
@@ -34,6 +35,15 @@ dependencies {
     compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
     compile 'com.google.cloud:google-cloud-datastore:1.31.0'
     compile 'com.auth0:java-jwt:3.4.0'
+    // https://mvnrepository.com/artifact/com.googlecode.objectify/objectify
+	compile group: 'com.googlecode.objectify', name: 'objectify', version: '6.0'
+	testCompile group: 'com.sun.jersey', name: 'jersey-client', version: '1.18.2'
+    compile group: 'com.sun.jersey', name: 'jersey-core', version: '1.18.2'
+    compile group: 'com.sun.jersey', name: 'jersey-server', version: '1.18.2'
+    compile group: 'com.sun.jersey', name: 'jersey-servlet', version: '1.18.2'
+    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.2.4.v20141103'
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.2.4.v20141103'
+    
 }
 
 

@@ -83,5 +83,11 @@ public class Room {
 		
 		return this.currentGame;
 	}
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.valueOf(this.RoomID);
+	}
+	
 	
 }
