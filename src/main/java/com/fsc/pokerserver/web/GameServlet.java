@@ -25,56 +25,77 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 @WebServlet(name = "RoomServlet", urlPatterns = { "/api/room" })
 
-public class RoomServlet extends HttpServlet {
+public class GameServlet extends HttpServlet {
+	
 
 	GameServer server = GameServer.getInstance();
-
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
+	{
 		String method = request.getParameter("method");
-		if ("put".equalsIgnoreCase(method)) {
-			doPut(request, response);
+		if("put".equalsIgnoreCase(method))
+		{
+			doPut(request,response);
 			return;
-		} else if ("join".equalsIgnoreCase(method)) {
-			doPost(request, response);
+		}
+		else if("join".equalsIgnoreCase(method))
+		{
+			doPost(request,response);
 			return;
-		} else {
-
-			String data = Joiner.on(",").join(this.server.getListRoom());
-			response.getWriter().println(data);
-
+		}
+		else
+		{
+			
+			
+				String data = Joiner.on(",").join(this.server.getListRoom());
+				response.getWriter().println(data);
+			
+			
+			
+			
+			
 		}
 	}
-
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
+	{
+
 
 		Player p = (Player) request.getAttribute("player");
-
+		
+		
 		String id = request.getParameter("id");
-
+		
+		
+		
 		Room room = server.getRoomByID(Long.parseLong(id));
-
-		checkNotNull(room, "Room " + id + " not found");
-
+		
+		checkNotNull(room,"Room "+id+" not found");
+		
 		room.addPlayer(p);
-
+		
 		String data = Joiner.on(",").join(this.server.getListPlayer());
-
+		
 		response.getWriter().println(data);
-
+		
+		
 	}
-
+	
 	@Override
 	public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+		
+
 		Player p = (Player) request.getAttribute("player");
-
-		Room room = new Room(p, BlindLevel.BLIND_10_20);
-
-		server.addRoom(room);
-
-		response.getWriter().println(room.getRoomID());
+		
+		
+		Room room = p.getCurrentRoom();
+		
+		checkNotNull(room,"Room  not found");
+		
+		room.createNewGame();
+		
+		response.getWriter().println(room.getCurrentGame().getId());
 
 	}
 }

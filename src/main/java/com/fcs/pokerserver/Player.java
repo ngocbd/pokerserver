@@ -48,6 +48,7 @@ public class Player {
 	private String name;
 	private String id;
 	private boolean sittingOut=false;
+	private Room currentRoom = null;
 	
 	 
 	public Player()
@@ -202,24 +203,13 @@ public class Player {
 	
 	public String toString()
 	{
-		ObjectMapper mapper = new ObjectMapper();
-		
-
-
-		String jsonInString ="Error when dump Object";
-		try {
-			 jsonInString = mapper.writeValueAsString(this);
-		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return jsonInString;
+		return  this.getName()+","+this.balance+","+this.roundBet;
+	}
+	public Room getCurrentRoom() {
+		return currentRoom;
+	}
+	public void setCurrentRoom(Room currentRoom) {
+		this.currentRoom = currentRoom;
 	}
 	
 }

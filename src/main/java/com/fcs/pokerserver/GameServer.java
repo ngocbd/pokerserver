@@ -29,6 +29,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fsc.pokerserver.web.RoomServlet;
+import com.fsc.pokerserver.web.GameServlet;
 import com.fsc.pokerserver.web.LoginServlet;
 import com.fsc.pokerserver.web.ObjectifyWebFilter;
 import com.fsc.pokerserver.web.PokerTokenFilter;
@@ -50,7 +51,8 @@ public class GameServer implements MqttCallback {
 	private  GameServer() {
 		ServletHolder loginServlet = new ServletHolder(LoginServlet.class);
 		ServletHolder registerServlet = new ServletHolder(RegisterServlet.class);
-		ServletHolder createRoomServlet = new ServletHolder(RoomServlet.class);
+		ServletHolder roomServlet = new ServletHolder(RoomServlet.class);
+		ServletHolder gameServlet = new ServletHolder(GameServlet.class);
 
 		
         Server server = new Server(8080);
@@ -66,7 +68,8 @@ public class GameServer implements MqttCallback {
         
         context.addServlet(loginServlet, "/api/login");
         context.addServlet(registerServlet, "/api/register");
-        context.addServlet(createRoomServlet, "/api/room");
+        context.addServlet(roomServlet, "/api/room");
+        context.addServlet(gameServlet, "/api/game");
         
         
         logger.warning("GameServer starting..."+ ManagementFactory.getRuntimeMXBean().getName());

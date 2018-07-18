@@ -14,6 +14,17 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fcs.pokerserver.Sender;
+
+/*
+ * http://localhost:8080/api/register?username=habogay&password=123456
+ * http://localhost:8080/api/login?username=habogay&password=123456
+ * http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImRhaWNhIn0.n3ETnk6P6Hw42xjx78iRYGBJc93rbHWCfW3KiZe-LmI&method=put
+ * http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImRhaWNhIn0.n3ETnk6P6Hw42xjx78iRYGBJc93rbHWCfW3KiZe-LmI&method=get
+ * http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhhYm9nYXkifQ.AkzXqdFjQRpM09hngtx2aP7jyX3OLbdJWPItAPjmBTg&method=join&id=1531887589128
+ * 
+ * 
+ * 
+ * **/
 @Ignore
 public class GameServerClientTest implements MqttCallback {
 

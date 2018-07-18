@@ -27,12 +27,22 @@ public class Room {
 	Game currentGame =null;
 	long RoomID;
 	Player master = null;
-	
+	GameServer server = null;
 	private List<Player> listPlayer = new ArrayList<Player>();
 	
 	public void addPlayer(Player p)
 	{
 		this.listPlayer.add(p);
+		p.setCurrentRoom(this);
+		
+		if(this.currentGame.getStatus()==GameStatus.NOT_STARTED && this.currentGame.getListPlayer().size()<8)
+		{
+			
+			this.currentGame.addPlayer(p);
+		}
+		
+		String content = "cmd=playerJoin&id="+p.getName();
+		this.server.sender.add(GameServer.SERVER_TOPIC+"/room/"+this.getRoomID(), content);
 		
 	}
 	public List<Player> getListPlayer() {
@@ -73,7 +83,12 @@ public class Room {
 		this.master=master;
 		this.blindLevel=blindLevel; ;
 		this.RoomID=System.currentTimeMillis();
+		this.server=GameServer.getInstance();
 		
+		
+		String content = "cmd=playerJoin&id="+master.getName();
+		this.server.sender.add(GameServer.SERVER_TOPIC+"/room/"+this.getRoomID(), content);
+		this.createNewGame();
 		
 	}
 	public Game createNewGame()
@@ -81,6 +96,8 @@ public class Room {
 		this.currentGame = new Game(this);
 		this.currentGame.addPlayer(this.master);
 		
+		String content = "cmd=gameCreated&id="+this.currentGame.getId();
+		this.server.sender.add(GameServer.SERVER_TOPIC+"/room/"+this.getRoomID(), content);
 		return this.currentGame;
 	}
 	@Override
