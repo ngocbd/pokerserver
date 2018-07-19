@@ -53,11 +53,12 @@ public class Player {
 	 
 	public Player()
 	{
-		
+		this.setId(String.valueOf(System.currentTimeMillis()));
 	}
 	public Player(String name)
 	{
 		this.name=name;
+		this.setId(String.valueOf(System.currentTimeMillis()));
 	}
 	private CardHolder playerHand = new CardHolder();
 	
@@ -201,9 +202,11 @@ public class Player {
 	}
 	private Game currentGame = null;
 	
+	
+	//TODO JSON please
 	public String toString()
 	{
-		return  this.getName()+","+this.balance+","+this.roundBet;
+		return  "["+this.getName()+","+this.balance+","+this.roundBet+"]";
 	}
 	public Room getCurrentRoom() {
 		return currentRoom;

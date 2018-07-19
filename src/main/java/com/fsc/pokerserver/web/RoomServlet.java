@@ -39,7 +39,11 @@ public class RoomServlet extends HttpServlet {
 			doPost(request, response);
 			return;
 		} else {
-
+			//TODO return more data ex Blind level , number of player , game status ...
+/*
+ * List All room
+ * 
+ * */
 			String data = Joiner.on(",").join(this.server.getListRoom());
 			response.getWriter().println(data);
 
@@ -58,7 +62,8 @@ public class RoomServlet extends HttpServlet {
 		checkNotNull(room, "Room " + id + " not found");
 
 		room.addPlayer(p);
-
+		
+		//TODO return more data ex Blind level ,  player balance  , game status ...
 		String data = Joiner.on(",").join(this.server.getListPlayer());
 
 		response.getWriter().println(data);

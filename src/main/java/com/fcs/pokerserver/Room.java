@@ -23,7 +23,10 @@ package com.fcs.pokerserver;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Room {
+import com.fcs.pokerserver.events.GameEvent;
+import com.fcs.pokerserver.events.GameListener;
+
+public class Room implements GameListener {
 	Game currentGame =null;
 	long RoomID;
 	Player master = null;
@@ -94,6 +97,7 @@ public class Room {
 	public Game createNewGame()
 	{
 		this.currentGame = new Game(this);
+		this.currentGame.addGameListener(this);
 		this.currentGame.addPlayer(this.master);
 		
 		String content = "cmd=gameCreated&id="+this.currentGame.getId();
@@ -104,6 +108,12 @@ public class Room {
 	public String toString() {
 		// TODO Auto-generated method stub
 		return String.valueOf(this.RoomID);
+	}
+	@Override
+	public void actionPerformed(GameEvent event) {
+		String content = "cmd="+event.getAction()+"&id="+this.currentGame.getId();
+		this.server.sender.add(GameServer.SERVER_TOPIC+"/room/"+this.getRoomID(), content);
+		
 	}
 	
 	

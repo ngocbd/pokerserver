@@ -14,6 +14,8 @@ public class User {
 	@Index
 	private String token;
 	
+	private long balance;
+	
 	public String getUsername() {
 		return username;
 	}
@@ -31,6 +33,12 @@ public class User {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	public long getBalance() {
+		return balance;
+	}
+	public void setBalance(long balance) {
+		this.balance = balance;
 	}
 	
 	
