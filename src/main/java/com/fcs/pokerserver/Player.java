@@ -48,17 +48,18 @@ public class Player {
 	private String name;
 	private String id;
 	private boolean sittingOut=false;
+	private Room currentRoom = null;
+	private String token = null;
 	private boolean commandThisTurn=false;
-	
-	
 	 
 	public Player()
 	{
-		
+		this.setId(String.valueOf(System.currentTimeMillis()));
 	}
 	public Player(String name)
 	{
 		this.name=name;
+		this.setId(String.valueOf(System.currentTimeMillis()));
 	}
 	private CardHolder playerHand = new CardHolder();
 	
@@ -80,7 +81,7 @@ public class Player {
 		pe.agruments.put("gameBet", this.gameBet);
 		
 		this.fireEvent(pe);
-		this.setCommandThisTurn(true);
+		assert this.sittingOut==false;
 		
 		
 	}
@@ -92,19 +93,16 @@ public class Player {
 	{
 		this.setRoundBet(0);
 		this.round++;
-		this.setCommandThisTurn(false);
 	}
 	public void newGame()
 	{
 		this.setRoundBet(0);
 		this.gameBet=0;
 		this.round=0;
-		this.setCommandThisTurn(false);
 	}
 	public void fold()
 	{
-		assert sittingOut == false;
-		this.setCommandThisTurn(true);
+		
 		
 		
 		PlayerEvent pe = new PlayerEvent(this, PlayerAction.FOLD);
@@ -118,10 +116,10 @@ public class Player {
 	public void check()
 	{
 		
-		this.setCommandThisTurn(true);
+		
 		
 		PlayerEvent pe = new PlayerEvent(this, PlayerAction.CHECK);
-//		System.out.println("No check anh oi");
+		
 		this.fireEvent(pe);
 		
 		
@@ -206,26 +204,23 @@ public class Player {
 	}
 	private Game currentGame = null;
 	
+	
+	//TODO JSON please
 	public String toString()
 	{
-		ObjectMapper mapper = new ObjectMapper();
-		
-
-
-		String jsonInString ="Error when dump Object";
-		try {
-			 jsonInString = mapper.writeValueAsString(this);
-		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return jsonInString;
+		return  "["+this.getName()+","+this.balance+","+this.roundBet+"]";
+	}
+	public Room getCurrentRoom() {
+		return currentRoom;
+	}
+	public void setCurrentRoom(Room currentRoom) {
+		this.currentRoom = currentRoom;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 	public boolean didCommandThisTurn() {
 		return commandThisTurn;

@@ -34,7 +34,7 @@ public class PlayerTest implements PlayerListener  {
 		if(event.getAction()==PlayerAction.BET)
 		{
 			
-			System.out.println(event.getSource().getName()+" bet "+event.getSource().getRoundBet());
+			//System.out.println(event.getSource().getName()+" bet "+event.getSource().getRoundBet());
 		}
 		
 	}
