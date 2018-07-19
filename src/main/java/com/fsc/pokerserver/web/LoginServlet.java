@@ -59,9 +59,9 @@ public class LoginServlet extends HttpServlet {
 	        .withJWTId(username)
 	        .sign(algorithm);
 	    
-    
+    p.setToken(token);
     response.getWriter().println(token);
     
-
+    
   }
 }

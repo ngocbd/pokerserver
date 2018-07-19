@@ -63,6 +63,7 @@ public class GameServer implements MqttCallback {
                 EnumSet.of(DispatcherType.REQUEST));
         
         context.addFilter(PokerTokenFilter.class, "/api/room",EnumSet.of(DispatcherType.REQUEST));
+        context.addFilter(PokerTokenFilter.class, "/api/game",EnumSet.of(DispatcherType.REQUEST));
         
         
         

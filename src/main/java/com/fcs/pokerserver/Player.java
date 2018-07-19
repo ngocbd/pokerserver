@@ -49,6 +49,7 @@ public class Player {
 	private String id;
 	private boolean sittingOut=false;
 	private Room currentRoom = null;
+	private String token = null;
 	
 	 
 	public Player()
@@ -213,6 +214,12 @@ public class Player {
 	}
 	public void setCurrentRoom(Room currentRoom) {
 		this.currentRoom = currentRoom;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 }

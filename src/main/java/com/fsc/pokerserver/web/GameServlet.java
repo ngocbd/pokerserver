@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-@WebServlet(name = "RoomServlet", urlPatterns = { "/api/room" })
+@WebServlet(name = "GameServlet", urlPatterns = { "/api/game" })
 
 public class GameServlet extends HttpServlet {
 	
@@ -41,6 +41,19 @@ public class GameServlet extends HttpServlet {
 		else if("join".equalsIgnoreCase(method))
 		{
 			doPost(request,response);
+			return;
+		}
+		else if("start".equalsIgnoreCase(method))
+		{
+			
+			Player p = (Player) request.getAttribute("player");
+			
+			
+			p.getCurrentGame().startGame();
+			
+			
+			
+			
 			return;
 		}
 		else
