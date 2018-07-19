@@ -148,7 +148,8 @@ public class Game implements PlayerListener {
 	public void turn() {
 		assert this.isNextRoundReady();
 		for (Player player : listPlayer) {
-			assert player.didCommandThisTurn();
+			
+			assert player.isSittingOut() || player.didCommandThisTurn();
 			player.nextRound();
 		}
 		Card card = this.deck.dealCard();
@@ -171,10 +172,12 @@ public class Game implements PlayerListener {
 		this.fireEvent(gameEvent);
 		this.setStatus(GameStatus.RIVER);
 		
+		
 		//this.setRound((short) 4);
 	}
 	public void endGame()
 	{
+		assert this.isNextRoundReady();
 		this.setStatus(GameStatus.END_HAND);
 		GameEvent gameEvent=  new GameEvent(this, GameAction.ENDED);
 		this.fireEvent(gameEvent);
