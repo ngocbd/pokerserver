@@ -83,7 +83,8 @@ public class Game implements PlayerListener {
 		this.setStatus(GameStatus.SEATING);
 		this.startTime = LocalDateTime.now();
 		
-		
+		GameEvent gameEvent=  new GameEvent(this, GameAction.WAITTING);
+		this.fireEvent(gameEvent);
 	}
 	
 	public void preflop() {
@@ -212,6 +213,7 @@ public class Game implements PlayerListener {
 		{
 			this.listPlayer.add(p);
 			p.addPlayerListener(this);
+			p.setCurrentGame(this);
 			
 		}
 		else

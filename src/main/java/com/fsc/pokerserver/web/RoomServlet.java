@@ -13,9 +13,9 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fcs.pokerserver.BlindLevel;
-import com.fcs.pokerserver.GameServer;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
+import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 import com.google.common.base.Joiner;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -27,7 +27,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 public class RoomServlet extends HttpServlet {
 
-	GameServer server = GameServer.getInstance();
+	MqttServletGameServer server = MqttServletGameServer.getInstance();
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

@@ -1,4 +1,4 @@
-package com.fcs.pokerserver;
+package com.fcs.pokerserver.gameserver;
 
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
@@ -28,6 +28,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fcs.pokerserver.BlindLevel;
+import com.fcs.pokerserver.Player;
+import com.fcs.pokerserver.Room;
+import com.fcs.pokerserver.Sender;
 import com.fsc.pokerserver.web.RoomServlet;
 import com.fsc.pokerserver.web.GameServlet;
 import com.fsc.pokerserver.web.LoginServlet;
@@ -41,14 +45,14 @@ import com.google.cloud.datastore.Key;
 /*
  * This class is for testing not for production
  * */
-public class GameServer implements MqttCallback {
+public class MqttServletGameServer implements MqttCallback {
 
 	
-	private static  GameServer instance =null;
+	private static  MqttServletGameServer instance =null;
 	
-	static Logger logger = Logger.getLogger(GameServer.class.getName());
+	static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
 	
-	private  GameServer() {
+	private  MqttServletGameServer() {
 		ServletHolder loginServlet = new ServletHolder(LoginServlet.class);
 		ServletHolder registerServlet = new ServletHolder(RegisterServlet.class);
 		ServletHolder roomServlet = new ServletHolder(RoomServlet.class);
@@ -73,7 +77,7 @@ public class GameServer implements MqttCallback {
         context.addServlet(gameServlet, "/api/game");
         
         
-        logger.warning("GameServer starting..."+ ManagementFactory.getRuntimeMXBean().getName());
+        logger.warning("MqttServletGameServer starting..."+ ManagementFactory.getRuntimeMXBean().getName());
         try {
 			server.start();
 			 
@@ -89,22 +93,22 @@ public class GameServer implements MqttCallback {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		logger.warning("GameServer started at "+DateTime.now().toLocalDateTime().toString());
+		logger.warning("MqttServletGameServer started at "+DateTime.now().toLocalDateTime().toString());
 
 	}
-	public static GameServer getInstance()
+	public static MqttServletGameServer getInstance()
 	{
 		
 		
 		if(instance==null)  
 		{
-			instance = new GameServer();
+			instance = new MqttServletGameServer();
 		}
 		
 		return instance;
 	}
 	public static void main(String[] args) {
-		GameServer gameServer = GameServer.getInstance();
+		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
 		
 		
 		

@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fcs.pokerserver.GameServer;
 import com.fcs.pokerserver.Player;
+import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
     checkArgument( password.equals(user.getPassword()) , "Incorrect Password");
     
     Player p = new Player(username);
-    GameServer.getInstance().addPlayer(p);
+    MqttServletGameServer.getInstance().addPlayer(p);
     String token = JWT.create()
 	        .withIssuer("pokerserver")
 	        .withJWTId(username)
