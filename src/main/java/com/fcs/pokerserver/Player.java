@@ -222,5 +222,11 @@ public class Player {
 	public void setToken(String token) {
 		this.token = token;
 	}
+	public boolean didCommandThisTurn() {
+		return commandThisTurn;
+	}
+	public void setCommandThisTurn(boolean commandThisTurn) {
+		this.commandThisTurn = commandThisTurn;
+	}
 	
 }
