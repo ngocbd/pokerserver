@@ -50,7 +50,7 @@ public class Player {
 	private boolean sittingOut=false;
 	private Room currentRoom = null;
 	private String token = null;
-	
+	private boolean commandThisTurn=false;
 	 
 	public Player()
 	{
@@ -69,6 +69,7 @@ public class Player {
 	{
 		
 		assert amount<this.balance;
+		assert this.sittingOut==false;
 		this.setRoundBet(this.getRoundBet() + amount);
 		this.gameBet+=amount;
 		this.balance=this.balance-amount;
@@ -80,7 +81,7 @@ public class Player {
 		pe.agruments.put("gameBet", this.gameBet);
 		
 		this.fireEvent(pe);
-		
+		assert this.sittingOut==false;
 		
 		
 	}

@@ -116,7 +116,7 @@ public class GameTest {
 	}
 
 	@Test
-	public void testSetDealerAndBig() {
+	public void testSetDealerAndBig() {  
 		Game game = room.createNewGame();
 		
 		Player player2 = new Player();
@@ -388,43 +388,7 @@ public class GameTest {
 		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 2);
 
 	}
-	
-//	
-//	@Test(expected = AssertionError.class)
-//	public void testGamePreFlopNotPlayerInGame() {
-//		Game game = room.createNewGame();
-//
-//		Player player2 = new Player();
-//		game.addPlayer(player2);
-//		Player player3 = new Player();
-////		game.addPlayer(player3);
-//		Player player4 = new Player();
-//		game.addPlayer(player4);
-//		Player player5 = new Player();
-//		game.addPlayer(player5);
-//
-//		game.setDealer(player5);
-//
-//		master.setBalance(1000);
-//		player2.setBalance(1000);
-//		player3.setBalance(1000);
-//		player4.setBalance(1000);
-//		player5.setBalance(1000);
-//
-//		game.startGame();
-//		
-//		game.preflop();
-//		
-//		player3.bet(20);
-//		player4.bet(20);
-//		player5.bet(20);
-//		master.bet(10);
-//		
-//		game.flop();
-//
-////		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 2);
-//
-//	}
+
 	
 	/*
 	 * 5 players: master, player2(p2), player3(p3), player4(p4), player5(p5)
@@ -540,6 +504,291 @@ public class GameTest {
 		assertEquals(game.getCurrentPlayer(), master);
 	}
 
+	@Test
+	public void testCurrentPlayer3WihtMoreTimesAfterFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(30);
+		player4.bet(30);
+		player5.bet(30);
+		master.bet(20);
+		player2.bet(10);
+		
+		game.flop();
+//		After flop, the SB is starter if SB don't fold. So, the current player is player3
+		assertEquals(game.getCurrentPlayer(), master);
+	}
+	
+	
+	@Test
+	public void testCurrentPlayerWithBetMoreTimesAndSmallBlindFoldAfterFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(30);
+		player4.bet(30);
+		player5.bet(30);
+		master.bet(20);
+		player2.bet(10);
+		
+		game.flop();
+		master.fold();
+//		After flop, the BB is starter when SB fold. So, the current player is player2
+		assertEquals(game.getCurrentPlayer(), player2);
+	}
+	
+	
+	@Test
+	public void testSumCardsOnTableAfterFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(30);
+		player4.bet(30);
+		player5.bet(30);
+		master.bet(20);
+		player2.bet(10);
+		
+		game.flop();
+		
+		master.fold();
+//		After flop, get current sum of number cards on the table.
+		assertEquals(3, game.getBoard().getCardNumber());
+	}
+	
+	@Test(expected = AssertionError.class)
+	public void testCallTurnFunctionAfterflop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(30);
+		player4.bet(30);
+		player5.bet(30);
+		master.bet(20);
+		player2.bet(10);
+		
+		game.flop();
+//		Before call turn function, sure that every player need actions. And at least having 1 player have not fold.
+		game.turn();
+	}
+	
+	
+	@Test(expected = AssertionError.class)
+	public void testAllActionsOfPlayerBeforeCallTurn() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(30);
+		player4.bet(30);
+		player5.bet(30);
+		master.bet(20);
+		player2.bet(10);
+		
+		game.flop();
+//		Check all actions of players
+		
+//		player4.check();
+//		player5.check();
+//		master.check();
+//		player2.check();
+//		player3.check();
+		game.turn();
+		
+		
+	}
+	
+	
+	@Test(expected = AssertionError.class)
+	public void testChangePlayerAfterFlopAndBeforeTurn() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(30);
+		player4.bet(30);
+		player5.bet(30);
+		master.bet(20);
+		player2.bet(10);
+		
+		game.flop();
+
+		//change turn of player2 to master 
+		player2.check();
+		master.check();
+		
+		player3.check();
+		player4.check();
+		player5.check();
+		
+		game.turn();
+		
+//		assertEquals(game.getCurrentPlayer(), master);
+	}
+	
+	@Test
+	public void testCurrentPlayerAfterFlopAndBeforeTurn() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(30);
+		player4.bet(30);
+		player5.bet(30);
+		master.bet(20);
+		player2.bet(10);
+		
+		game.flop();
+//		Check all actions of players
+		
+		master.check();
+		player2.check();
+		player3.check();
+		player4.check();
+		player5.check();
+		
+//		System.out.println(game.getRound());
+//		System.out.println(master.getRound());
+//		System.out.println(player2.getRound());
+//		System.out.println(player3.getRound());
+//		System.out.println(player4.getRound());
+//		System.out.println(player5.getRound());
+		game.turn();
+		
+		assertEquals(game.getCurrentPlayer(), master);
+	}
+	
 	@Test(expected = AssertionError.class)
 	public void testBetNotEqualtBetweenPlayersAndMaster() {
 		Game game = room.createNewGame();
@@ -607,7 +856,6 @@ public class GameTest {
 		game.flop();
 
 	}
-	
 	
 	
 	// TODO Write more method to test other cases for current and next Player
