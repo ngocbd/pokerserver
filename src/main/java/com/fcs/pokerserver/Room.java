@@ -41,7 +41,7 @@ public class Room implements GameListener {
 
 	private List<RoomListener> listeners = new ArrayList<RoomListener>();
 
-	public void addGameListener(RoomListener rl) {
+	public void addRoomListener(RoomListener rl) {
 		this.listeners.add(rl);
 	}
 
@@ -118,19 +118,20 @@ public class Room implements GameListener {
 		;
 		this.RoomID = System.currentTimeMillis();
 		this.server = MqttServletGameServer.getInstance();
-
+		this.createNewGame();
 		this.addPlayer(master);
 
 //		String content = "cmd=playerJoin&id="+master.getName();
 //		this.server.sender.add(MqttServletGameServer.SERVER_TOPIC+"/room/"+this.getRoomID(), content);
-		this.createNewGame();
+		
+		
 
 	}
 
 	public Game createNewGame() {
 		this.currentGame = new Game(this);
 		this.currentGame.addGameListener(this);
-		this.currentGame.addPlayer(this.master);
+		//this.currentGame.addPlayer(this.master);
 
 
 		//TODO not good because game event should fire from game
