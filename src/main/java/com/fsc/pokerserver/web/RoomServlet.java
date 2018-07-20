@@ -72,13 +72,17 @@ public class RoomServlet extends HttpServlet {
 
 	@Override
 	public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+		
 		Player p = (Player) request.getAttribute("player");
-
+		
+		checkNotNull(p,"Player not found");
+		
 		Room room = new Room(p, BlindLevel.BLIND_10_20);
+	
 
 		server.addRoom(room);
-
+		
+		
 		response.getWriter().println(room.getRoomID());
 
 	}

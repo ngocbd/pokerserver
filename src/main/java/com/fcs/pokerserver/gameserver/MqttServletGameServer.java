@@ -32,6 +32,10 @@ import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 import com.fcs.pokerserver.Sender;
+import com.fcs.pokerserver.events.GameEvent;
+import com.fcs.pokerserver.events.RoomAction;
+import com.fcs.pokerserver.events.RoomEvent;
+import com.fcs.pokerserver.events.RoomListener;
 import com.fsc.pokerserver.web.RoomServlet;
 import com.fsc.pokerserver.web.GameServlet;
 import com.fsc.pokerserver.web.LoginServlet;
@@ -45,7 +49,7 @@ import com.google.cloud.datastore.Key;
 /*
  * This class is for testing not for production
  * */
-public class MqttServletGameServer implements MqttCallback {
+public class MqttServletGameServer implements MqttCallback, RoomListener {
 
 	
 	private static  MqttServletGameServer instance =null;
@@ -128,6 +132,7 @@ public class MqttServletGameServer implements MqttCallback {
 	}
 	public void addRoom(Room r) {
 		this.getListRoom().add(r);
+		r.addRoomListener(this);
 
 	}
 	public Player getPlayerByName(String name)
@@ -208,125 +213,9 @@ public class MqttServletGameServer implements MqttCallback {
 		// TODO Auto-generated method stub
 				String body = new String(message.getPayload(), Charset.forName("UTF-8"));
 				System.out.println("topic:" + topic + " msg:" + new String(message.getPayload()));
-				Map<String, String> queryMap = getQueryMap(body);
-				String username = queryMap.get("username");
 				
+					
 				
-				/*
-				 * Login method over mqtt is not safe . replace with other method ( prefer web )
-				 * */
-				if (queryMap.get("cmd").equals("login")) {
-					
-					String password = queryMap.get("password");
-
-					Player p = new Player(username);
-
-					Key key = datastore.newKeyFactory().setKind("users").newKey(p.getName());
-
-					Entity retrievedUser = datastore.get(key);
-					if (retrievedUser == null) {
-						System.out.println("User : "+username +" not found");
-						return;
-					}
-					if (retrievedUser.getString("password").equals(password)) {
-						this.addPlayer(p);
-						
-						
-					    String token = JWT.create()
-					        .withIssuer("pokerserver")
-					        .withJWTId(username)
-					        .sign(algorithm);
-					    datastore.put(Entity.newBuilder(retrievedUser).set("token", token).build());
-					    
-						String sendToClient = "cmd=login&token=" + token;
-						this.sender.add("/pokerserver/user/" + username, sendToClient);
-					}
-
-					return;
-				}
-				else
-				{
-					// check token 
-					String token = queryMap.get("token");
-					
-					try {
-					    
-					    JWTVerifier verifier = JWT.require(algorithm)
-					        .withIssuer("pokerserver")
-					        .build(); //Reusable verifier instance
-					    DecodedJWT jwt = verifier.verify(token);
-					    
-					    
-					    
-					    /*
-					     * Create room with mqtt maybe not good option
-					     * */
-					    if (queryMap.get("cmd").equals("createRoom"))
-					    {
-					    	Player master = this.getPlayerByName(username);
-					    	
-					    	//TODO fix with blind level // default 10-20
-					    	Room room = new Room(master, BlindLevel.BLIND_10_20);
-					    	this.addRoom(room);
-					    	room.addPlayer(master);
-					    	Key key = datastore.newKeyFactory().setKind("rooms").newKey(room.getRoomID());
-
-					    	 Entity entity = Entity.newBuilder(key)
-					    		        .set("master", username)
-					    		        .build();
-					    	 datastore.put(entity);
-					    	String sendToClient = "cmd=room&id=" + room.getRoomID();
-					    	this.sender.add("/pokerserver/room/" + room.getRoomID(), sendToClient);
-					    	return ;
-					    	
-					    }
-					    
-					    
-					    /*
-					     * join room
-					     * */
-					    if (queryMap.get("cmd").equals("joinRoom"))
-					    {
-					    	Player player = this.getPlayerByName(username);
-					    	long roomID = Long.parseLong(queryMap.get("id"));
-					    	
-					    	
-					    	//TODO Check room not exists
-					    
-					    	Room room = this.getRoomByID(roomID);
-					    	
-					    	if(room==null&&this.getListRoom().size()>0)
-					    	{
-					    		//TODO random room at BlindLEVEL
-					    		room = this.getListRoom().get(0);
-					    	}
-					    	else
-					    	{
-					    		 this.getListRoom().add(new Room(player, BlindLevel.BLIND_10_20));
-					    		 room = this.getListRoom().get(0);
-					    	}
-					    	
-					    	room.addPlayer(player);
-					    	
-					    	String sendToClient = "cmd=join&player=" +username;
-					    	this.sender.add("/pokerserver/room/" + roomID, sendToClient);
-					    	
-					    	return ;
-					    	
-					    }
-					    
-					    
-					    
-					    
-					} catch (JWTVerificationException exception){
-						exception.printStackTrace();
-						String sendToClient = "cmd=error&msg=" + exception.getMessage();
-				    	myClient.publish("/pokerserver/user/" +username, new MqttMessage(sendToClient.getBytes()));
-				    	return;
-					}
-					
-					
-				}
 	}
 	@Override
 	public void messageArrived(String topic, MqttMessage message) {
@@ -354,6 +243,19 @@ public class MqttServletGameServer implements MqttCallback {
 	}
 	public void setListPlayer(List<Player> listPlayer) {
 		this.listPlayer = listPlayer;
+	}
+	@Override
+	public void actionPerformed(RoomEvent event) {
+		
+		
+		String content = "cmd="+event.getAction()+"&id="+event.getSource().getRoomID();
+		if(event.getAction()==RoomAction.GAMEACTION)
+		{
+			GameEvent ge = (GameEvent) event.agruments.get("gameevent");
+			content+="gameEvent="+ge.getAction()+"&id="+ge.getSource().getId();
+		}
+		this.sender.add(MqttServletGameServer.SERVER_TOPIC+"/room/"+event.getSource().getRoomID(), content);
+		
 	}
 	
 
