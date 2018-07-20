@@ -32,6 +32,8 @@ import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 import com.fcs.pokerserver.Sender;
+import com.fcs.pokerserver.events.GameEvent;
+import com.fcs.pokerserver.events.RoomAction;
 import com.fcs.pokerserver.events.RoomEvent;
 import com.fcs.pokerserver.events.RoomListener;
 import com.fsc.pokerserver.web.RoomServlet;
@@ -247,6 +249,11 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		
 		
 		String content = "cmd="+event.getAction()+"&id="+event.getSource().getRoomID();
+		if(event.getAction()==RoomAction.GAMEACTION)
+		{
+			GameEvent ge = (GameEvent) event.agruments.get("gameevent");
+			content+="gameEvent="+ge.getAction()+"&id="+ge.getSource().getId();
+		}
 		this.sender.add(MqttServletGameServer.SERVER_TOPIC+"/room/"+event.getSource().getRoomID(), content);
 		
 	}
