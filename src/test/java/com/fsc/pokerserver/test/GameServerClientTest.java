@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.fcs.pokerserver.Sender;
+import com.fcs.pokerserver.gameserver.Sender;
 
 /*
  * http://localhost:8080/api/register?username=habogay&password=123456

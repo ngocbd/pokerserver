@@ -1,4 +1,4 @@
-package com.fcs.pokerserver;
+package com.fcs.pokerserver.gameserver;
 
 import java.util.LinkedList;
 import java.util.Queue;
