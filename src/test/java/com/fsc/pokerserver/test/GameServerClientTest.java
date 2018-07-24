@@ -32,21 +32,25 @@ import com.google.api.client.repackaged.com.google.common.base.Throwables;
 
 
 /*
+ * Url to get content
  * create player
- * http://localhost:8080/api/register?username=habogay&password=123456
+ * http://localhost:8080/api/register?username=hbg1&password=123456
  * 
  * player login
- * http://localhost:8080/api/login?username=habogay&password=123456
+ * http://localhost:8080/api/login?username=hbg1&password=123456
  * 
  * create room
- * http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImRhaWNhIn0.n3ETnk6P6Hw42xjx78iRYGBJc93rbHWCfW3KiZe-LmI&method=put
+ * http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhiZzEifQ.czIr3dIp9wMDzKwDzeun_a8eU8LizqA2urjctiUNT4M&method=put
  * 
  * get list room
- * http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImRhaWNhIn0.n3ETnk6P6Hw42xjx78iRYGBJc93rbHWCfW3KiZe-LmI&method=get
+ * http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhiZzEifQ.czIr3dIp9wMDzKwDzeun_a8eU8LizqA2urjctiUNT4M&method=get
  * 
  * player join room
- * http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhhYm9nYXkifQ.AkzXqdFjQRpM09hngtx2aP7jyX3OLbdJWPItAPjmBTg&method=join&id=1531887589128
+ * http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhiZzEifQ.czIr3dIp9wMDzKwDzeun_a8eU8LizqA2urjctiUNT4M&method=join&id=1531887589128
  * 
+ * 
+ * 
+ * List token of players.
  * String arr[]= {"gio1","hbg1","poke1","agru1","kuki1"};
  * gio1: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImdpbzEifQ.LUgFtexXVwBXQDPi3acL02tdpXZ4dtlNW7E700jilkI
  * hbg1: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhiZzEifQ.czIr3dIp9wMDzKwDzeun_a8eU8LizqA2urjctiUNT4M
