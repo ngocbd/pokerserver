@@ -26,9 +26,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.fcs.pokerserver.Sender;
+
+import com.fcs.pokerserver.gameserver.Sender;
+
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 import com.google.api.client.repackaged.com.google.common.base.Throwables;
+
 
 
 /*
