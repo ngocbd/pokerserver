@@ -411,7 +411,8 @@ public class Game implements PlayerListener {
 	@Override
 	public void actionPerformed(PlayerEvent event) {
 		Player p = event.getSource();
-		assert p==this.getCurrentPlayer();
+		if(this.getCurrentPlayer()==null)System.out.println("true");
+		assert p.hashCode()==this.getCurrentPlayer().hashCode();
 //		System.out.println(event.getAction());
 		if(listPlayer.contains(p))
 		{

@@ -64,8 +64,7 @@ public class Room implements GameListener {
 		re.agruments.put("player", p);
 
 		this.fireEvent(re);
-//		String content = "cmd=playerJoin&id="+p.getName();
-//		this.server.sender.add(MqttServletGameServer.SERVER_TOPIC+"/room/"+this.getRoomID(), content);
+
 
 	}
 
@@ -120,9 +119,6 @@ public class Room implements GameListener {
 		this.createNewGame();
 		this.addPlayer(master);
 
-//		String content = "cmd=playerJoin&id="+master.getName();
-//		this.server.sender.add(MqttServletGameServer.SERVER_TOPIC+"/room/"+this.getRoomID(), content);
-		
 		
 
 	}
@@ -130,7 +126,7 @@ public class Room implements GameListener {
 	public Game createNewGame() {
 		this.currentGame = new Game(this);
 		this.currentGame.addGameListener(this);
-		//this.currentGame.addPlayer(this.master);
+		this.currentGame.addPlayer(this.master);
 
 
 		//TODO not good because game event should fire from game
@@ -140,8 +136,7 @@ public class Room implements GameListener {
 
 		this.fireEvent(re);
 
-//		String content = "cmd=gameCreated&id="+this.currentGame.getId();
-//		this.server.sender.add(MqttServletGameServer.SERVER_TOPIC+"/room/"+this.getRoomID(), content);
+
 		return this.currentGame;
 	}
 
@@ -163,8 +158,6 @@ public class Room implements GameListener {
 
 		this.fireEvent(re);
 
-//		String content = "cmd="+event.getAction()+"&id="+this.currentGame.getId();
-//		this.server.sender.add(MqttServletGameServer.SERVER_TOPIC+"/room/"+this.getRoomID(), content);
 
 	}
 

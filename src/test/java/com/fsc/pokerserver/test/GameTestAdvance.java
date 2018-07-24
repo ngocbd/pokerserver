@@ -22,6 +22,7 @@ public class GameTestAdvance {
 	public void setUp() throws Exception {
 		master = new Player("Room master");
 		room = new Room(master, BlindLevel.BLIND_10_20);
+		
 	}
 
 	/*
@@ -191,6 +192,28 @@ public class GameTestAdvance {
 
 		assertSame("Small Blind", game.getSmallBlind(), player4);
 	}
+	
+	/*
+	 * Get the total of player in game
+	 * */
+	@Test
+	public void testGetPlayerInGame() {
+		Game game = room.createNewGame();
+		
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		
+		// set other player(player3) is the Dealer
+		game.setDealer(player3);
+		game.startGame();
+
+		assertSame("Total of player",  4,game.getListPlayer().size());
+	}
+	
 	/*
 	 * Get the BigBlind from the SmallBlind (the other player is Dealer)
 	 * */
@@ -209,7 +232,7 @@ public class GameTestAdvance {
 		game.setDealer(player3);
 		game.startGame();
 
-		assertSame("Big Blind", game.getBigBlind(), master);
+		assertSame("Big Blind",  master,game.getBigBlind());
 	}
 	
 	
@@ -287,6 +310,40 @@ public class GameTestAdvance {
 		game.preflop();
 		
 		assertEquals(master.getBalance(), 990);
+	}
+	
+	/*
+	 * current player in Flop not bet
+	 * */
+	@Test
+	public void testGetCurrentPlayerAfterFreFlopNotBet() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		
+		assertEquals(game.getNextPlayer(player2), player3);
+		
+		
+//		assertEquals(game.getCurrentPlayer(), player3);
 	}
 	
 	/*  
