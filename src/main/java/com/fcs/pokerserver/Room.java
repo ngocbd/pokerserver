@@ -30,13 +30,12 @@ import com.fcs.pokerserver.events.GameListener;
 import com.fcs.pokerserver.events.RoomAction;
 import com.fcs.pokerserver.events.RoomEvent;
 import com.fcs.pokerserver.events.RoomListener;
-import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 
 public class Room implements GameListener {
 	Game currentGame = null;
 	long RoomID;
 	Player master = null;
-	MqttServletGameServer server = null;
+	
 	private List<Player> listPlayer = new ArrayList<Player>();
 
 	private List<RoomListener> listeners = new ArrayList<RoomListener>();
@@ -115,9 +114,9 @@ public class Room implements GameListener {
 	public Room(Player master, BlindLevel blindLevel) {
 		this.master = master;
 		this.blindLevel = blindLevel;
-		;
+		
 		this.RoomID = System.currentTimeMillis();
-		this.server = MqttServletGameServer.getInstance();
+		
 		this.createNewGame();
 		this.addPlayer(master);
 
