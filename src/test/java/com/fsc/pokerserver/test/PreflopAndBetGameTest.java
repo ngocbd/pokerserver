@@ -1,0 +1,384 @@
+package com.fsc.pokerserver.test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+import com.fcs.pokerserver.BlindLevel;
+import com.fcs.pokerserver.Deck;
+import com.fcs.pokerserver.Game;
+import com.fcs.pokerserver.Player;
+import com.fcs.pokerserver.Room;
+
+public class PreflopAndBetGameTest {
+	Player master;
+	Room room;
+
+	@Before
+	public void setUp() throws Exception {
+		master = new Player("Room master");
+		room = new Room(master, BlindLevel.BLIND_10_20);
+		
+	}
+
+
+/*--------------------- Preflop And Bet -----------------------*/
+	
+	
+	/*
+	 * Get the pot from the small blind in Preflop
+	 * */
+	@Test
+	public void testGetBalanceOfSmallBlindInFreFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+
+		game.preflop();
+		
+		assertEquals(master.getBalance(), 990);
+	}
+	
+	/*
+	 * current player in Flop not bet
+	 * */
+	@Test
+	public void testGetCurrentPlayerAfterFreFlopNotBet() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		
+		assertEquals(game.getNextPlayer(player2), player3);
+		
+		
+//		assertEquals(game.getCurrentPlayer(), player3);
+	}
+	
+	/*  
+	 * Get current player in Flop.
+	 * */
+	@Test
+	public void testGetCurrentPlayerAfterPlayerFoldAfterPreFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.fold();
+		player4.bet(20);
+		player5.bet(30);
+		master.bet(20);
+		player2.bet(10);
+		
+		
+		
+		assertEquals(game.getCurrentPlayer(), player4);
+	}
+	
+	
+	/*
+	 * Get the balance from the big blind in Preflop
+	 * */
+	@Test
+	public void testGetBalanceOfBigBlindInFreFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+
+		game.preflop();
+		
+		assertEquals(player2.getBalance(), 980);
+	}
+	
+	/*
+	 * Get the pot from the small blind and big blind in Preflop
+	 * */
+	@Test
+	public void testPotFromSBAndBBInFreFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+
+		game.preflop();
+
+		assertEquals(game.getPotBalance(), 30);
+	}
+	
+	/*
+	 * Get the pot after the player is under the gun bet in Preflop
+	 * */
+	@Test
+	public void testGetPotAfterUnderTheGunBetInPreflop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+
+		game.preflop();
+		//player is Dealer. master is smallblind. player2 is bigblind. player3 is underthegun.
+		player3.bet(70);
+
+		assertEquals(game.getPotBalance(), 100);
+
+	}
+	
+	/*
+	 * Get the pot from the small blind and big blind. Player3 and player4 bet in Preflop
+	 * */
+	@Test
+	public void testPotIsBetInFreFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+		
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+
+		game.preflop();
+		
+		//player bet
+		player3.bet(70);
+		player4.bet(250);
+		
+		assertEquals(game.getPotBalance(), 350);
+	}
+	
+	/*
+	 * 5 players: master, player2(p2), player3(p3), player4(p4), player5(p5)
+	 * Dealer is p5. So, SB is master, BB is p2, UTG is the p3. 
+	 * In preflop, the first call is p3.  
+	 * */
+	@Test
+	public void testTurnAndBetAndGetPotInPreFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(20);
+		player4.bet(20);
+		player5.bet(30);
+		master.bet(20);
+		player2.bet(10);
+		player3.bet(10);
+		player4.bet(10);
+		
+//		game.flop();
+
+		assertEquals(game.getPotBalance(), 150);
+	}
+	
+	
+	/*
+	 * Check turn player bet is correct.
+	 * */
+	@Test(expected = AssertionError.class)
+	public void testTurnGameInPreFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+//		it's error when player4 bet before player3
+		player4.bet(20);
+		player3.bet(20);
+		player5.bet(20);
+		master.bet(10);
+		
+//		game.flop();
+	}
+	
+	
+	/*
+	 * Get current player in preflop.
+	 * */
+	@Test
+	public void testCurrentPlayerInPreFlop() {
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+		Player player3 = new Player();
+		game.addPlayer(player3);
+		Player player4 = new Player();
+		game.addPlayer(player4);
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(player5);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+
+		game.startGame();
+		
+		game.preflop();
+		player3.bet(20);
+		player4.bet(20);
+//		player5.bet(20);
+//		master.bet(10);
+		
+//		game.flop();
+		
+		assertEquals(game.getCurrentPlayer(), player5);
+	}
+		
+}
