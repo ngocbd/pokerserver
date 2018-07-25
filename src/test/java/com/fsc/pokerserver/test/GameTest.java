@@ -241,13 +241,13 @@ public class GameTest {
 		Game game = room.createNewGame();
 		
 
-		Player player2 = new Player();
+		Player player2 = new Player("Player 2");
 		game.addPlayer(player2);
-		Player player3 = new Player();
+		Player player3 = new Player("Player 3");
 		game.addPlayer(player3);
-		Player player4 = new Player();
+		Player player4 = new Player("Player 4");
 		game.addPlayer(player4);
-		Player player5 = new Player();
+		Player player5 = new Player("Player 5");
 		game.addPlayer(player5);
 		
 		game.setDealer(player5);
@@ -261,7 +261,8 @@ public class GameTest {
 		game.startGame();
 
 		game.preflop();
-
+		System.out.println(game.getSmallBlind());
+		System.out.println(game.getBigBlind());
 		assertEquals(player2.getBalance(), 980);
 
 	}
@@ -778,12 +779,7 @@ public class GameTest {
 		player4.check();
 		player5.check();
 		
-//		System.out.println(game.getRound());
-//		System.out.println(master.getRound());
-//		System.out.println(player2.getRound());
-//		System.out.println(player3.getRound());
-//		System.out.println(player4.getRound());
-//		System.out.println(player5.getRound());
+
 		game.turn();
 		
 		assertEquals(game.getCurrentPlayer(), master);
@@ -1159,6 +1155,35 @@ public class GameTest {
 
 		
 
+	}
+	public static void main(String[] args) {
+		Player master = new Player("Room master");
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
+		Game game = room.createNewGame();
+
+		Player player2 = new Player();
+		game.addPlayer(player2);
+
+		Player player3 = new Player();
+		game.addPlayer(player3);
+
+		Player player4 = new Player();
+		game.addPlayer(player4);
+
+		Player player5 = new Player();
+		game.addPlayer(player5);
+
+		game.setDealer(master);
+
+		master.setBalance(1000);
+		player2.setBalance(1000);
+		player3.setBalance(1000);
+		player4.setBalance(1000);
+		player5.setBalance(1000);
+		game.startGame();
+		game.preflop();
+		System.out.println(game.getListPlayer().size());
+		
 	}
 
 }

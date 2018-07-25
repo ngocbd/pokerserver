@@ -147,11 +147,11 @@ public class Game implements PlayerListener {
 
 	public void turn() {
 		assert this.isNextRoundReady();
-		for (Player player : listPlayer) {
-			
-			assert player.isSittingOut() || player.didCommandThisTurn();
-			player.nextRound();
-		}
+//		for (Player player : listPlayer) {
+//			
+//			assert player.isSittingOut() || player.didCommandThisTurn();
+//			player.nextRound();
+//		}
 		Card card = this.deck.dealCard();
 		this.getBoard().addCard(card);
 		GameEvent gameEvent=  new GameEvent(this, GameAction.TURN);
@@ -265,6 +265,7 @@ public class Game implements PlayerListener {
 	}
 	public Player getNextPlayer(Player p)
 	{
+		assert listPlayer.contains(p) ;
 		Player temp = null;
 		for(int i = 0; i < this.getListPlayer().size(); i++){
 			//Find the player we are starting at
@@ -274,6 +275,7 @@ public class Game implements PlayerListener {
 				break;
 			}
 		}
+		
 		if(temp.isSittingOut())
 		{
 			return getNextPlayer(temp);
@@ -285,7 +287,15 @@ public class Game implements PlayerListener {
 	}
 
 	public void setDealer(Player dealer) {
-
+		
+		assert this.listPlayer.contains(dealer);
+		this.dealer = dealer;
+		this.smallBlind= this.getNextPlayer(this.dealer);
+		
+		this.bigBlind= this.getNextPlayer(this.smallBlind);
+		
+		
+/*
 		// kt dk neeu add 1 thang mat day ko co trong playerlist thi error
 
 		if (listPlayer.contains(dealer)) {
@@ -322,7 +332,7 @@ public class Game implements PlayerListener {
 		} else {
 			throw new AssertionFailedError("Player not in Game");
 		}
-
+*/
 	}
 
 	public Player getBigBlind() {
@@ -411,8 +421,8 @@ public class Game implements PlayerListener {
 	@Override
 	public void actionPerformed(PlayerEvent event) {
 		Player p = event.getSource();
-		if(this.getCurrentPlayer()==null)System.out.println("true");
-		assert p.hashCode()==this.getCurrentPlayer().hashCode();
+		
+		assert p==this.getCurrentPlayer();
 //		System.out.println(event.getAction());
 		if(listPlayer.contains(p))
 		{

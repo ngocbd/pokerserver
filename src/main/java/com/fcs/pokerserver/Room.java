@@ -30,7 +30,6 @@ import com.fcs.pokerserver.events.GameListener;
 import com.fcs.pokerserver.events.RoomAction;
 import com.fcs.pokerserver.events.RoomEvent;
 import com.fcs.pokerserver.events.RoomListener;
-import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 
 public class Room implements GameListener {
 	Game currentGame = null;
@@ -118,13 +117,20 @@ public class Room implements GameListener {
 		this.RoomID = System.currentTimeMillis();
 		
 		this.createNewGame();
-		this.addPlayer(master);
+		
 
 		
 
 	}
 
 	public Game createNewGame() {
+		if(this.currentGame!=null)
+		{
+			if(this.currentGame.getStatus()!=GameStatus.END_HAND)
+			{
+				return this.currentGame;
+			}
+		}
 		this.currentGame = new Game(this);
 		this.currentGame.addGameListener(this);
 		this.currentGame.addPlayer(this.master);
