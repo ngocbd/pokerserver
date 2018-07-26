@@ -1,5 +1,8 @@
 package com.fsc.pokerserver.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -12,7 +15,10 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 
 
 
@@ -32,6 +38,9 @@ import org.junit.Test;
  * 
  * player join room
  * http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhiZzEifQ.czIr3dIp9wMDzKwDzeun_a8eU8LizqA2urjctiUNT4M&method=join&id=1531887589128
+ * 
+ *  player start game in room
+ * http://localhost:8080/api/game?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhiZzEifQ.czIr3dIp9wMDzKwDzeun_a8eU8LizqA2urjctiUNT4M&method=start
  * 
  * 
  * 
@@ -71,8 +80,8 @@ public class GameServerClientTest implements MqttCallback {
 	
 	@Before
 	public void setUp() throws Exception {
-//		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
-//		Thread.sleep(2000);
+		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
+		Thread.sleep(2000);
 	}
 	
 	/*
@@ -124,6 +133,22 @@ public class GameServerClientTest implements MqttCallback {
 	}
 	
 	/*
+	 * Check value is Numeric
+	 * */
+	public static boolean isNumeric(String str)  
+	{  
+	  try  
+	  {  
+	    double d = Double.parseDouble(str);  
+	  }  
+	  catch(NumberFormatException nfe)  
+	  {  
+	    return false;  
+	  }  
+	  return true;  
+	}
+	
+	/*
 	 * Create player
 	 * */
 //	@Test
@@ -142,11 +167,22 @@ public class GameServerClientTest implements MqttCallback {
 //	}
 
 	
+	/*
+	 * Create player but player is exist
+	 * */
+	@Test(expected = AssertionError.class) @Ignore
+	public void testCreatePlayerExist()  throws IOException, ClientProtocolException{
+		String username = "hbg1";
+		String url = "http://localhost:8080/api/register?username="+username+"&password=123456";
+		assertEquals(this.getContentFromUrl(url), username);
+		
+	}
+	
 	
 	/*
 	 * Player login
 	 * */
-	@Test
+	@Test @Ignore
 	public void testLogin() throws ClientProtocolException, IOException  {
 //		create player array to get token array of player to join room.
 //		String arr[]= {"gio1","hbg1","poke1","agru1","kuki1"};
@@ -162,60 +198,245 @@ public class GameServerClientTest implements MqttCallback {
 	}
 	
 	/*
+	 * Player login error
+	 * */
+	@Test(expected = AssertionError.class) @Ignore
+	public void testLoginWithPlayerNotRegister() throws ClientProtocolException, IOException  {
+
+		String username = "mai";
+		String url = "http://localhost:8080/api/login?username="+username+"&password=123456";
+		this.getContentFromUrl(url);
+		assertEquals(this.getContentFromUrl(url), "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImFncnUxIn0._NXg4_vRYyu8ntaHROfVdu8snHxGirmzNlMav-96fZ4");
+	}
+	
+	/*
 	 * Create room
 	 * */
-//	@Test
-//	public void testCreateRoom()   throws IOException, ClientProtocolException{
-//		try {
-//			String url = "http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhiZzEifQ.czIr3dIp9wMDzKwDzeun_a8eU8LizqA2urjctiUNT4M&method=put";
-//			System.out.println(this.getContentFromUrl(url));
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//			System.out.println(e.getMessage());
-//		}
-//		
-//	}
+	@Test @Ignore
+	public void testCreateRoom()   throws IOException, ClientProtocolException{
+		//Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		// Array Token of Players
+		String token[] = this.getTokenPlayer();
+		
+		//Player login
+		for(int i = 0;i<arr.length;i++)
+		{
+			String url = "http://localhost:8080/api/login?username="+arr[0]+"&password=123456";
+			this.getContentFromUrl(url);
+		}
+		
+		//create room
+		String url = "http://localhost:8080/api/room?token="+token[0]+"&method=put";
+		this.getContentFromUrl(url);
+	
+		
+		
+	}
 	
 	
 	/*
-	 * create room and join room.
+	 * Create room With Token not login or Not Exist
+	 * */
+	@Test(expected = AssertionError.class)@Ignore
+	public void testCreateRoomTokenError()   throws IOException, ClientProtocolException{
+		//Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		
+		//Player login
+		for(int i = 0;i<arr.length;i++)
+		{
+			String url = "http://localhost:8080/api/login?username="+arr[0]+"&password=123456";
+			this.getContentFromUrl(url);
+		}
+		
+		//create room
+		// Player have token that Player dont login
+		String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6InRpdDEifQ.qpOQ6sLLzhdyX-bl7H4cEi-le-cz2QuZe2ZhVOaH-Ls";
+		String url = "http://localhost:8080/api/room?token="+token+"&method=put";
+		assertEquals(isNumeric(this.getContentFromUrl(url)), true);	
+	}
+	
+	
+	/*
+	 * Join room.
 	 * */
 	@Test
 	public void testJoinRoom()  throws IOException, ClientProtocolException{
-//		String arr[] = {"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImdpbzEifQ.LUgFtexXVwBXQDPi3acL02tdpXZ4dtlNW7E700jilkI","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhiZzEifQ.czIr3dIp9wMDzKwDzeun_a8eU8LizqA2urjctiUNT4M","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6InBva2UxIn0.3Hk9VnA32dhgk5sA_LnKENnyTkJ4pQIL1GF1HDetEDc","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImFncnUxIn0._NXg4_vRYyu8ntaHROfVdu8snHxGirmzNlMav-96fZ4","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6Imt1a2kxIn0.1ZOy2qKYzZBEutMHFQtxmKoeKRv8DL9Pk90RQq_boOY"};
+		// Array Token of Players
 		String token[] = this.getTokenPlayer();
-//		for(int i=0;i<token.length;i++)
-//		{
-//			System.out.println(token[i]);
-//		}
-//		System.out.println("Length: "+token.length);
+		//Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		
+		//Player login
+		for(int i = 0;i<arr.length;i++)
+		{
+			String url = "http://localhost:8080/api/login?username="+arr[0]+"&password=123456";
+			this.getContentFromUrl(url);
+		}
+		
+		//create room
 		String urlCreateRoom = "http://localhost:8080/api/room?token="+token[0]+"&method=put";
 		String id = this.getContentFromUrl(urlCreateRoom);
+		
+		//join room
+		for(int i=0;i<token.length;i++)
+		{
+			String url = "http://localhost:8080/api/room?token="+token[i]+"&method=join&id="+id;
+			this.getContentFromUrl(url);
+//			System.out.println(this.getContentFromUrl(url));
+		}
+		
+	}
+	
+	/*
+	 * Join room With token error.
+	 * */
+	@SuppressWarnings("deprecation")
+	@Test(expected = AssertionError.class)@Ignore
+	public void testJoinRoomWithTokenError()  throws IOException, ClientProtocolException{
+		// Array Token of Players
+		String token[] = this.getTokenPlayer();
+		//Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		
+		//Player login
+		for(int i = 0;i<arr.length;i++)
+		{
+			String url = "http://localhost:8080/api/login?username="+arr[0]+"&password=123456";
+			this.getContentFromUrl(url);
+		}
+		
+		//create room
+		String urlCreateRoom = "http://localhost:8080/api/room?token="+token[0]+"&method=put";
+		String id = this.getContentFromUrl(urlCreateRoom);
+		
+		//join room
+		String titToken= "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6InRpdDEifQ.qpOQ6sLLzhdyX-bl7H4cEi-le-cz2QuZe2ZhVOaH-Ls";
+		String urlJoin = "http://localhost:8080/api/room?token="+titToken+"&method=join&id="+id;
+		this.getContentFromUrl(urlJoin);
+		float lengthUrlJoinFirst = this.getContentFromUrl(urlJoin).length();
+		float sumLengthUrlJoin = 0;
+		for(int i=1;i<token.length;i++)
+		{
+			String url = "http://localhost:8080/api/room?token="+token[i]+"&method=join&id="+id;
+			this.getContentFromUrl(url);
+			sumLengthUrlJoin+=this.getContentFromUrl(url).length();
+		}
+		float value = sumLengthUrlJoin/(token.length-1);
+		assertEquals(value, lengthUrlJoinFirst);
+		
+	}
+	
+
+	/*
+	 * Join room with room id error.
+	 * */
+	@Test(expected = AssertionError.class)
+	public void testJoinRoomWithRoomIdError()  throws IOException, ClientProtocolException{
+		// Array Token of Players
+		String token[] = this.getTokenPlayer();
+		//Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		
+		//Player login
+		for(int i = 0;i<arr.length;i++)
+		{
+			String url = "http://localhost:8080/api/login?username="+arr[0]+"&password=123456";
+			this.getContentFromUrl(url);
+		}
+		
+		//create room to get room id
+		//room id error
+		String id = "1532594321491";
+		int sumOfLength=0;
+		//join room
+		for(int i=0;i<token.length;i++)
+		{
+			String url = "http://localhost:8080/api/room?token="+token[i]+"&method=join&id="+id;
+			this.getContentFromUrl(url);
+			sumOfLength+= this.getContentFromUrl(url).length();
+		}
+		int value = sumOfLength/token.length;
+		assertNotEquals(value, 6);
+	}
+	
+	/*
+	 * Get list of room
+	 * */
+	@Test @Ignore
+	public void testGetListRooms()  throws IOException, ClientProtocolException{
+		// Array Token of Players
+		String token[] = this.getTokenPlayer();
+		//Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		
+		//Player login
+		for(int i = 0;i<arr.length;i++)
+		{
+			String url = "http://localhost:8080/api/login?username="+arr[0]+"&password=123456";
+			this.getContentFromUrl(url);
+		}
+		
+		//create room
+		String urlCreateRoom = "http://localhost:8080/api/room?token="+token[0]+"&method=put";
+		String id = this.getContentFromUrl(urlCreateRoom);
+		
+		//join room
 		for(int i=0;i<token.length;i++)
 		{
 			String url = "http://localhost:8080/api/room?token="+token[i]+"&method=join&id="+id;
 			this.getContentFromUrl(url);
 		}
 		
-	}
-	
-	/*
-	 * Get list of room
-	 * */
-	@Test
-	public void testGetListRooms()  throws IOException, ClientProtocolException{
-		String token[] = this.getTokenPlayer();
 		String urlGetListRoom = "http://localhost:8080/api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImdpbzEifQ.LUgFtexXVwBXQDPi3acL02tdpXZ4dtlNW7E700jilkI&method=get";
 //		System.out.println(this.getContentFromUrl(urlGetListRoom));
 		this.getContentFromUrl(urlGetListRoom);
+	}
+	
+	/*
+	 * Start Game in Room
+	 * */
+	@Test @Ignore
+	public void testStartGame()  throws IOException, ClientProtocolException{
+		// Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		// Array Token of Players
+		String token[] = this.getTokenPlayer();
+		
+		//Player login
+
+		for(int i = 0;i<arr.length;i++)
+		{
+			String url = "http://localhost:8080/api/login?username="+arr[0]+"&password=123456";
+			this.getContentFromUrl(url);
+		}
+		
+		//create room
+		String urlCreateRoom = "http://localhost:8080/api/room?token="+token[0]+"&method=put";
+		String id = this.getContentFromUrl(urlCreateRoom);
+		
+		//join room
+		String createRoom = "http://localhost:8080/api/room?token="+token[0]+"&method=put";
+		String idRoom = this.getContentFromUrl(createRoom);
+		for(int i=0;i<token.length;i++)
+		{
+			String url = "http://localhost:8080/api/room?token="+token[i]+"&method=join&id="+idRoom;
+			this.getContentFromUrl(url);
+		}
+		
+		//startgame
+		String startGame = "http://localhost:8080/api/game?token="+token[0]+"&method=start";
+		this.getContentFromUrl(startGame);
+//		System.out.println(this.getContentFromUrl(startGame));
+	
 	}
 	
 	
 
 	@Override
 	public void connectionLost(Throwable cause) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stubs
 		
 	}
 
