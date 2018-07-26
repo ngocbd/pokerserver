@@ -51,7 +51,7 @@ public class GameServlet extends HttpServlet {
 			
 			p.getCurrentGame().startGame();
 			
-			
+			response.getWriter().println("Start Game Successful");
 			
 			
 			return;

@@ -156,7 +156,8 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	MqttClient myClient;
 	MqttConnectOptions connOpt;
 
-	static final String BROKER_URL = "tcp://broker.mqttdashboard.com:1883";
+//	static final String BROKER_URL = "tcp://broker.mqttdashboard.com:1883";
+	static final String BROKER_URL = "tcp://localhost:1883";
 	static final String SERVER_TOPIC = "/pokerserver/server";
 
 	/**
