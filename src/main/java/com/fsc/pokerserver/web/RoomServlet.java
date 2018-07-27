@@ -60,11 +60,18 @@ public class RoomServlet extends HttpServlet {
 		Room room = server.getRoomByID(Long.parseLong(id));
 
 		checkNotNull(room, "Room " + id + " not found");
-
+		
+		System.out.println("player name: "+p.getName());
+		System.out.println("Room Id: "+room.getRoomID());
+		for (int i = 0; i < room.getListPlayer().size(); i++) {
+			System.out.println("Player Name in Room: "+room.getListPlayer().get(i).getName());
+		}
+		System.out.println("Player in room: "+room.getListPlayer().size());
+		
 		room.addPlayer(p);
 		
 		//TODO return more data ex Blind level ,  player balance  , game status ...
-		String data = Joiner.on(",").join(this.server.getListPlayer());
+		String data = Joiner.on(",").join(room.getListPlayer());
 
 		response.getWriter().println(data);
 
