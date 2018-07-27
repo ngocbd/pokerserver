@@ -51,7 +51,20 @@ public class GameServlet extends HttpServlet {
 			
 			p.getCurrentGame().startGame();
 			
-			response.getWriter().println("Start Game Successful");
+//			response.getWriter().println("Start Game Successful");
+			
+			
+			return;
+		}
+		else if("preflop".equalsIgnoreCase(method))
+		{
+			
+			Player p = (Player) request.getAttribute("player");
+			
+			
+			p.getCurrentGame().preflop();
+			
+			response.getWriter().println("Preflop");
 			
 			
 			return;
