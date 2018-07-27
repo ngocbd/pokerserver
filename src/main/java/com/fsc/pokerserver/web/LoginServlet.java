@@ -48,12 +48,17 @@ public class LoginServlet extends HttpServlet {
     
     checkArgument(password!=null, "password can't not be null"); 
     
+    MqttServletGameServer server = MqttServletGameServer.getInstance();
+    
+    Player exist = server.getListPlayer().stream().filter(p -> p.getName().equals(username)).findAny().orElse(null);
+    
+    checkArgument(exist==null,"User logged-in ready !!!!");
     
     User user = ofy().load().type(User.class).id(username).safe();
     checkArgument( password.equals(user.getPassword()) , "Incorrect Password");
     
     Player p = new Player(username);
-    MqttServletGameServer.getInstance().addPlayer(p);
+    server.addPlayer(p);
     String token = JWT.create()
 	        .withIssuer("pokerserver")
 	        .withJWTId(username)
