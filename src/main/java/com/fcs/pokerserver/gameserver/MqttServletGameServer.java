@@ -157,6 +157,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	MqttConnectOptions connOpt;
 
 	static final String BROKER_URL = "tcp://broker.mqttdashboard.com:1883";
+//	static final String BROKER_URL = "tcp://localhost:1883";
 	static final String SERVER_TOPIC = "/pokerserver/server";
 
 	/**
@@ -247,12 +248,17 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	public void actionPerformed(RoomEvent event) {
 		
 		
-		String content = "cmd="+event.getAction()+"&id="+event.getSource().getRoomID();
+		String content = "cmd="+event.getAction()+"&roomid="+event.getSource().getRoomID();
 		if(event.getAction()==RoomAction.GAMEACTION)
 		{
 			GameEvent ge = (GameEvent) event.agruments.get("gameevent");
-			content+="gameEvent="+ge.getAction()+"&id="+ge.getSource().getId();
-		}
+			content+="&gameEvent="+ge.getAction()+"&gameid="+ge.getSource().getId();
+		}else if(event.getAction()==RoomAction.PLAYERJOINEDROOM)
+		{
+//			Player p = (Player) event.agruments.get("p");
+//			content+="&playerid="+p.getId();
+		} 
+		
 		this.sender.add(MqttServletGameServer.SERVER_TOPIC+"/room/"+event.getSource().getRoomID(), content);
 		
 	}

@@ -60,9 +60,9 @@ public class Room implements GameListener {
 
 			this.currentGame.addPlayer(p);
 		}
-		RoomEvent re = new RoomEvent(this, RoomAction.PLAYERJOINED);
+		RoomEvent re = new RoomEvent(this, RoomAction.PLAYERJOINEDROOM);
 		re.agruments.put("player", p);
-
+		
 		this.fireEvent(re);
 
 
