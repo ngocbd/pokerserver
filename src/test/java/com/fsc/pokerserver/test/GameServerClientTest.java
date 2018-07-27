@@ -80,7 +80,8 @@ import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 
 public class GameServerClientTest implements MqttCallback {
 
-	String host = "http://localhost:8080/";
+//	String host = "http://localhost:8080/";
+	String host = "http://192.168.1.187:8080/";
 	@Before
 	public void setUp() throws Exception {
 		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
