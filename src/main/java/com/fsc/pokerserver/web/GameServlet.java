@@ -13,6 +13,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fcs.pokerserver.BlindLevel;
+import com.fcs.pokerserver.GameStatus;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
@@ -49,19 +50,20 @@ public class GameServlet extends HttpServlet {
 			Player p = (Player) request.getAttribute("player");
 			p.getCurrentGame().setDealer(p);
 			int sizeOfListPlayer = p.getCurrentGame().getListPlayer().size();
-			response.getWriter().println("size of list players: "+sizeOfListPlayer);
+//			response.getWriter().println("size of list players: "+sizeOfListPlayer);
 			for(int i=0;i<sizeOfListPlayer;i++)
 			{
 				p.getCurrentGame().getListPlayer().get(i).setBalance(1000);
-				response.getWriter().println("Name number "+i+": "+p.getCurrentGame().getListPlayer().get(i).getName());;
+//				response.getWriter().println("Name number "+i+": "+p.getCurrentGame().getListPlayer().get(i).getName());;
 			}
 			
 			p.getCurrentGame().startGame();
 			
+			
 //			response.getWriter().println("Start Game Successful");
-			response.getWriter().println("Dealer: {Name: "+ p.getCurrentGame().getDealer().getName() + " ; Balance: "+p.getCurrentGame().getDealer().getBalance()+"}");
-			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+//			response.getWriter().println("Dealer: {Name: "+ p.getCurrentGame().getDealer().getName() + " ; Balance: "+p.getCurrentGame().getDealer().getBalance()+"}");
+//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
 			
 			return;
 		}
@@ -69,25 +71,39 @@ public class GameServlet extends HttpServlet {
 		{
 			
 			Player p = (Player) request.getAttribute("player");
-		
+			
 			p.getCurrentGame().preflop();
+			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
 			
-			response.getWriter().println("Preflop");
+			return;
+		}
+		else if("bet".equalsIgnoreCase(method))
+		{
+			Player p = (Player) request.getAttribute("player");
 			
+			long betValue = Long.parseLong(request.getParameter("value"));
+			p.bet(betValue);
+			response.getWriter().println("Player: "+p.getName()+"\n Bet value: "+betValue+" \n Balance of Current Player: "+p.getBalance());
 			
+		}
+		else if("flop".equalsIgnoreCase(method))
+		{
+			
+			Player p = (Player) request.getAttribute("player");
+			
+			p.getCurrentGame().flop();
+			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+		
 			return;
 		}
 		else
 		{
-			
-			
 				String data = Joiner.on(",").join(this.server.getListRoom());
-				response.getWriter().println(data);
-			
-			
-			
-			
-			
+				response.getWriter().println(data);	
 		}
 	}
 	@Override
