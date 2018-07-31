@@ -47,12 +47,21 @@ public class GameServlet extends HttpServlet {
 		{
 			
 			Player p = (Player) request.getAttribute("player");
-			
+			p.getCurrentGame().setDealer(p);
+			int sizeOfListPlayer = p.getCurrentGame().getListPlayer().size();
+			response.getWriter().println("size of list players: "+sizeOfListPlayer);
+			for(int i=0;i<sizeOfListPlayer;i++)
+			{
+				p.getCurrentGame().getListPlayer().get(i).setBalance(1000);
+				response.getWriter().println("Name number "+i+": "+p.getCurrentGame().getListPlayer().get(i).getName());;
+			}
 			
 			p.getCurrentGame().startGame();
 			
 //			response.getWriter().println("Start Game Successful");
-			
+			response.getWriter().println("Dealer: {Name: "+ p.getCurrentGame().getDealer().getName() + " ; Balance: "+p.getCurrentGame().getDealer().getBalance()+"}");
+			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
 			
 			return;
 		}
@@ -60,8 +69,7 @@ public class GameServlet extends HttpServlet {
 		{
 			
 			Player p = (Player) request.getAttribute("player");
-			
-			
+		
 			p.getCurrentGame().preflop();
 			
 			response.getWriter().println("Preflop");

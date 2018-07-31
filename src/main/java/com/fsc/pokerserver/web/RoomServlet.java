@@ -61,12 +61,11 @@ public class RoomServlet extends HttpServlet {
 
 		checkNotNull(room, "Room " + id + " not found");
 		
-		System.out.println("player name: "+p.getName());
-		System.out.println("Room Id: "+room.getRoomID());
-		for (int i = 0; i < room.getListPlayer().size(); i++) {
-			System.out.println("Player Name in Room: "+room.getListPlayer().get(i).getName());
-		}
-		System.out.println("Player in room: "+room.getListPlayer().size());
+//		System.out.println("player name: "+p.getName());
+//		System.out.println("Room Id: "+room.getRoomID());
+		
+		
+		
 		
 		room.addPlayer(p);
 		
@@ -74,7 +73,10 @@ public class RoomServlet extends HttpServlet {
 		String data = Joiner.on(",").join(room.getListPlayer());
 
 		response.getWriter().println(data);
-
+//		for (int i = 0; i < room.getListPlayer().size(); i++) {
+//			System.out.println("Player Name in Room: "+room.getListPlayer().get(i).getName());
+//		}
+//		System.out.println("Player in room: "+room.getListPlayer().size());
 	}
 
 	@Override

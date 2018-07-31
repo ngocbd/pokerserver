@@ -3,8 +3,11 @@ package com.fsc.pokerserver.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -14,6 +17,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -80,12 +85,12 @@ import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 
 public class GameServerClientTest implements MqttCallback {
 
-//	String host = "http://localhost:8080/";
-	String host = "http://192.168.1.187:8080/";
+	String host = "http://localhost:8080/";
+//	String host = "http://192.168.1.187:8080/";
 	@Before
 	public void setUp() throws Exception {
-		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
-		Thread.sleep(2000);
+//		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
+//		Thread.sleep(2000);
 	}
 	
 	/*
@@ -93,44 +98,25 @@ public class GameServerClientTest implements MqttCallback {
 	 * */
 	public String getContentFromUrl(String url)  throws ClientProtocolException, IOException
 	{
-		
-		String content="";
-		
-		HttpClient client = new DefaultHttpClient();
-		
-		HttpGet request = new HttpGet(url);
-		HttpResponse response  = client.execute(request);
-		
-		DataInputStream rd = new DataInputStream(
-				response.getEntity().getContent());
-		
-		
-		content = rd.readLine();
-		return content;
+		Document contentDoc = Jsoup.connect(url).get();
+		return contentDoc.body().text();
 	}
 	
 	/*
 	 * Get token from Player
 	 * */
-	public String[] getTokenPlayer() throws ClientProtocolException, IOException
+	public String[] getTokenPlayer(String[] arr) throws ClientProtocolException, IOException
 	{
 //		String arr[]= {"gio1","hbg1","poke1","agru1","kuki1"};
 //		String arr[]= {"loi1","xeng1","thuy1","hoan1","lam1"};
 //		String arr[]= {"tit1","thoa1","hung1","ngoc1","tuan1"};
-		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
-		String token[] = new String[5];
+//		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		String token[] = new String[arr.length];
 	
 		for(int i = 0;i<arr.length;i++)
 		{
-			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(host+"api/login?username="+arr[i]+"&password=123456");
-//			HttpGet request = new HttpGet(host+"api/login?username=hbg1&password=123456");
-			HttpResponse response  = client.execute(request);
-			
-			DataInputStream rd = new DataInputStream(
-					response.getEntity().getContent());
-			
-			token[i]=rd.readLine();
+			Document tokenDoc = Jsoup.connect(host+"api/login?username="+arr[i]+"&password=123456").get();
+			token[i] = tokenDoc.body().text();
 		}
 //		System.out.println("length of token: "+token.length);
 		return token;
@@ -152,23 +138,23 @@ public class GameServerClientTest implements MqttCallback {
 	  return true;  
 	}
 	
-	/*
-	 * Create player
-	 * */
-//	@Test
-//	public void testCreatePlayer()  throws IOException, ClientProtocolException{
-////		String arr[]= {"gio1","hbg1","poke1","agru1","kuki1"};
-////		String arr[]= {"loi1","xeng1","thuy1","hoan1","lam1"};
-////		String arr[]= {"tit1","thoa1","hung1","ngoc1","tuan1"};
-//		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
-//
-//		for(int i=0;i<arr.length;i++)
-//		{
-//			String url = host+"api/register?username="+arr[i]+"&password=123456";
-//			this.getContentFromUrl(url);
-//		}
-//		
-//	}
+//	/*
+//	 * Create player
+//	 * */
+////	@Test
+////	public void testCreatePlayer()  throws IOException, ClientProtocolException{
+//////		String arr[]= {"gio1","hbg1","poke1","agru1","kuki1"};
+//////		String arr[]= {"loi1","xeng1","thuy1","hoan1","lam1"};
+//////		String arr[]= {"tit1","thoa1","hung1","ngoc1","tuan1"};
+////		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+////
+////		for(int i=0;i<arr.length;i++)
+////		{
+////			String url = host+"api/register?username="+arr[i]+"&password=123456";
+////			this.getContentFromUrl(url);
+////		}
+////		
+////	}
 
 	
 	/*
@@ -222,7 +208,7 @@ public class GameServerClientTest implements MqttCallback {
 		//Array of Players
 		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
 		// Players login and return Array Token of Players
-		String token[] = this.getTokenPlayer();
+		String token[] = this.getTokenPlayer(arr);
 		
 		//create room
 		String url = host+"api/room?token="+token[0]+"&method=put";
@@ -257,60 +243,30 @@ public class GameServerClientTest implements MqttCallback {
 	/*
 	 * Join room.
 	 * */
-	@Test//@Ignore
+	@Test @Ignore
 	public void testJoinRoom()  throws IOException, ClientProtocolException{
-		/*
+		//Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
 		// Players login and return Array Token of Players
-		String token[] = this.getTokenPlayer();
+		String token[] = this.getTokenPlayer(arr);
 		
 		//create room
 		String urlCreateRoom = host+"api/room?token="+token[0]+"&method=put";
-		String id = this.getContentFromUrl(urlCreateRoom);
+		String roomId = this.getContentFromUrl(urlCreateRoom);
 		
 		//join room
 		System.out.println("length of token: "+token.length);
 		
 		for(int i=0;i<token.length;i++)
 		{
-			String url = host+"api/room?token="+token[i]+"&method=join&id="+id;
-			this.getContentFromUrl(url);
-			System.out.println("Player"+i+" join game: "+this.getContentFromUrl(url));
+			System.out.println("token at "+i+": "+token[i]);
+			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
+			System.out.println("Url join: "+url);
+//			this.getContentFromUrl(url);
+			Document d = Jsoup.connect(url).get();
+			System.out.println("Player"+i+" join game: "+d.text());
 		}
-		*/
-		
-		//login and get token of each player
-		
-		String urlToan = host+"api/login?username=toan1&password=123456";
-		String tokenToan = this.getContentFromUrl(urlToan);
-		String urlDanh =  host+"api/login?username=danh1&password=123456";
-		String tokenDanh = this.getContentFromUrl(urlDanh);
-		String urlLinh =  host+"api/login?username=linh1&password=123456";
-		String tokenLinh = this.getContentFromUrl(urlLinh);
-		String urlChau =  host+"api/login?username=chau1&password=123456";
-		String tokenChau = this.getContentFromUrl(urlChau);
-		String urlNghe =  host+"api/login?username=nghe1&password=123456";
-		String tokenNghe = this.getContentFromUrl(urlNghe);
-		
-		//create room. Set Toan's token is token to create room.
-		String urlCreateRoom =  host+"api/room?token="+tokenToan+"&method=put";
-		String idRoom = this.getContentFromUrl(urlCreateRoom);
-		
-		//join room. Get 5 token of players to join room.
-		String urlJoinToan =  host+"api/room?token="+tokenToan+"&method=join&id="+idRoom;
-		this.getContentFromUrl(urlJoinToan);
-//		System.out.println(this.getContentFromUrl(urlJoinToan));
-		String urlJoinDanh =  host+"api/room?token="+tokenDanh+"&method=join&id="+idRoom;
-		this.getContentFromUrl(urlJoinDanh);
-//		System.out.println(this.getContentFromUrl(urlJoinDanh));
-		String urlJoinLinh =  host+"api/room?token="+tokenLinh+"&method=join&id="+idRoom;
-		this.getContentFromUrl(urlJoinLinh);
-//		System.out.println(this.getContentFromUrl(urlJoinLinh));
-		String urlJoinChau =  host+"api/room?token="+tokenChau+"&method=join&id="+idRoom;
-		this.getContentFromUrl(urlJoinChau);
-//		System.out.println(this.getContentFromUrl(urlJoinChau));
-		String urlJoinNghe =  host+"api/room?token="+tokenNghe+"&method=join&id="+idRoom;
-		this.getContentFromUrl(urlJoinNghe);
-//		System.out.println(this.getContentFromUrl(urlJoinNghe));
+	
 	}
 	
 	/*
@@ -319,10 +275,11 @@ public class GameServerClientTest implements MqttCallback {
 	@SuppressWarnings("deprecation")
 	@Test(expected = AssertionError.class)@Ignore
 	public void testJoinRoomWithTokenError()  throws IOException, ClientProtocolException{
-		// Players login and return Array Token of Players
-		String token[] = this.getTokenPlayer();
 		//Array of Players
 		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		// Players login and return Array Token of Players
+		String token[] = this.getTokenPlayer(arr);
+		
 		
 		
 		
@@ -353,10 +310,11 @@ public class GameServerClientTest implements MqttCallback {
 	 * */
 	@Test(expected = AssertionError.class)@Ignore
 	public void testJoinRoomWithRoomIdError()  throws IOException, ClientProtocolException{
-		// Players login and return Array Token of Players
-		String token[] = this.getTokenPlayer();
 		//Array of Players
 		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		// Players login and return Array Token of Players
+		String token[] = this.getTokenPlayer(arr);
+		
 		
 		//create room to get room id
 		//room id error
@@ -378,10 +336,11 @@ public class GameServerClientTest implements MqttCallback {
 	 * */
 	@Test @Ignore
 	public void testGetListRooms()  throws IOException, ClientProtocolException{
-		// Players login and return Array Token of Players
-		String token[] = this.getTokenPlayer();
 		//Array of Players
 		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		// Players login and return Array Token of Players
+		String token[] = this.getTokenPlayer(arr);
+		
 		
 		//create room
 		String urlCreateRoom = host+"api/room?token="+token[0]+"&method=put";
@@ -404,29 +363,26 @@ public class GameServerClientTest implements MqttCallback {
 	 * */
 	@Test@Ignore
 	public void testStartGame()  throws IOException, ClientProtocolException{
-		// Array of Players
+		//Array of Players
 		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
-		for (int i = 0; i < arr.length; i++) {
-			System.out.println("Username "+i+": "+arr[i]);
-		}
-
 		// Players login and return Array Token of Players
-		String token[] = this.getTokenPlayer();
-		for (int i = 0; i < token.length; i++) {
-			System.out.println("Token "+i+": "+token[i]);
-		}
-			
+		String token[] = this.getTokenPlayer(arr);
+		
 		//create room
-		String createRoom = host+"api/room?token="+token[0]+"&method=put";
-		String idRoom = this.getContentFromUrl(createRoom);
-		System.out.println("Room id: "+idRoom);
+		String urlCreateRoom = host+"api/room?token="+token[0]+"&method=put";
+		String roomId = this.getContentFromUrl(urlCreateRoom);
 		
 		//join room
-		for(int i=1;i<token.length;i++)
+		System.out.println("length of token: "+token.length);
+		
+		for(int i=0;i<token.length;i++)
 		{
-			String url = host+"api/room?token="+token[i]+"&method=join&id="+idRoom;
-			this.getContentFromUrl(url);
-			System.out.println("join room: "+this.getContentFromUrl(url));
+			System.out.println("token at "+i+": "+token[i]);
+			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
+			System.out.println("Url join: "+url);
+//					this.getContentFromUrl(url);
+			Document d = Jsoup.connect(url).get();
+			System.out.println("Player"+i+" join game: "+d.text());
 		}
 		
 		//startgame
@@ -439,38 +395,34 @@ public class GameServerClientTest implements MqttCallback {
 	/*
 	 * Game Preflop
 	 * */
-	@Test @Ignore
+	@Test //@Ignore
 	public void testGamePreflop()  throws IOException, ClientProtocolException{
-		// Array of Players
+		//Array of Players
 		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
-		for (int i = 0; i < arr.length; i++) {
-			System.out.println("Username "+i+": "+arr[i]);
-		}
-
 		// Players login and return Array Token of Players
-		String token[] = this.getTokenPlayer();
-		for (int i = 0; i < token.length; i++) {
-			System.out.println("Token "+i+": "+token[i]);
-		}
+		String token[] = this.getTokenPlayer(arr);
 		
 		//create room
-		String createRoom = host+"api/room?token="+token[0]+"&method=put";
-		String idRoom = this.getContentFromUrl(createRoom);
-		System.out.println("room id: "+idRoom);
+		String urlCreateRoom = host+"api/room?token="+token[0]+"&method=put";
+		String roomId = this.getContentFromUrl(urlCreateRoom);
 		
 		//join room
+//		System.out.println("length of token: "+token.length);
+		
 		for(int i=1;i<token.length;i++)
 		{
-			String url = host+"api/room?token="+token[i]+"&method=join&id="+idRoom;
-			this.getContentFromUrl(url);
-			System.out.println("join room: "+this.getContentFromUrl(url));
+//			System.out.println("token at "+i+": "+token[i]);
+			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
+//			System.out.println("Url join: "+url);
+//							this.getContentFromUrl(url);
+			Document d = Jsoup.connect(url).get();
+//			System.out.println("Player"+i+" join game: "+d.text());
 		}
 		
 		//startgame
-		String startGame = host+"api/game?token="+token[1]+"&method=start";
-		System.out.println("start game url: "+startGame);
+		String startGame = host+"api/game?token="+token[0]+"&method=start";
 		this.getContentFromUrl(startGame);
-		System.out.println("start game: "+this.getContentFromUrl(startGame));
+//		System.out.println("start Game: "+this.getContentFromUrl(startGame));
 		
 		//preflop
 		String preflop = host+"api/game?token="+token[0]+"&method=preflop";
