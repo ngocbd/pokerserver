@@ -43,6 +43,7 @@ dependencies {
     compile group: 'com.sun.jersey', name: 'jersey-servlet', version: '1.18.2'
     compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.2.4.v20141103'
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.2.4.v20141103'
+    compile 'org.jsoup:jsoup:1.11.3'
     
 }
 
