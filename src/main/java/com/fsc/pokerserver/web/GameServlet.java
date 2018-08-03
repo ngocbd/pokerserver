@@ -49,6 +49,7 @@ public class GameServlet extends HttpServlet {
 			
 			Player p = (Player) request.getAttribute("player");
 			p.getCurrentGame().setDealer(p);
+		
 			int sizeOfListPlayer = p.getCurrentGame().getListPlayer().size();
 //			response.getWriter().println("size of list players: "+sizeOfListPlayer);
 			for(int i=0;i<sizeOfListPlayer;i++)
@@ -65,6 +66,12 @@ public class GameServlet extends HttpServlet {
 //			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
 //			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
 			
+			System.out.println("Start Game Successful");
+			System.out.println("Dealer: {Name: "+ p.getCurrentGame().getDealer().getName() + " ; Balance: "+p.getCurrentGame().getDealer().getBalance()+"}");
+			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+			
+			
 			return;
 		}
 		else if("preflop".equalsIgnoreCase(method))
@@ -73,9 +80,13 @@ public class GameServlet extends HttpServlet {
 			Player p = (Player) request.getAttribute("player");
 			
 			p.getCurrentGame().preflop();
-			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+//			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+			
+			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+			System.out.println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
 			
 			return;
 		}
@@ -85,8 +96,16 @@ public class GameServlet extends HttpServlet {
 			
 			long betValue = Long.parseLong(request.getParameter("value"));
 			p.bet(betValue);
-			response.getWriter().println("Player: "+p.getName()+"\n Bet value: "+betValue+" \n Balance of Current Player: "+p.getBalance());
+//			response.getWriter().println("Player: "+p.getName()+"\n Bet value: "+betValue+" \n Balance of Current Player: "+p.getBalance());
+			System.out.println("Player: "+p.getName()+"\n Bet value: "+betValue+" \n Balance of Current Player: "+p.getBalance());
+		}
+		else if("fold".equalsIgnoreCase(method))
+		{
+			Player p = (Player) request.getAttribute("player");
 			
+			p.fold();
+//			response.getWriter().println("Player: "+p.getName()+"\n Bet value: "+betValue+" \n Balance of Current Player: "+p.getBalance());
+			System.out.println("Player folded: "+p.getName());
 		}
 		else if("flop".equalsIgnoreCase(method))
 		{
@@ -94,16 +113,77 @@ public class GameServlet extends HttpServlet {
 			Player p = (Player) request.getAttribute("player");
 			
 			p.getCurrentGame().flop();
-			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+//			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+//			response.getWriter().println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
 		
+			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+			System.out.println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+			System.out.println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
+			
+			return;
+		}
+		else if("turn".equalsIgnoreCase(method))
+		{
+			
+			Player p = (Player) request.getAttribute("player");
+			
+			p.getCurrentGame().turn();
+//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+//			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+//			response.getWriter().println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
+		
+			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+			System.out.println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+			System.out.println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
+			
+			return;
+		}
+		else if("river".equalsIgnoreCase(method))
+		{
+			
+			Player p = (Player) request.getAttribute("player");
+			
+			p.getCurrentGame().river();
+//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+//			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+//			response.getWriter().println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
+		
+			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+			System.out.println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+			System.out.println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
+			
+			return;
+		}
+		else if("end".equalsIgnoreCase(method))
+		{
+			
+			Player p = (Player) request.getAttribute("player");
+			
+			p.getCurrentGame().endGame();
+//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+//			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+//			response.getWriter().println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
+		
+			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+			System.out.println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+			System.out.println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
+			
 			return;
 		}
 		else
 		{
 				String data = Joiner.on(",").join(this.server.getListRoom());
-				response.getWriter().println(data);	
+//				response.getWriter().println(data);	
+				System.out.println(data);
 		}
 	}
 	@Override

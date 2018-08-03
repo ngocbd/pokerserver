@@ -24,10 +24,10 @@ package com.fcs.pokerserver;
  */
 public enum Suit {
 
-	CLUBS("c"),
-	DIAMONDS("d"),
-	HEARTS("h"),
-	SPADES("s");
+	CLUBS("\u2663"),
+	DIAMONDS("\u2666"),
+	HEARTS("\u2665"),
+	SPADES("\u2660");
 
 	/**
 	 * Short string representation of the suit (one letter symbol).

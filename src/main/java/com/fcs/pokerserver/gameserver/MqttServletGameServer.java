@@ -244,6 +244,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	public void setListPlayer(List<Player> listPlayer) {
 		this.listPlayer = listPlayer;
 	}
+	
 	@Override
 	public void actionPerformed(RoomEvent event) {
 		

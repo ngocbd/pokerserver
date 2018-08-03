@@ -50,6 +50,12 @@ import com.fcs.pokerserver.gameserver.MqttServletGameServer;
  * game preflop
  * http://localhost:8080/api/game?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhiZzEifQ.czIr3dIp9wMDzKwDzeun_a8eU8LizqA2urjctiUNT4M&method=preflop
  * 
+ * bet game
+ * http://localhost:8080/api/game?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImNoYXUxIn0.nuXZBVlnVBZPHP0IdQ1YcFDIlaNNwQBcvxibgF8qN94&method=bet&value=25
+ * 
+ * fold game
+ * http://localhost:8080/api/game?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImhiZzEifQ.czIr3dIp9wMDzKwDzeun_a8eU8LizqA2urjctiUNT4M&method=fold
+ * 
  * 
  * 
  * List token of players.
@@ -121,6 +127,7 @@ public class GameServerClientTest implements MqttCallback {
 //		System.out.println("length of token: "+token.length);
 		return token;
 	}
+	
 	
 	/*
 	 * Check value is Numeric
@@ -257,7 +264,7 @@ public class GameServerClientTest implements MqttCallback {
 		//join room
 		System.out.println("length of token: "+token.length);
 		
-		for(int i=0;i<token.length;i++)
+		for(int i=1;i<token.length;i++)
 		{
 			System.out.println("token at "+i+": "+token[i]);
 			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
@@ -321,7 +328,7 @@ public class GameServerClientTest implements MqttCallback {
 		String id = "1532594321491";
 		int sumOfLength=0;
 		//join room
-		for(int i=0;i<token.length;i++)
+		for(int i=1;i<token.length;i++)
 		{
 			String url = host+"api/room?token="+token[i]+"&method=join&id="+id;
 			this.getContentFromUrl(url);
@@ -347,7 +354,7 @@ public class GameServerClientTest implements MqttCallback {
 		String id = this.getContentFromUrl(urlCreateRoom);
 		
 		//join room
-		for(int i=0;i<token.length;i++)
+		for(int i=1;i<token.length;i++)
 		{
 			String url = host+"api/room?token="+token[i]+"&method=join&id="+id;
 			this.getContentFromUrl(url);
@@ -373,29 +380,70 @@ public class GameServerClientTest implements MqttCallback {
 		String roomId = this.getContentFromUrl(urlCreateRoom);
 		
 		//join room
-		System.out.println("length of token: "+token.length);
+//		System.out.println("length of token: "+token.length);
 		
-		for(int i=0;i<token.length;i++)
+		for(int i=1;i<token.length;i++)
 		{
-			System.out.println("token at "+i+": "+token[i]);
+//			System.out.println("token at "+i+": "+token[i]);
 			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
-			System.out.println("Url join: "+url);
-//					this.getContentFromUrl(url);
-			Document d = Jsoup.connect(url).get();
-			System.out.println("Player"+i+" join game: "+d.text());
+//			System.out.println("Url join: "+url);
+			this.getContentFromUrl(url);
+//			Document d = Jsoup.connect(url).get();
+//			System.out.println("Player"+i+" join game: "+d.text());
 		}
 		
 		//startgame
 		String startGame = host+"api/game?token="+token[0]+"&method=start";
 		this.getContentFromUrl(startGame);
-		System.out.println("start Game: "+this.getContentFromUrl(startGame));
+//		System.out.println("start Game: "+this.getContentFromUrl(startGame));
+	
+	}
+	
+	
+	/*
+	 * Start Game in Room but player dont login
+	 * */
+	@Test(expected = AssertionError.class)@Ignore
+	public void testStartGameWithPlayerNotLogin() throws ClientProtocolException, IOException{
+		//Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		// Players login and return Array Token of Players
+		String token[] = this.getTokenPlayer(arr);
+		
+		//create room
+		String urlCreateRoom = host+"api/room?token="+token[0]+"&method=put";
+		String roomId = this.getContentFromUrl(urlCreateRoom);
+		
+		//join room
+//		System.out.println("length of token: "+token.length);
+		
+		for(int i=1;i<token.length;i++)
+		{
+//			System.out.println("token at "+i+": "+token[i]);
+			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
+//			System.out.println("Url join: "+url);
+			this.getContentFromUrl(url);
+//			Document d = Jsoup.connect(url).get();
+//			System.out.println("Player"+i+" join game: "+d.text());
+		}
+		
+		//startgame
+		/*
+		 * Gio don't login acc.
+		 * gio1: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImdpbzEifQ.LUgFtexXVwBXQDPi3acL02tdpXZ4dtlNW7E700jilkI
+		 * */
+		
+		String gioToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImdpbzEifQ.LUgFtexXVwBXQDPi3acL02tdpXZ4dtlNW7E700jilkI";
+		String startGame = host+"api/game?token="+gioToken+"&method=start";
+		this.getContentFromUrl(startGame);
+//		System.out.println("start Game: "+this.getContentFromUrl(startGame));
 	
 	}
 	
 	/*
 	 * Game Preflop
 	 * */
-	@Test //@Ignore
+	@Test @Ignore
 	public void testGamePreflop()  throws IOException, ClientProtocolException{
 		//Array of Players
 		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
@@ -414,9 +462,9 @@ public class GameServerClientTest implements MqttCallback {
 //			System.out.println("token at "+i+": "+token[i]);
 			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
 //			System.out.println("Url join: "+url);
-//							this.getContentFromUrl(url);
-			Document d = Jsoup.connect(url).get();
-//			System.out.println("Player"+i+" join game: "+d.text());
+			this.getContentFromUrl(url);
+//			Document d = Jsoup.connect(url).get();
+//			System.out.println("Player"+i+" join game: "+this.getContentFromUrl(url));
 		}
 		
 		//startgame
@@ -427,9 +475,221 @@ public class GameServerClientTest implements MqttCallback {
 		//preflop
 		String preflop = host+"api/game?token="+token[0]+"&method=preflop";
 		this.getContentFromUrl(preflop);
-		System.out.println("preflop: "+ this.getContentFromUrl(preflop));
+//		System.out.println("preflop: "+ this.getContentFromUrl(preflop));
+		
+	
 		
 	}
+	
+	
+	
+	/*
+	 * Game Flop
+	 * */
+	@Test@Ignore
+	public void testGameFlop()  throws IOException, ClientProtocolException{
+		//Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		// Players login and return Array Token of Players
+		String token[] = this.getTokenPlayer(arr);
+		
+		//create room
+		String urlCreateRoom = host+"api/room?token="+token[0]+"&method=put";
+		String roomId = this.getContentFromUrl(urlCreateRoom);
+		
+		//join room
+//		System.out.println("length of token: "+token.length);
+		
+		for(int i=1;i<token.length;i++)
+		{
+//			System.out.println("token at "+i+": "+token[i]);
+			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
+//			System.out.println("Url join: "+url);
+			this.getContentFromUrl(url);
+//			Document d = Jsoup.connect(url).get();
+//			System.out.println("Player"+i+" join game: "+this.getContentFromUrl(url));
+		}
+		
+		//startgame
+		String startGame = host+"api/game?token="+token[0]+"&method=start";
+		this.getContentFromUrl(startGame);
+//		System.out.println("start Game: "+this.getContentFromUrl(startGame));
+		
+		//preflop
+		
+//		System.out.println("preflop: "+ this.getContentFromUrl(preflop));
+		
+		//Bet
+		String utg = host+"api/game?token="+token[3]+"&method=bet&value=20";
+		this.getContentFromUrl(utg);
+		String ngheBet = host+"api/game?token="+token[4]+"&method=bet&value=20";
+		this.getContentFromUrl(ngheBet);
+		String toanBet = host+"api/game?token="+token[0]+"&method=bet&value=20";
+		this.getContentFromUrl(toanBet);
+		String danhBet = host+"api/game?token="+token[1]+"&method=bet&value=10";
+		this.getContentFromUrl(danhBet);
+		
+		//flop
+		String flop = host+"api/game?token="+token[0]+"&method=flop";
+		this.getContentFromUrl(flop);
+		
+	}
+	
+	
+	/*
+	 * Game Turn
+	 * */
+	@Test@Ignore
+	public void testGameTurn()  throws IOException, ClientProtocolException{
+		//Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		// Players login and return Array Token of Players
+		String token[] = this.getTokenPlayer(arr);
+		
+		//create room
+		String urlCreateRoom = host+"api/room?token="+token[0]+"&method=put";
+		String roomId = this.getContentFromUrl(urlCreateRoom);
+		
+		//join room
+//		System.out.println("length of token: "+token.length);
+		
+		for(int i=1;i<token.length;i++)
+		{
+//			System.out.println("token at "+i+": "+token[i]);
+			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
+//			System.out.println("Url join: "+url);
+			this.getContentFromUrl(url);
+//			Document d = Jsoup.connect(url).get();
+//			System.out.println("Player"+i+" join game: "+this.getContentFromUrl(url));
+		}
+		
+		//startgame
+		String startGame = host+"api/game?token="+token[0]+"&method=start";
+		this.getContentFromUrl(startGame);
+//		System.out.println("start Game: "+this.getContentFromUrl(startGame));
+		
+		//preflop
+		
+//		System.out.println("preflop: "+ this.getContentFromUrl(preflop));
+		
+		//Bet
+		String utgChauBet = host+"api/game?token="+token[3]+"&method=bet&value=20";
+		this.getContentFromUrl(utgChauBet);
+		String ngheBet = host+"api/game?token="+token[4]+"&method=bet&value=20";
+		this.getContentFromUrl(ngheBet);
+		String toanBet = host+"api/game?token="+token[0]+"&method=bet&value=20";
+		this.getContentFromUrl(toanBet);
+		String danhBet = host+"api/game?token="+token[1]+"&method=bet&value=10";
+		this.getContentFromUrl(danhBet);
+		
+		//flop
+		String flop = host+"api/game?token="+token[0]+"&method=flop";
+		this.getContentFromUrl(flop);
+		
+
+		//Bet and Fold
+		String sbDanhBet1 = host+"api/game?token="+token[1]+"&method=bet&value=20";
+		this.getContentFromUrl(sbDanhBet1);
+		String bbLinhBet1 = host+"api/game?token="+token[2]+"&method=bet&value=20";
+		this.getContentFromUrl(bbLinhBet1);
+		String utgChauBet1 = host+"api/game?token="+token[3]+"&method=bet&value=20";
+		this.getContentFromUrl(utgChauBet1);
+		String ngheBet1 = host+"api/game?token="+token[4]+"&method=fold";
+		this.getContentFromUrl(ngheBet1);
+		String dealerToanBet1 = host+"api/game?token="+token[0]+"&method=bet&value=20"; 
+		this.getContentFromUrl(dealerToanBet1);
+		
+		//turn
+		String turn = host+"api/game?token="+token[1]+"&method=turn";
+		this.getContentFromUrl(turn);
+	}
+	
+	
+	/*
+	 * Game River
+	 * */
+	@Test
+	public void testGameRiver()  throws IOException, ClientProtocolException{
+		//Array of Players
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+		// Players login and return Array Token of Players
+		String token[] = this.getTokenPlayer(arr);
+		
+		//create room
+		String urlCreateRoom = host+"api/room?token="+token[0]+"&method=put";
+		String roomId = this.getContentFromUrl(urlCreateRoom);
+		
+		//join room
+//		System.out.println("length of token: "+token.length);
+		
+		for(int i=1;i<token.length;i++)
+		{
+//			System.out.println("token at "+i+": "+token[i]);
+			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
+//			System.out.println("Url join: "+url);
+			this.getContentFromUrl(url);
+//			Document d = Jsoup.connect(url).get();
+//			System.out.println("Player"+i+" join game: "+this.getContentFromUrl(url));
+		}
+		
+		//startgame
+		String startGame = host+"api/game?token="+token[0]+"&method=start";
+		this.getContentFromUrl(startGame);
+//		System.out.println("start Game: "+this.getContentFromUrl(startGame));
+		
+		//preflop
+		
+//		System.out.println("preflop: "+ this.getContentFromUrl(preflop));
+		
+		//Bet
+		String utgChauBet = host+"api/game?token="+token[3]+"&method=bet&value=20";
+		this.getContentFromUrl(utgChauBet);
+		String ngheBet = host+"api/game?token="+token[4]+"&method=bet&value=20";
+		this.getContentFromUrl(ngheBet);
+		String toanBet = host+"api/game?token="+token[0]+"&method=bet&value=20";
+		this.getContentFromUrl(toanBet);
+		String danhBet = host+"api/game?token="+token[1]+"&method=bet&value=10";
+		this.getContentFromUrl(danhBet);
+		
+		//flop
+		String flop = host+"api/game?token="+token[0]+"&method=flop";
+		this.getContentFromUrl(flop);
+		
+
+		//Bet and Fold
+		String sbDanhBet2 = host+"api/game?token="+token[1]+"&method=bet&value=20";
+		this.getContentFromUrl(sbDanhBet2);
+		String bbLinhBet2 = host+"api/game?token="+token[2]+"&method=bet&value=20";
+		this.getContentFromUrl(bbLinhBet2);
+		String utgChauBet2 = host+"api/game?token="+token[3]+"&method=bet&value=20";
+		this.getContentFromUrl(utgChauBet2);
+		String ngheBet2 = host+"api/game?token="+token[4]+"&method=fold";
+		this.getContentFromUrl(ngheBet2);
+		String dealerToanBet2 = host+"api/game?token="+token[0]+"&method=bet&value=20"; 
+		this.getContentFromUrl(dealerToanBet2);
+		
+		//turn
+		String turn = host+"api/game?token="+token[1]+"&method=turn";
+		this.getContentFromUrl(turn);
+		
+		//Bet and Fold
+		String sbDanhBet3 = host+"api/game?token="+token[1]+"&method=bet&value=20";
+		this.getContentFromUrl(sbDanhBet3);
+		String bbLinhBet3 = host+"api/game?token="+token[2]+"&method=bet&value=20";
+		this.getContentFromUrl(bbLinhBet3);
+		String utgChauBet3 = host+"api/game?token="+token[3]+"&method=bet&value=20";
+		this.getContentFromUrl(utgChauBet3);
+		String ngheBet3 = host+"api/game?token="+token[4]+"&method=fold";
+		this.getContentFromUrl(ngheBet3);
+		String dealerToanBet3 = host+"api/game?token="+token[0]+"&method=bet&value=20"; 
+		this.getContentFromUrl(dealerToanBet3);
+		
+		//turn
+		String river = host+"api/game?token="+token[1]+"&method=turn";
+		this.getContentFromUrl(river);
+		
+	}
+	
 	
 	
 

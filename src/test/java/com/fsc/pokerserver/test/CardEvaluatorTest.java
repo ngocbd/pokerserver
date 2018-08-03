@@ -21,6 +21,11 @@ package com.fsc.pokerserver.test;
 
 import junit.framework.TestCase;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fcs.pokerserver.Card;
@@ -40,8 +45,75 @@ import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
  * 
  * @author jacobhyphenated
  */
+
 public class CardEvaluatorTest extends TestCase {
 
+	
+	
+	public static void main(String[] args) {
+//		Hand h1 = new Hand(Card.ACE_OF_CLUBS, Card.ACE_OF_DIAMONDS);
+//		Hand h2 = new Hand(Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS);
+//		Hand h3 = new Hand(Card.EIGHT_OF_CLUBS, Card.KING_OF_DIAMONDS);
+		
+//		Hand h1 = new Hand(Card.JACK_OF_SPADES, Card.ACE_OF_DIAMONDS);
+//		Hand h2 = new Hand(Card.TWO_OF_HEARTS, Card.SIX_OF_CLUBS);
+//		Hand h3 = new Hand(Card.JACK_OF_CLUBS, Card.QUEEN_OF_DIAMONDS);
+		
+		Hand h1 = new Hand(Card.THREE_OF_CLUBS, Card.SEVEN_OF_HEARTS);
+		Hand h2 = new Hand(Card.TWO_OF_SPADES, Card.FOUR_OF_CLUBS);
+		Hand h3 = new Hand(Card.NINE_OF_SPADES, Card.TWO_OF_DIAMONDS);
+		Hand h4 = new Hand(Card.TEN_OF_DIAMONDS, Card.FOUR_OF_SPADES);
+		Hand h5 = new Hand(Card.TEN_OF_CLUBS, Card.FOUR_OF_DIAMONDS);
+		
+		Board b = new Board(Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS, Card.EIGHT_OF_HEARTS, 
+				Card.THREE_OF_HEARTS, Card.TEN_OF_HEARTS);
+//		int comp = compare(h1,h2,b);
+		List<Hand> list = new ArrayList<Hand>();
+		list.add(h1);
+		list.add(h2);
+		list.add(h3);
+		list.add(h4);
+		list.add(h5);
+		
+		list.sort(new Comparator<Hand>() {
+			public int compare(Hand o1, Hand o2) {
+				return CardEvaluatorTest.compare(o1, o2, b);
+				
+			}
+		});
+		
+		TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
+		
+		HandRank rank1 = evaluator.evaluate(b, h1);
+		System.out.println(rank1.getHandType() +" : value ="+rank1.getValue());
+		
+		HandRank rank2 = evaluator.evaluate(b, h2);
+		System.out.println(rank2.getHandType()+" : value ="+rank2.getValue());
+		
+		HandRank rank3 = evaluator.evaluate(b, h3);
+		System.out.println(rank3.getHandType()+" : value ="+rank3.getValue());
+		
+		HandRank rank4 = evaluator.evaluate(b, h4);
+		System.out.println(rank4.getHandType()+" : value ="+rank4.getValue());
+		
+		HandRank rank5 = evaluator.evaluate(b, h5);
+		System.out.println(rank5.getHandType()+" : value ="+rank5.getValue());
+		
+		
+		
+		System.out.println("Best hand "+list.get(list.size()-1));
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Test
 	//test pair over pair
 	public void testPair1(){
@@ -203,9 +275,9 @@ public class CardEvaluatorTest extends TestCase {
 	
 	@Test
 	public void testFourOfAKindType(){
-		Hand h1 = new Hand(Card.JACK_OF_DIAMONDS, Card.JACK_OF_CLUBS);
-		Board b = new Board(Card.JACK_OF_HEARTS, Card.THREE_OF_HEARTS, Card.NINE_OF_DIAMONDS,
-				Card.JACK_OF_SPADES, Card.EIGHT_OF_DIAMONDS);
+		Hand h1 = new Hand(Card.TWO_OF_DIAMONDS, Card.SIX_OF_CLUBS);
+		Board b = new Board(Card.TWO_OF_HEARTS, Card.TWO_OF_CLUBS, Card.NINE_OF_DIAMONDS,
+				Card.TWO_OF_SPADES, Card.EIGHT_OF_DIAMONDS);
 		TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
 		HandRank rank = evaluator.evaluate(b, h1);
 		assertEquals(HandType.FOUR_OF_A_KIND, rank.getHandType());
@@ -222,7 +294,7 @@ public class CardEvaluatorTest extends TestCase {
 	}
 	
 	//Compareto equivalent to h1.compareTo(h2) using Two Plus Two Algorithm
-	private int compare(Hand h1, Hand h2, Board b){
+	public static int compare(Hand h1, Hand h2, Board b){
 		TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
 		HandRank rank1 = evaluator.evaluate(b, h1);
 		HandRank rank2 = evaluator.evaluate(b, h2);

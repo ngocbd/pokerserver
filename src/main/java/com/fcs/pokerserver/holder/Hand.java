@@ -41,5 +41,10 @@ public class Hand extends CardHolder {
 	public Hand(Card card1, Card card2) {
 		super(card1, card2);
 	}
+	public String toString()
+	{
+		return this.cards.toString();
+		
+	}
 
 }
