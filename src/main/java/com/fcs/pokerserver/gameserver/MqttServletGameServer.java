@@ -31,7 +31,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
+import com.fcs.pokerserver.events.GameAction;
 import com.fcs.pokerserver.events.GameEvent;
+import com.fcs.pokerserver.events.PlayerAction;
+import com.fcs.pokerserver.events.PlayerEvent;
 import com.fcs.pokerserver.events.RoomAction;
 import com.fcs.pokerserver.events.RoomEvent;
 import com.fcs.pokerserver.events.RoomListener;
@@ -248,17 +251,50 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	@Override
 	public void actionPerformed(RoomEvent event) {
 		
-		
+		/*
+		 * cmd=PLAYERJOINEDROOM&roomid=1533543539864
+		 * cmd=GAMEACTION&roomid=1533543539864&gameEvent=WAITTING&gameid=1533543539865
+		 * */
 		String content = "cmd="+event.getAction()+"&roomid="+event.getSource().getRoomID();
 		if(event.getAction()==RoomAction.GAMEACTION)
 		{
 			GameEvent ge = (GameEvent) event.agruments.get("gameevent");
 			content+="&gameEvent="+ge.getAction()+"&gameid="+ge.getSource().getId();
+			if(ge.getAction()==GameAction.PLAYEREVENT)
+			{
+				PlayerEvent pe = (PlayerEvent) ge.agruments.get("playerEvent");
+				
+				if(pe.getAction()==PlayerAction.BET)
+				{
+					long amount = (long) pe.agruments.get("amount");
+					Player p = pe.getSource();
+					content+="&pid="+p.getId()+"&playeraction=bet&amount="+amount;
+				}
+				if(pe.getAction()==PlayerAction.FOLD)
+				{
+					Player p = pe.getSource();
+					content+="&pid="+p.getId()+"&playeraction=fold";
+				}
+				if(pe.getAction()==PlayerAction.CHECK)
+				{
+					Player p = pe.getSource();
+					content+="&pid="+p.getId()+"&playeraction=check";
+				}
+				if(pe.getAction()==PlayerAction.CALL)
+				{
+					Player p = pe.getSource();
+					content+="&pid="+p.getId()+"&playeraction=call";
+				}
+				
+			}
+			
+			System.out.println(ge);
 		}else if(event.getAction()==RoomAction.PLAYERJOINEDROOM)
 		{
-//			Player p = (Player) event.agruments.get("p");
-//			content+="&playerid="+p.getId();
-		} 
+//			Player p = (Player) event.agruments.get("player");
+//			content+="&pid="+p.getId();
+			
+		}
 		
 		this.sender.add(MqttServletGameServer.SERVER_TOPIC+"/room/"+event.getSource().getRoomID(), content);
 		

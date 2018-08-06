@@ -473,8 +473,8 @@ public class GameServerClientTest implements MqttCallback {
 //		System.out.println("start Game: "+this.getContentFromUrl(startGame));
 		
 		//preflop
-		String preflop = host+"api/game?token="+token[0]+"&method=preflop";
-		this.getContentFromUrl(preflop);
+		String preFlop = host+"api/game?token="+token[0]+"&method=preflop";
+		this.getContentFromUrl(preFlop);
 //		System.out.println("preflop: "+ this.getContentFromUrl(preflop));
 		
 	
@@ -516,8 +516,8 @@ public class GameServerClientTest implements MqttCallback {
 //		System.out.println("start Game: "+this.getContentFromUrl(startGame));
 		
 		//preflop
-		
-//		System.out.println("preflop: "+ this.getContentFromUrl(preflop));
+		String preFlop = host+"api/game?token="+token[0]+"&method=preflop";
+		this.getContentFromUrl(preFlop);
 		
 		//Bet
 		String utg = host+"api/game?token="+token[3]+"&method=bet&value=20";
@@ -569,8 +569,8 @@ public class GameServerClientTest implements MqttCallback {
 //		System.out.println("start Game: "+this.getContentFromUrl(startGame));
 		
 		//preflop
-		
-//		System.out.println("preflop: "+ this.getContentFromUrl(preflop));
+		String preFlop = host+"api/game?token="+token[0]+"&method=preflop";
+		this.getContentFromUrl(preFlop);
 		
 		//Bet
 		String utgChauBet = host+"api/game?token="+token[3]+"&method=bet&value=20";
@@ -608,7 +608,7 @@ public class GameServerClientTest implements MqttCallback {
 	/*
 	 * Game River
 	 * */
-	@Test
+	@Test//@Ignore
 	public void testGameRiver()  throws IOException, ClientProtocolException{
 		//Array of Players
 		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
@@ -638,8 +638,8 @@ public class GameServerClientTest implements MqttCallback {
 //		System.out.println("start Game: "+this.getContentFromUrl(startGame));
 		
 		//preflop
-		
-//		System.out.println("preflop: "+ this.getContentFromUrl(preflop));
+		String preFlop = host+"api/game?token="+token[0]+"&method=preflop";
+		this.getContentFromUrl(preFlop);
 		
 		//Bet
 		String utgChauBet = host+"api/game?token="+token[3]+"&method=bet&value=20";
@@ -669,7 +669,7 @@ public class GameServerClientTest implements MqttCallback {
 		this.getContentFromUrl(dealerToanBet2);
 		
 		//turn
-		String turn = host+"api/game?token="+token[1]+"&method=turn";
+		String turn = host+"api/game?token="+token[0]+"&method=turn";
 		this.getContentFromUrl(turn);
 		
 		//Bet and Fold
@@ -684,9 +684,14 @@ public class GameServerClientTest implements MqttCallback {
 		String dealerToanBet3 = host+"api/game?token="+token[0]+"&method=bet&value=20"; 
 		this.getContentFromUrl(dealerToanBet3);
 		
-		//turn
-		String river = host+"api/game?token="+token[1]+"&method=turn";
+		//river
+		String river = host+"api/game?token="+token[0]+"&method=river";
 		this.getContentFromUrl(river);
+		
+		//end game
+		String endGame = host+"api/game?token="+token[0]+"&method=end";
+		this.getContentFromUrl(endGame);
+		
 		
 	}
 	

@@ -46,5 +46,8 @@ public class Hand extends CardHolder {
 		return this.cards.toString();
 		
 	}
+	public Hand() {
+		
+	}
 
 }

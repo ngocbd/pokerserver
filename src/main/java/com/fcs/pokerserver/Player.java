@@ -61,7 +61,7 @@ public class Player {
 		this.name=name;
 		this.setId(String.valueOf(System.currentTimeMillis()));
 	}
-	private CardHolder playerHand = new CardHolder();
+	private Hand playerHand = new Hand();
 	
 	private List<PlayerListener> listeners = new ArrayList<PlayerListener>();
 	
@@ -77,11 +77,10 @@ public class Player {
 		PlayerEvent pe = new PlayerEvent(this, PlayerAction.BET);
 		
 		pe.agruments.put("amount", amount);
-		pe.agruments.put("roundBet", this.getRoundBet());
-		pe.agruments.put("gameBet", this.gameBet);
+
 		
 		this.fireEvent(pe);
-		assert this.sittingOut==false;
+		
 		
 		
 	}
@@ -165,7 +164,7 @@ public class Player {
 		this.id = id;
 	}
 
-	public CardHolder getPlayerHand() {
+	public Hand getPlayerHand() {
 		return playerHand;
 	}
 	void setPlayerHand(Hand playerHand) {

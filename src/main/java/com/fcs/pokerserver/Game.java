@@ -464,6 +464,12 @@ public class Game implements PlayerListener {
 			{
 				this.setCurrentPlayer(this.getNextPlayer(p));
 			}
+			GameEvent ge = new GameEvent(this, GameAction.PLAYEREVENT);
+			ge.agruments.put("playerEvent", event);
+			
+			this.fireEvent(ge);
+			
+			
 		}
 		
 	}

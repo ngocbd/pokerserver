@@ -53,7 +53,7 @@ public class Board extends CardHolder {
 	public List<Card> getFlopCards()
 	{
 		
-		return this.cards.subList(0, 2);
+		return this.cards.subList(0, 3);
 	}
 	public Card getTurnCard()
 	{
