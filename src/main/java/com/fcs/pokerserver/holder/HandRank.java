@@ -42,10 +42,15 @@ public class HandRank implements Comparable<HandRank>, Serializable {
 	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
+//	@Override
+//	public final int compareTo(HandRank rank) {
+//		return rankValue < rank.rankValue ? -1
+//				: (rankValue == rank.rankValue ? 0 : 1);
+//	}
 	@Override
 	public final int compareTo(HandRank rank) {
-		return rankValue < rank.rankValue ? -1
-				: (rankValue == rank.rankValue ? 0 : 1);
+		return rankValue - rank.rankValue ;
+				
 	}
 
 	@Override

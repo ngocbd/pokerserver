@@ -8,6 +8,7 @@ public enum GameAction {
 	FLOP,
 	TURN,
 	RIVER,
-	ENDED
+	ENDED,
+	PLAYEREVENT
 	
 }

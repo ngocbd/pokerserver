@@ -65,6 +65,15 @@ public class CardHolder implements Serializable {
 	public Card getCard(int index) {
 		return cards.get(index);
 	}
+	
+	/*
+	 * Get all cards on board
+	 * */
+	
+	public List<Card> getAllCards()
+	{
+		return this.cards;
+	}
 
 	/**
 	 * Returns the number of the cards stored in the container.

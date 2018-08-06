@@ -1,6 +1,7 @@
 package com.fcs.pokerserver.events;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.fcs.pokerserver.Game;
 
@@ -26,5 +27,13 @@ public class GameEvent {
 	public void setAction(GameAction action) {
 		this.action = action;
 	}
-	
+	public String toString()
+	{
+		String str="";
+		for (String key : agruments.keySet()) {
+			str+=key+":"+agruments.get(key);
+		
+		}
+		return source.getId() + action.toString()+str;
+	}
 }
