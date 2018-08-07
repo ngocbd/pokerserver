@@ -16,7 +16,7 @@ import com.fcs.pokerserver.Deck;
 import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
-
+@Ignore
 public class GameTest {
 	Player master;
 	Room room;

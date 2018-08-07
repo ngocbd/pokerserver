@@ -45,7 +45,7 @@ import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
  * 
  * @author jacobhyphenated
  */
-
+@Ignore
 public class CardEvaluatorTest extends TestCase {
 
 	
