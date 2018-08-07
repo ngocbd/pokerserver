@@ -252,8 +252,33 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	public void actionPerformed(RoomEvent event) {
 		
 		/*
-		 * cmd=PLAYERJOINEDROOM&roomid=1533543539864
-		 * cmd=GAMEACTION&roomid=1533543539864&gameEvent=WAITTING&gameid=1533543539865
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=ENDED&gameid=1533628053188
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=RIVER&gameid=1533628053188
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628051383&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628053134&playeraction=fold
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052772&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052461&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052128&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=TURN&gameid=1533628053188
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628051383&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628053134&playeraction=fold
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052772&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052461&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052128&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=FLOP&gameid=1533628053188
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052128&playeraction=bet&amount=10
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628051383&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628053134&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052772&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PREFLOP&gameid=1533628053188
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052461&playeraction=bet&amount=20
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052128&playeraction=bet&amount=10
+		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=WAITTING&gameid=1533628053188
+		 * cmd=PLAYERJOINEDROOM&roomid=1533628053187&pid=1533628053134
+		 * cmd=PLAYERJOINEDROOM&roomid=1533628053187&pid=1533628052772
+		 * cmd=PLAYERJOINEDROOM&roomid=1533628053187&pid=1533628052461
+		 * cmd=PLAYERJOINEDROOM&roomid=1533628053187&pid=1533628052128
+		 * 
 		 * */
 		String content = "cmd="+event.getAction()+"&roomid="+event.getSource().getRoomID();
 		if(event.getAction()==RoomAction.GAMEACTION)
@@ -285,14 +310,17 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 					Player p = pe.getSource();
 					content+="&pid="+p.getId()+"&playeraction=call";
 				}
-				
+			}
+			if(ge.getAction()==GameAction.ENDED)
+			{
+				content +="&playerwin="+ge.agruments.get("playerwin")+"&rank="+ge.agruments.get("rank")+"&besthand="+ge.agruments.get("besthand");
 			}
 			
 			System.out.println(ge);
 		}else if(event.getAction()==RoomAction.PLAYERJOINEDROOM)
 		{
-//			Player p = (Player) event.agruments.get("player");
-//			content+="&pid="+p.getId();
+			Player p = (Player) event.agruments.get("player");
+			content+="&pid="+p.getId();
 			
 		}
 		

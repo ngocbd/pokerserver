@@ -78,5 +78,10 @@ public class HandRank implements Comparable<HandRank>, Serializable {
 		Bit-shift to get the type value bit, match it to the enum with the ordinal ordering for the 2+2 evaluation type*/
 		return HandType.values()[rankValue >> 12];
 	}
+	
+	public String toString()
+	{
+		return getHandType().toString();
+	}
 
 }

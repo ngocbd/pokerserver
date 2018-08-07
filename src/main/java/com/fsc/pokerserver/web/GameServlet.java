@@ -201,27 +201,27 @@ public class GameServlet extends HttpServlet {
 			
 			Player p = (Player) request.getAttribute("player");
 			
-			
-			List<Hand> list = new ArrayList<Hand>();
-			for(int i=0;i<p.getCurrentGame().getListPlayer().size();i++)
-			{
-				list.add(p.getCurrentGame().getListPlayer().get(i).getPlayerHand());
-//				System.out.println("Cards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString());
-			}
-			Board b = p.getCurrentGame().getBoard();
-			
-			list.sort(new Comparator<Hand>() {
-				public int compare(Hand o1, Hand o2) {
-					return CardEvaluatorTest.compare(o1, o2, b);
-					
-				}
-			});
-			
-			TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
-			
-			
-			
-			System.out.println("Best hand "+list.get(list.size()-1));
+//			
+//			List<Hand> list = new ArrayList<Hand>();
+//			for(int i=0;i<p.getCurrentGame().getListPlayer().size();i++)
+//			{
+//				list.add(p.getCurrentGame().getListPlayer().get(i).getPlayerHand());
+////				System.out.println("Cards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString());
+//			}
+//			Board b = p.getCurrentGame().getBoard();
+//			
+//			list.sort(new Comparator<Hand>() {
+//				public int compare(Hand o1, Hand o2) {
+//					return CardEvaluatorTest.compare(o1, o2, b);
+//					
+//				}
+//			});
+//			
+//			TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
+//			
+//			
+//			
+//			System.out.println("Best hand "+list.get(list.size()-1));
 			
 			p.getCurrentGame().endGame();
 //			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");

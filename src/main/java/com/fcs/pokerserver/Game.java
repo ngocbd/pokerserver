@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
@@ -41,6 +42,10 @@ import com.fcs.pokerserver.events.PlayerAction;
 import com.fcs.pokerserver.events.PlayerEvent;
 import com.fcs.pokerserver.events.PlayerListener;
 import com.fcs.pokerserver.holder.Board;
+import com.fcs.pokerserver.holder.Hand;
+import com.fcs.pokerserver.holder.HandRank;
+import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
+import com.fsc.pokerserver.test.CardEvaluatorTest;
 
 import junit.framework.AssertionFailedError;
 
@@ -175,11 +180,48 @@ public class Game implements PlayerListener {
 		
 		//this.setRound((short) 4);
 	}
+	
 	public void endGame()
 	{
 		assert this.isNextRoundReady();
 		this.setStatus(GameStatus.END_HAND);
 		GameEvent gameEvent=  new GameEvent(this, GameAction.ENDED);
+		
+		List<Hand> list = new ArrayList<Hand>();
+		for(int i=0;i<this.getListPlayer().size();i++)
+		{
+			list.add(this.getListPlayer().get(i).getPlayerHand());
+//			System.out.println("Cards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString());
+		}
+		Board b = this.getBoard();
+		
+		list.sort(new Comparator<Hand>() {
+			public int compare(Hand o1, Hand o2) {
+				return CardEvaluatorTest.compare(o1, o2, b);
+				
+			}
+		});
+		
+		TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
+		
+		Hand winHand = list.get(list.size()-1);
+		//find the player is winner follow winHand
+		Player playerWinner = null;
+		for(int i = 0; i<this.getListPlayer().size();i++)
+		{
+			if(this.getListPlayer().get(i).getPlayerHand()==winHand)
+			{
+				playerWinner = this.getListPlayer().get(i);
+				break;
+			}
+		}
+		gameEvent.agruments.put("playerwin", playerWinner.getId());
+		//rank of winner player
+		HandRank rank1 = evaluator.evaluate(b, winHand);
+		gameEvent.agruments.put("rank", rank1.toString());
+		gameEvent.agruments.put("besthand", list.get(list.size()-1));
+
+		
 		this.fireEvent(gameEvent);
 		
 		
