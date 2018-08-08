@@ -1,3 +1,23 @@
+/*
+The MIT License (MIT)
+Copyright (c) 2018 by habogay
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
 package com.fsc.pokerserver.web;
 
 import java.io.IOException;
@@ -201,27 +221,27 @@ public class GameServlet extends HttpServlet {
 			
 			Player p = (Player) request.getAttribute("player");
 			
-			
-			List<Hand> list = new ArrayList<Hand>();
-			for(int i=0;i<p.getCurrentGame().getListPlayer().size();i++)
-			{
-				list.add(p.getCurrentGame().getListPlayer().get(i).getPlayerHand());
-//				System.out.println("Cards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString());
-			}
-			Board b = p.getCurrentGame().getBoard();
-			
-			list.sort(new Comparator<Hand>() {
-				public int compare(Hand o1, Hand o2) {
-					return CardEvaluatorTest.compare(o1, o2, b);
-					
-				}
-			});
-			
-			TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
-			
-			
-			
-			System.out.println("Best hand "+list.get(list.size()-1));
+//			
+//			List<Hand> list = new ArrayList<Hand>();
+//			for(int i=0;i<p.getCurrentGame().getListPlayer().size();i++)
+//			{
+//				list.add(p.getCurrentGame().getListPlayer().get(i).getPlayerHand());
+////				System.out.println("Cards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString());
+//			}
+//			Board b = p.getCurrentGame().getBoard();
+//			
+//			list.sort(new Comparator<Hand>() {
+//				public int compare(Hand o1, Hand o2) {
+//					return CardEvaluatorTest.compare(o1, o2, b);
+//					
+//				}
+//			});
+//			
+//			TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
+//			
+//			
+//			
+//			System.out.println("Best hand "+list.get(list.size()-1));
 			
 			p.getCurrentGame().endGame();
 //			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");

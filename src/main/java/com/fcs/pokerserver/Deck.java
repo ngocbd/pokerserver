@@ -33,11 +33,17 @@ public class Deck {
 	private List<Card> cards;
 	
 
+	/**
+	 * Simple call constructor with no shuffle.
+	 * */
 	public Deck(){
 		this(true);
 	}
 	
 
+	/**
+	 * Call constructor with 2 options: shuffle(true) or not shuffle(flase)
+	 * */
 	public Deck(boolean shuffle){
 		initDeck();
 		if(shuffle){
@@ -46,27 +52,44 @@ public class Deck {
 	}
 	
 
+	/**
+	 * Create the Deck with cards.
+	 * */
 	public Deck(List<Card> cards){
-		//this.cards = new LinkedList<Card>();
-		//this.cards.addAll(cards);
 		this.cards = cards;
 	}
 	
+	/**
+	 * Create and Init for Deck.
+	 * Add 52 cards in the deck.
+	 * */
 	public void initDeck(){
 		cards = new LinkedList<Card>();
 		cards.addAll(Arrays.asList(Card.values()));
 	}
 	
+	/**
+	 * Shuffle Deck used to randomize a deck of playing cards to provide an element of chance in card games.
+	 *  
+	 * */
 	public void shuffleDeck(){
 		Collections.shuffle(cards);
 	}
 	
 
+	/**
+	 * Deal the cards in the Deck 
+	 * @return the card 
+	 *  
+	 * */
 	public Card dealCard(){
 		return cards.remove(0);
 	}
 	
-
+	/**
+	 * Return all of cards of Deck
+	 * @return cards
+	 * */
 	public List<Card> exportDeck(){
 		return cards;
 	}

@@ -1,5 +1,3 @@
-package com.fcs.pokerserver;
-
 /*
 The MIT License (MIT)
 Copyright (c) 2018 by Ngocbd
@@ -20,6 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+package com.fcs.pokerserver;
 
 /**
  * Enumeration of the card ranks.

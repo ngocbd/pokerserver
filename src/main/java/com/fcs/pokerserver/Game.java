@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
@@ -41,6 +42,10 @@ import com.fcs.pokerserver.events.PlayerAction;
 import com.fcs.pokerserver.events.PlayerEvent;
 import com.fcs.pokerserver.events.PlayerListener;
 import com.fcs.pokerserver.holder.Board;
+import com.fcs.pokerserver.holder.Hand;
+import com.fcs.pokerserver.holder.HandRank;
+import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
+import com.fsc.pokerserver.test.CardEvaluatorTest;
 
 import junit.framework.AssertionFailedError;
 
@@ -66,6 +71,10 @@ public class Game implements PlayerListener {
 	
 	private List<GameListener> listeners= new ArrayList<GameListener>();
 	
+	/**
+	 * Create new Game in Room
+	 * @param Room room
+	 * */
 	public Game(Room room) {
 		this.room = room;
 		this.setId(System.currentTimeMillis());
@@ -76,6 +85,11 @@ public class Game implements PlayerListener {
 
 	}
 
+	/**
+	 * Start Game
+	 * @return void
+	 * @exception Players in Room need greater than or equal to 2
+	 * */
 	public void startGame() {
 		assert this.listPlayer.size() >=2;
 
@@ -87,6 +101,11 @@ public class Game implements PlayerListener {
 		this.fireEvent(gameEvent);
 	}
 	
+	/**
+	 * Pre-flop play refers to the action that occurs before the flop is dealt. A game begins with the small blind and big blind posting the blinds, and cards are dealt to each player.
+	 * @exception Players in Room need greater than or equal to 2
+	 * @return void
+	 * */
 	public void preflop() {
 		assert this.listPlayer.size() >= 2;
 
@@ -121,7 +140,13 @@ public class Game implements PlayerListener {
 		
 
 	}
-
+	
+	
+	/**
+	 * the first three community cards that are dealt face-up in the center of the table all at one time. The "flop" also indicates the second round of betting. 
+	 * @return void
+	 * @exception Next Round of player is Ready
+	 * */
 	public void flop() {
 		
 		assert this.isNextRoundReady();
@@ -145,6 +170,11 @@ public class Game implements PlayerListener {
 		this.setRound((short) 2);
 	}
 
+	/**
+	 * In flop games, this is the fourth card dealt. It is the third round of betting
+	 * @return void
+	 * @exception Next Round of Player is ready 
+	 * */
 	public void turn() {
 		assert this.isNextRoundReady();
 //		for (Player player : listPlayer) {
@@ -164,8 +194,13 @@ public class Game implements PlayerListener {
 		//this.setRound((short) 3);
 	}
 
+	/**
+	 * This is the last card given in all games.
+	 * @return void
+	 * @exception Next Round of Player is ready 
+	 * */
 	public void river() {
-
+		assert this.isNextRoundReady();
 		Card card = this.deck.dealCard();
 		this.getBoard().addCard(card);
 		GameEvent gameEvent=  new GameEvent(this, GameAction.RIVER);
@@ -175,40 +210,114 @@ public class Game implements PlayerListener {
 		
 		//this.setRound((short) 4);
 	}
+	
+	
+	/**
+	 * Finish the game. Show the winner Player.
+	 * @return void
+	 * */
 	public void endGame()
 	{
-		assert this.isNextRoundReady();
+//		assert this.isNextRoundReady();
 		this.setStatus(GameStatus.END_HAND);
 		GameEvent gameEvent=  new GameEvent(this, GameAction.ENDED);
+		
+		List<Hand> list = new ArrayList<Hand>();
+		for(int i=0;i<this.getListPlayer().size();i++)
+		{
+			list.add(this.getListPlayer().get(i).getPlayerHand());
+//			System.out.println("Cards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString());
+		}
+		Board b = this.getBoard();
+		
+		list.sort(new Comparator<Hand>() {
+			public int compare(Hand o1, Hand o2) {
+				return CardEvaluatorTest.compare(o1, o2, b);
+				
+			}
+		});
+		
+		TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
+		
+		Hand winHand = list.get(list.size()-1);
+		//find the player is winner follow winHand
+		Player playerWinner = null;
+		for(int i = 0; i<this.getListPlayer().size();i++)
+		{
+			if(this.getListPlayer().get(i).getPlayerHand()==winHand)
+			{
+				playerWinner = this.getListPlayer().get(i);
+				break;
+			}
+		}
+		gameEvent.agruments.put("playerwin", playerWinner.getId());
+		//rank of winner player
+		HandRank rank1 = evaluator.evaluate(b, winHand);
+		gameEvent.agruments.put("rank", rank1.toString());
+		gameEvent.agruments.put("besthand", list.get(list.size()-1));
+
+		
 		this.fireEvent(gameEvent);
 		
 		
 	}
 
+	/**
+	 * Get Deck
+	 * @return Deck
+	 * */
 	public Deck getDeck() {
 		return deck;
 	}
 
+	/**
+	 * Set value for Deck
+	 * @param Deck deck 
+	 * @return void
+	 * */
 	public void setDeck(Deck deck) {
 		this.deck = deck;
 	}
 
+	/**
+	 * Get "the money or chips"(Pot) in the center of a table that players try to win
+	 * @return long Pot
+	 * */
 	public long getPotBalance() {
 		return potBalance;
 	}
 
+	/**
+	 * Set(inscrease) the money or chips in the center of a table.
+	 * @param add more the money or chips(long pot) of players  in the center of a table.
+	 * @return void
+	 * */
 	public void setPotBalance(long potBalance) {
 		this.potBalance = potBalance;
 	}
 
+	/**
+	 * Get room in game
+	 * @return Room room
+	 * */
 	public Room getRoom() {
 		return room;
 	}
 
+	/**
+	 * ReSet Room.
+	 * @param Room room
+	 * @return void
+	 * */
 	public void setRoom(Room room) {
 		this.room = room;
 	}
 
+	/**
+	 * Add player into the game
+	 * @param Player p
+	 * @return void
+	 * */
 	public void addPlayer(Player p) {
 		
 		// check if timeout join after 15 second then Reject
@@ -226,6 +335,10 @@ public class Game implements PlayerListener {
 
 	}
 
+	/**
+	 * Return List of Player in Game
+	 * @return List<Player> list
+	 * */
 	public List<Player> getListPlayer() {
 		return listPlayer;
 	}
@@ -234,14 +347,27 @@ public class Game implements PlayerListener {
 		this.listPlayer = listPlayer;
 	}
 
+	/**
+	 * Return Id of Game
+	 * @return long id
+	 * */
 	public long getId() {
 		return id;
 	}
 
+	/**
+	 * Set Id for Game
+	 * @param long id
+	 * @return void
+	 * */
 	private void setId(long id) {
 		this.id = id;
 	}
 
+	/**
+	 * Return Status of Game
+	 * @return GameStatus gameStatus
+	 * */
 	public GameStatus getStatus() {
 		return status;
 	}
@@ -250,6 +376,10 @@ public class Game implements PlayerListener {
 		this.status = status;
 	}
 
+	/**
+	 * Return Player is Dealer
+	 * @return Player Dealer of game
+	 * */
 	public Player getDealer() {
 		return dealer;
 	}
@@ -263,6 +393,13 @@ public class Game implements PlayerListener {
 		}
 		return index;
 	}
+	
+	/**
+	 * Return Player is Next Player of Game
+	 * @param Player p
+	 * @return Player
+	 * @exception the list of Players is not contain the Player.
+	 * */
 	public Player getNextPlayer(Player p)
 	{
 		assert listPlayer.contains(p) ;
@@ -286,6 +423,12 @@ public class Game implements PlayerListener {
 		
 	}
 
+	/**
+	 * Set the player is Dealer in the game
+	 * @param Player dealer
+	 * @return void
+	 * @exception the list of Players is not contain the Player.
+	 * */
 	public void setDealer(Player dealer) {
 		
 		assert this.listPlayer.contains(dealer);
@@ -335,33 +478,67 @@ public class Game implements PlayerListener {
 */
 	}
 
+	/**
+	 * Return Player is Big Blind
+	 * @return Player Big Blind of game
+	 * */
 	public Player getBigBlind() {
 		return bigBlind;
 	}
 
+	/**
+	 * Set the player is Big Blind in the game
+	 * @param Player bigBlind
+	 * @return void
+	 * */
 	public void setBigBlind(Player bigBlind) {
 		this.bigBlind = bigBlind;
 	}
 
+	/**
+	 * Return Player is Small Blind
+	 * @return Player Big Small of game
+	 * */
 	public Player getSmallBlind() {
 		return smallBlind;
 	}
 
+	/**
+	 * Set the player is Small Blind in the game
+	 * @param Player smallBlind
+	 * @return void
+	 * */
 	public void setSmallBlind(Player smallBlind) {
 		this.smallBlind = smallBlind;
 	}
 
+	/**
+	 * Return The cards of Board on the table in the game
+	 * @return Board cards
+	 * */
 	public Board getBoard() {
 		return board;
 	}
 
+	/**
+	 * Set cards of Board on the table in game
+	 * @param Board board
+	 * @return void
+	 * */
 	public void setBoard(Board board) {
 		this.board = board;
 	}
+	
+	/**
+	 * Add Listener for the game
+	 * @param GameListener gl
+	 * @return void
+	 * */
 	public void addGameListener(GameListener gl)
 	{
 		this.listeners.add(gl);
 	}
+	
 	private void fireEvent(GameEvent ge)
 	{
 		for (Iterator iterator = this.listeners.iterator(); iterator.hasNext();) {
@@ -372,6 +549,10 @@ public class Game implements PlayerListener {
 		}
 	}
 	
+	/**
+	 * Return the Next Round Ready for Player
+	 * @return boolean is next round ready
+	 * */
 	public boolean isNextRoundReady()
 	{
 		//TODO need more test and code review
@@ -385,6 +566,12 @@ public class Game implements PlayerListener {
 			
 		
 	}
+	
+	
+	/**
+	 * Return the Player has problem. The player has current Round Bet is different for other players.
+	 * @return Player PlayerHasProblem
+	 * */
 	public Player getPlayerHasProblem()
 	{
 		//TODO need more test and code review
@@ -392,11 +579,12 @@ public class Game implements PlayerListener {
 				.filter(x->!x.isSittingOut())		
 				.filter(x -> x.getRoundBet() != this.getCurrentRoundBet() || x.getRound() != this.getRound())
 				.findAny().orElse(null);
-		
-			
-			
-		
 	}
+	
+	/**
+	 * Return all list of players to become playerListString.
+	 * @return String dumpListPlayer.
+	 * */
 	public String dumpListPlayer()
 	{
 		ObjectMapper mapper = new ObjectMapper();
@@ -418,6 +606,13 @@ public class Game implements PlayerListener {
 		}
 		return jsonInString;
 	}
+	
+	/**
+	 * Override the actionPerformed method to sure the Player has action need in the game. 
+	 * @param PlayerEvent pe.
+	 * @exception Player is not the current player or the player is not in game.
+	 * @return void.
+	 * */
 	@Override
 	public void actionPerformed(PlayerEvent event) {
 		Player p = event.getSource();
@@ -474,28 +669,55 @@ public class Game implements PlayerListener {
 		
 	}
 
+	/**
+	 * Return the current Player in Game
+	 * @return Player current player
+	 * */
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
 
+	/**
+	 * Set the player is current player.
+	 * @param Player p
+	 * @return void
+	 * */
 	public void setCurrentPlayer(Player p) {
 		this.currentPlayer = p;
 		this.currentPlayer.myTurn();
 		
 	}
 
+	/**
+	 * Return the player has current round bet
+	 * @return long value of the player has current round bet
+	 * */
 	public long getCurrentRoundBet() {
 		return currentRoundBet;
 	}
 
+	/**
+	 * Set the current Bet for the player in the game
+	 * @param long currentBet
+	 * @return void
+	 * */
 	public void setCurrentBet(long currentBet) {
 		this.currentRoundBet = currentBet;
 	}
 
+	/**
+	 * Return the round of the game.
+	 * @return short value of round of the game.
+	 * */
 	public short getRound() {
 		return round;
 	}
 
+	/**
+	 * Set the round for game.
+	 * @param short round
+	 * @return void
+	 * */
 	public void setRound(short round) {
 		this.round = round;
 	}
