@@ -26,8 +26,8 @@ import java.util.List;
 
 /**
  * Standard deck of cards for poker. 52 Cards. 13 Clubs, Diamonds, Spades, and Hearts.
- * 
- * @author ngocbd
+ * @category pokerserver
+ * @author Ngocbd
  */
 public class Deck {
 	private List<Card> cards;
@@ -70,7 +70,6 @@ public class Deck {
 	
 	/**
 	 * Shuffle Deck used to randomize a deck of playing cards to provide an element of chance in card games.
-	 *  
 	 * */
 	public void shuffleDeck(){
 		Collections.shuffle(cards);

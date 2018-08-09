@@ -40,7 +40,7 @@ public enum Suit {
 
 	/**
 	 * Returns the name of the suit.
-	 * 
+	 * @return String name
 	 * @see java.lang.Enum#toString()
 	 */
 	@Override

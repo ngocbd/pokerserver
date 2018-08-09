@@ -31,6 +31,11 @@ import com.fcs.pokerserver.events.RoomAction;
 import com.fcs.pokerserver.events.RoomEvent;
 import com.fcs.pokerserver.events.RoomListener;
 
+/**
+ * An instance of the Room class is created Room when user want to play Poker Game.
+ * @category pokerserver
+ * @author Ngocbd
+ * */
 public class Room implements GameListener {
 	Game currentGame = null;
 	long RoomID;
@@ -40,10 +45,17 @@ public class Room implements GameListener {
 
 	private List<RoomListener> listeners = new ArrayList<RoomListener>();
 
+	/**
+	 * The method to add more listener to this Room.
+	 * @param RoomListener rl
+	 * */
 	public void addRoomListener(RoomListener rl) {
 		this.listeners.add(rl);
 	}
 
+	/**
+	 * The method fire RoomEvent to all listener.
+	 * */
 	private void fireEvent(RoomEvent re) {
 		for (Iterator iterator = this.listeners.iterator(); iterator.hasNext();) {
 			RoomListener listener = (RoomListener) iterator.next();
@@ -52,6 +64,10 @@ public class Room implements GameListener {
 		}
 	}
 
+	/**
+	 * The method to add the Player to the room.
+	 * @param Player p
+	 * */
 	public void addPlayer(Player p) {
 		this.listPlayer.add(p);
 		p.setCurrentRoom(this);
@@ -68,48 +84,92 @@ public class Room implements GameListener {
 
 	}
 
+	/**
+	 * Return the list of the Players 
+	 * @return List<Player> listPlayer
+	 * */
 	public List<Player> getListPlayer() {
 		return listPlayer;
 	}
 
+	/**
+	 * The method to reset the list of the Players 
+	 * @param List<Player> listPlayer
+	 * */
 	private void setListPlayer(List<Player> listPlayer) {
 		this.listPlayer = listPlayer;
 	}
 
+	/**
+	 * Return the current game in the room.
+	 * @return Game currentGame
+	 * */
 	public Game getCurrentGame() {
 		return currentGame;
 	}
 
+	/**
+	 * The method to set the current game in the room
+	 * @param Game currentGame
+	 * */
 	public void setCurrentGame(Game currentGame) {
 		this.currentGame = currentGame;
 	}
 
+	/**
+	 * Return the id of the current room.
+	 * @return long roomId
+	 * */
 	public long getRoomID() {
 		return RoomID;
 	}
 
+	/**
+	 * The method to set id for the room
+	 * @param long roomId
+	 * */
 	public void setRoomID(long roomID) {
 		RoomID = roomID;
 	}
 
+	/**
+	 * Return the Player is the Master
+	 * @return Player master
+	 * */
 	public Player getMaster() {
 		return master;
 	}
 
+	/**
+	 * The method to set the Player is the master
+	 * @param Player master
+	 * */
 	public void setMaster(Player master) {
 		this.master = master;
 	}
 
+	/**
+	 * Return the Blind Level of the Player
+	 * @return BlindLevel blindLevel
+	 * */
 	public BlindLevel getBlindLevel() {
 		return blindLevel;
 	}
 
+	/**
+	 * The method to set the Blind Level for the Player
+	 * @param BlindLevel blindLevel 
+	 * */
 	public void setBlindLevel(BlindLevel blindLevel) {
 		this.blindLevel = blindLevel;
 	}
 
 	BlindLevel blindLevel;
 
+	/**
+	 * The constructor with 2 params are Player and BlindLevel
+	 * @param Player master, BlindLevel blindLevel
+	 * */
 	public Room(Player master, BlindLevel blindLevel) {
 		this.master = master;
 		this.blindLevel = blindLevel;
@@ -117,12 +177,13 @@ public class Room implements GameListener {
 		this.RoomID = System.currentTimeMillis();
 		
 		this.createNewGame();
-		
-
-		
-
 	}
 
+	
+	/**
+	 * The method to create the new Game in the Room
+	 * @return Game currentGame
+	 * */
 	public Game createNewGame() {
 		if(this.currentGame!=null)
 		{
@@ -147,15 +208,19 @@ public class Room implements GameListener {
 		return this.currentGame;
 	}
 
+	/**
+	 * Returns the id of the room.
+	 * @return String roomId
+	 */
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub need to fix
 		return String.valueOf(this.RoomID);
 	}
 
-	/*
-	 * Send all event to room topic
-	 */
+	/**
+	 * Send all event to the room topic
+	 **/
 	@Override
 	public void actionPerformed(GameEvent event) {
 
