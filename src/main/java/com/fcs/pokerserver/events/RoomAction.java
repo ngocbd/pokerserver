@@ -20,6 +20,10 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver.events;
 
+/**
+ * The RoomAction enum the action in the Room.
+ * @category pokerserver.events
+ * */
 public enum RoomAction {
 
 	PLAYERJOINEDROOM,

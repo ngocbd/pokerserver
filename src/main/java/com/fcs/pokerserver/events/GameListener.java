@@ -20,6 +20,11 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver.events;
 
+
+/**
+ * The GameListener interface listen the Event in the Game.
+ * @category pokerserver.events
+ * */
 public interface GameListener {
 	public void actionPerformed(GameEvent event);
 	

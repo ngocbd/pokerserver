@@ -27,7 +27,7 @@ import com.fcs.pokerserver.Game;
 
 /**
  * An instance of the GameEvent class is described the Events of the Game.
- * @category pokerserver
+ * @category pokerserver.events
  * */
 public class GameEvent {
 	private Game source ;
@@ -45,7 +45,7 @@ public class GameEvent {
 	}
 	
 	/**
-	 * Return the Event Source from the game.
+	 * Return the Game Event Source from the game.
 	 * @return Game eventSource
 	 * */
 	public Game getSource() {
@@ -70,7 +70,7 @@ public class GameEvent {
 	}
 	
 	/**
-	 * The method to set the Action for the Player in the Game.
+	 * The method to set the Game Action in the Game.
 	 * @param GameAction action
 	 * */
 	public void setAction(GameAction action) {

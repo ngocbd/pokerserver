@@ -25,27 +25,70 @@ import java.util.HashMap;
 import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Room;
 
+/**
+ * The RoomEvent class is described the Events in the Room.
+ * @category pokerserver.events
+ * */
 public class RoomEvent {
 	private Room source ;
 	private RoomAction action;
 	public HashMap<String, Object> agruments = new HashMap<String, Object>(); 
+	
+	/**
+	 * The constructor with 2 parameters Room and RoomAction 
+	 * @param Room src, RoomAction action
+	 * */
 	public RoomEvent(Room src,RoomAction action)
 	{
 		this.source = src;
 		this.action = action;
 	}
 	
+	/**
+	 * Return the Room Event Source from the game.
+	 * @return Room eventSource
+	 * */
 	public Room getSource() {
 		return source;
 	}
+	
+	/**
+	 * The method to set event source in the Room.
+	 * @param Room sourceEvent
+	 * */
 	public void setSource(Room source) {
 		this.source = source;
 	}
+	
+	/**
+	 * Return the action in the Room event. Like CREATED, WAITTING, PREFLOP, FLOP, TURN, RIVER, ENDED, PLAYEREVENT
+	 * @see RoomAction
+	 * @return RoomAction action.
+	 * */
 	public RoomAction getAction() {
 		return action;
 	}
+	
+	/**
+	 * The method to set the Action in the Room.
+	 * @param RoomAction action
+	 * */
 	public void setAction(RoomAction action) {
 		this.action = action;
 	}
 	
+	/**
+	 * Override the String method to return the RoomEvent String.
+	 * @return String roomEventString
+	 * */
+	@Override
+	public String toString()
+	{
+		String str="";
+		for (String key : agruments.keySet()) {
+			str+=key+":"+agruments.get(key);
+		
+		}
+		return source.getRoomID() + action.toString()+str;
+	}
 }

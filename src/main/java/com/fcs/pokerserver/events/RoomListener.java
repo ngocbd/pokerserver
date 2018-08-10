@@ -20,6 +20,10 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver.events;
 
+/**
+ * The RoomListener interface listen the Event of Room in the Game.
+ * @category pokerserver.events
+ * */
 public interface RoomListener {
 	public void actionPerformed(RoomEvent event);
 	

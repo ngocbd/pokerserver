@@ -24,25 +24,70 @@ import java.util.HashMap;
 
 import com.fcs.pokerserver.Player;
 
+/**
+ * An instance of the PlayerEvent class is described the Events of the Player.
+ * @category pokerserver.events
+ * */
 public class PlayerEvent {
 	private Player source ;
 	private PlayerAction action;
 	public HashMap<String, Object> agruments = new HashMap<String, Object>(); 
+	
+	/**
+	 * The constructor with 2 parameters Player and PlayerAction 
+	 * @param Player src, PlayerAction action
+	 * */
 	public PlayerEvent(Player src,PlayerAction action)
 	{
 		this.setSource(src);
 		this.setAction(action);
 	}
+	
+	/**
+	 * Return the Player Event Source from the game.
+	 * @return Player eventSource
+	 * */
 	public Player getSource() {
 		return source;
 	}
+	
+	/**
+	 * The method to set event source of the Player.
+	 * @param Player sourceEvent
+	 * */
 	public void setSource(Player source) {
 		this.source = source;
 	}
+	
+	/**
+	 * Return the action from the Player event in the game. Like BET, FOLD, CALL, CHECK
+	 * @see PlayerAction
+	 * @return PlayerAction action.
+	 * */
 	public PlayerAction getAction() {
 		return action;
 	}
+	
+	/**
+	 * The method to set the Action for the Player in the Game.
+	 * @param PlayerAction action
+	 * */
 	public void setAction(PlayerAction action) {
 		this.action = action;
+	}
+	
+	/**
+	 * Override the String method to return the PlayerEvent String.
+	 * @return String playerEventString
+	 * */
+	@Override
+	public String toString()
+	{
+		String str="";
+		for (String key : agruments.keySet()) {
+			str+=key+":"+agruments.get(key);
+		
+		}
+		return source.getId() + action.toString()+str;
 	}
 }
