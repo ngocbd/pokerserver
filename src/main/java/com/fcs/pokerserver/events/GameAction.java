@@ -20,6 +20,10 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver.events;
 
+/**
+ * An instance of the GameAction class is described the action of the Game.
+ * @category pokerserver
+ * */
 public enum GameAction {
 
 	CREATED,

@@ -25,28 +25,63 @@ import java.util.Iterator;
 
 import com.fcs.pokerserver.Game;
 
+/**
+ * An instance of the GameEvent class is described the Events of the Game.
+ * @category pokerserver
+ * */
 public class GameEvent {
 	private Game source ;
 	private GameAction action;
 	public HashMap<String, Object> agruments = new HashMap<String, Object>(); 
+	
+	/**
+	 * The constructor with 2 parameters Game and GameAction 
+	 * @param Game src, GameAction action
+	 * */
 	public GameEvent(Game src,GameAction action)
 	{
 		this.source = src;
 		this.action = action;
 	}
 	
+	/**
+	 * Return the Event Source from the game.
+	 * @return Game eventSource
+	 * */
 	public Game getSource() {
 		return source;
 	}
+	
+	/**
+	 * The method to set event source of the game.
+	 * @param Game sourceEvent
+	 * */
 	public void setSource(Game source) {
 		this.source = source;
 	}
+	
+	/**
+	 * Return the action from the game event in the game. Like CREATED, WAITTING, PREFLOP, FLOP, TURN, RIVER, ENDED, PLAYEREVENT
+	 * @see GameAction
+	 * @return GameAction action.
+	 * */
 	public GameAction getAction() {
 		return action;
 	}
+	
+	/**
+	 * The method to set the Action for the Player in the Game.
+	 * @param GameAction action
+	 * */
 	public void setAction(GameAction action) {
 		this.action = action;
 	}
+	
+	/**
+	 * Override the String method to return the GameEvent String.
+	 * @return String gameEventString
+	 * */
+	@Override
 	public String toString()
 	{
 		String str="";

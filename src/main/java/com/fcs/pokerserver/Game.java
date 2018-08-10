@@ -48,6 +48,7 @@ import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
 import com.fsc.pokerserver.test.CardEvaluatorTest;
 
 import junit.framework.AssertionFailedError;
+
 /**
  * An instance of the Game class is created Game to Player play Poker Game. This is the most important file in system.
  * @category pokerserver
@@ -172,8 +173,8 @@ public class Game implements PlayerListener {
 	}
 
 	/**
-	 * In flop games, this is the fourth card dealt. It is the third round of betting
-	 * @exception Next Round of Player is ready 
+	 * In flop games, this is the fourth card deal. It is the third round of betting
+	 * @throws AssertionError Next Round of Player is ready 
 	 * */
 	public void turn() {
 		assert this.isNextRoundReady();
@@ -196,7 +197,7 @@ public class Game implements PlayerListener {
 
 	/**
 	 * This is the last card given in all games.
-	 * @exception Next Round of Player is ready 
+	 * @throws AssertionError Next Round of Player is ready.
 	 * */
 	public void river() {
 		assert this.isNextRoundReady();
@@ -393,7 +394,7 @@ public class Game implements PlayerListener {
 	 * Return Player is Next Player of Game
 	 * @param Player p
 	 * @return Player
-	 * @exception the list of Players is not contain the Player.
+	 * @throws AssertionError the list of Players is not contain the Player.
 	 * */
 	public Player getNextPlayer(Player p)
 	{
@@ -421,7 +422,7 @@ public class Game implements PlayerListener {
 	/**
 	 * Set the player is Dealer in the game
 	 * @param Player dealer
-	 * @exception the list of Players is not contain the Player.
+	 * @throws AssertionError the list of Players is not contain the Player.
 	 * */
 	public void setDealer(Player dealer) {
 		
@@ -433,8 +434,7 @@ public class Game implements PlayerListener {
 		
 		
 /*
-		// kt dk neeu add 1 thang mat day ko co trong playerlist thi error
-
+//      Check the condition if add the player not in playerlist, show error.
 		if (listPlayer.contains(dealer)) {
 
 			this.dealer = dealer;
@@ -534,8 +534,6 @@ public class Game implements PlayerListener {
 		for (Iterator iterator = this.listeners.iterator(); iterator.hasNext();) {
 			GameListener listener = (GameListener) iterator.next();
 			listener.actionPerformed(ge);
-			
-			
 		}
 	}
 	
@@ -551,10 +549,6 @@ public class Game implements PlayerListener {
 				//.filter(x -> x.getRoundBet() != this.getCurrentRoundBet() || x.getRound() != this.getRound())
 				.filter(x -> x.getRoundBet() != this.getCurrentRoundBet() )
 				.findAny().isPresent();
-		
-			
-			
-		
 	}
 	
 	
@@ -600,7 +594,7 @@ public class Game implements PlayerListener {
 	/**
 	 * Override the actionPerformed method to sure the Player has action need in the game. 
 	 * @param PlayerEvent pe.
-	 * @exception Player is not the current player or the player is not in game.
+	 * @throws AssertionError if the Player is not the current player or the player is not in game. The Round of Bet is not less than the current round bet.
 	 * @return void.
 	 * */
 	@Override
@@ -615,10 +609,8 @@ public class Game implements PlayerListener {
 			{
 				assert p.getRoundBet()>=this.currentRoundBet;
 				
-				
 				this.potBalance+= (long)event.agruments.get("amount");
 				this.currentRoundBet=p.getRoundBet(); // set current bet equal to this bet amount
-				
 				
 				//TODO Temporary set check next round for game
 				// if next round ready then next Player will be left person of dealer
@@ -628,15 +620,12 @@ public class Game implements PlayerListener {
 				}
 				else
 				{
-				
-				
 					Player next = this.getNextPlayer(p);
 					if(next!=null)
 					{
 						this.setCurrentPlayer(next);
 					}				
 				}
-				
 			}
 			
 			if(event.getAction()==PlayerAction.FOLD)
@@ -649,12 +638,10 @@ public class Game implements PlayerListener {
 			{
 				this.setCurrentPlayer(this.getNextPlayer(p));
 			}
+			
 			GameEvent ge = new GameEvent(this, GameAction.PLAYEREVENT);
 			ge.agruments.put("playerEvent", event);
-			
 			this.fireEvent(ge);
-			
-			
 		}
 		
 	}

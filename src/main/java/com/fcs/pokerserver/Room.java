@@ -60,7 +60,6 @@ public class Room implements GameListener {
 		for (Iterator iterator = this.listeners.iterator(); iterator.hasNext();) {
 			RoomListener listener = (RoomListener) iterator.next();
 			listener.actionPerformed(re);
-
 		}
 	}
 
@@ -76,12 +75,11 @@ public class Room implements GameListener {
 
 			this.currentGame.addPlayer(p);
 		}
+		
 		RoomEvent re = new RoomEvent(this, RoomAction.PLAYERJOINEDROOM);
 		re.agruments.put("player", p);
 		
 		this.fireEvent(re);
-
-
 	}
 
 	/**
@@ -196,14 +194,10 @@ public class Room implements GameListener {
 		this.currentGame.addGameListener(this);
 		this.currentGame.addPlayer(this.master);
 
-
 		//TODO not good because game event should fire from game
 		RoomEvent re = new RoomEvent(this, RoomAction.GAMEACTION);
-
 		re.agruments.put("gameevent", new GameEvent(this.currentGame, GameAction.CREATED));
-
 		this.fireEvent(re);
-
 
 		return this.currentGame;
 	}
@@ -223,14 +217,9 @@ public class Room implements GameListener {
 	 **/
 	@Override
 	public void actionPerformed(GameEvent event) {
-
 		RoomEvent re = new RoomEvent(this, RoomAction.GAMEACTION);
-
 		re.agruments.put("gameevent", event);
-
 		this.fireEvent(re);
-
-
 	}
 
 }

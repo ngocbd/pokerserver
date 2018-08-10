@@ -85,7 +85,6 @@ public class Player {
 	 * */
 	public void bet(long amount)
 	{
-		
 		assert amount<this.balance;
 		
 		assert this.sittingOut==false;
@@ -94,14 +93,8 @@ public class Player {
 		this.balance=this.balance-amount;
 		
 		PlayerEvent pe = new PlayerEvent(this, PlayerAction.BET);
-		
 		pe.agruments.put("amount", amount);
-
-		
 		this.fireEvent(pe);
-		
-		
-		
 	}
 	
 	/**
@@ -143,7 +136,6 @@ public class Player {
 		
 		this.fireEvent(pe);
 		this.sittingOut=true;
-		
 	}
 	
 	/**
@@ -151,9 +143,7 @@ public class Player {
 	 * */
 	public void check()
 	{
-
-		PlayerEvent pe = new PlayerEvent(this, PlayerAction.CHECK);
-		
+		PlayerEvent pe = new PlayerEvent(this, PlayerAction.CHECK);	
 		this.fireEvent(pe);
 	}
 	
@@ -342,7 +332,6 @@ public class Player {
 	 * Return the Player's information by Json type.
 	 * @return String jsonString 
 	 * */
-	//TODO JSON please
 	public String toString()
 	{
 		return "{"+"\"Name\": \""+this.getName()+"\", \"Balance\": "+this.balance+", \"RoundBet\": "+this.roundBet+"}";
