@@ -20,6 +20,10 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver.events;
 
+/**
+ * The PlayerAction enum the action of the Player.
+ * @category pokerserver.events
+ * */
 public enum PlayerAction {
 	BET,
 	FOLD,

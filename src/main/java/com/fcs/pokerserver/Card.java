@@ -42,6 +42,8 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 /**
  * Enumeration of all cards used in Texas Hold'em.
+ * @category pokerserver
+ * @author Ngocbd
  */
 //Serialize a member of this enum to JSON using the enum's toString method
 @JsonSerialize(using=ToStringSerializer.class)
@@ -124,7 +126,7 @@ public enum Card {
 	/**
 	 * Returns the card rank.
 	 * 
-	 * @return rank card rank
+	 * @return Rank of the card rank
 	 */
 	public Rank getRank() {
 		return rank;
@@ -133,7 +135,7 @@ public enum Card {
 	/**
 	 * Returns the card suit.
 	 * 
-	 * @return suit card suit
+	 * @return Suit of the card suit
 	 */
 	public Suit getSuit() {
 		return suit;

@@ -108,7 +108,7 @@ import com.fcs.pokerserver.gameserver.MqttServletGameServer;
  * nghe1: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6Im5naGUxIn0.3Bx_3efkx4UYEuHwVz2CCSNEIS6i6qeRN89o6xafAaY
  * 
  * **/
-@Ignore
+
 public class GameServerClientTest implements MqttCallback {
 
 	String host = "http://localhost:8080/";

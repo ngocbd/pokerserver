@@ -49,6 +49,11 @@ import com.fsc.pokerserver.test.CardEvaluatorTest;
 
 import junit.framework.AssertionFailedError;
 
+/**
+ * An instance of the Game class is created Game to Player play Poker Game. This is the most important file in system.
+ * @category pokerserver
+ * @author Ngocbd
+ * */
 public class Game implements PlayerListener {
 
 	private List<Player> listPlayer = new ArrayList<Player>();
@@ -86,9 +91,8 @@ public class Game implements PlayerListener {
 	}
 
 	/**
-	 * Start Game
-	 * @return void
-	 * @exception Players in Room need greater than or equal to 2
+	 * Start Game.
+	 * @throws AssertionError if the total of Players < 2.
 	 * */
 	public void startGame() {
 		assert this.listPlayer.size() >=2;
@@ -103,8 +107,7 @@ public class Game implements PlayerListener {
 	
 	/**
 	 * Pre-flop play refers to the action that occurs before the flop is dealt. A game begins with the small blind and big blind posting the blinds, and cards are dealt to each player.
-	 * @exception Players in Room need greater than or equal to 2
-	 * @return void
+	 * @throws AssertionError if the total of Players < 2.
 	 * */
 	public void preflop() {
 		assert this.listPlayer.size() >= 2;
@@ -144,8 +147,7 @@ public class Game implements PlayerListener {
 	
 	/**
 	 * the first three community cards that are dealt face-up in the center of the table all at one time. The "flop" also indicates the second round of betting. 
-	 * @return void
-	 * @exception Next Round of player is Ready
+	 * @throws AssertionError if the next round of the Player is not Ready
 	 * */
 	public void flop() {
 		
@@ -171,9 +173,8 @@ public class Game implements PlayerListener {
 	}
 
 	/**
-	 * In flop games, this is the fourth card dealt. It is the third round of betting
-	 * @return void
-	 * @exception Next Round of Player is ready 
+	 * In flop games, this is the fourth card deal. It is the third round of betting
+	 * @throws AssertionError Next Round of Player is ready 
 	 * */
 	public void turn() {
 		assert this.isNextRoundReady();
@@ -196,8 +197,7 @@ public class Game implements PlayerListener {
 
 	/**
 	 * This is the last card given in all games.
-	 * @return void
-	 * @exception Next Round of Player is ready 
+	 * @throws AssertionError Next Round of Player is ready.
 	 * */
 	public void river() {
 		assert this.isNextRoundReady();
@@ -214,7 +214,6 @@ public class Game implements PlayerListener {
 	
 	/**
 	 * Finish the game. Show the winner Player.
-	 * @return void
 	 * */
 	public void endGame()
 	{
@@ -273,7 +272,6 @@ public class Game implements PlayerListener {
 	/**
 	 * Set value for Deck
 	 * @param Deck deck 
-	 * @return void
 	 * */
 	public void setDeck(Deck deck) {
 		this.deck = deck;
@@ -316,7 +314,6 @@ public class Game implements PlayerListener {
 	/**
 	 * Add player into the game
 	 * @param Player p
-	 * @return void
 	 * */
 	public void addPlayer(Player p) {
 		
@@ -358,7 +355,6 @@ public class Game implements PlayerListener {
 	/**
 	 * Set Id for Game
 	 * @param long id
-	 * @return void
 	 * */
 	private void setId(long id) {
 		this.id = id;
@@ -398,7 +394,7 @@ public class Game implements PlayerListener {
 	 * Return Player is Next Player of Game
 	 * @param Player p
 	 * @return Player
-	 * @exception the list of Players is not contain the Player.
+	 * @throws AssertionError the list of Players is not contain the Player.
 	 * */
 	public Player getNextPlayer(Player p)
 	{
@@ -426,8 +422,7 @@ public class Game implements PlayerListener {
 	/**
 	 * Set the player is Dealer in the game
 	 * @param Player dealer
-	 * @return void
-	 * @exception the list of Players is not contain the Player.
+	 * @throws AssertionError the list of Players is not contain the Player.
 	 * */
 	public void setDealer(Player dealer) {
 		
@@ -439,8 +434,7 @@ public class Game implements PlayerListener {
 		
 		
 /*
-		// kt dk neeu add 1 thang mat day ko co trong playerlist thi error
-
+//      Check the condition if add the player not in playerlist, show error.
 		if (listPlayer.contains(dealer)) {
 
 			this.dealer = dealer;
@@ -489,7 +483,6 @@ public class Game implements PlayerListener {
 	/**
 	 * Set the player is Big Blind in the game
 	 * @param Player bigBlind
-	 * @return void
 	 * */
 	public void setBigBlind(Player bigBlind) {
 		this.bigBlind = bigBlind;
@@ -506,7 +499,6 @@ public class Game implements PlayerListener {
 	/**
 	 * Set the player is Small Blind in the game
 	 * @param Player smallBlind
-	 * @return void
 	 * */
 	public void setSmallBlind(Player smallBlind) {
 		this.smallBlind = smallBlind;
@@ -523,7 +515,6 @@ public class Game implements PlayerListener {
 	/**
 	 * Set cards of Board on the table in game
 	 * @param Board board
-	 * @return void
 	 * */
 	public void setBoard(Board board) {
 		this.board = board;
@@ -532,7 +523,6 @@ public class Game implements PlayerListener {
 	/**
 	 * Add Listener for the game
 	 * @param GameListener gl
-	 * @return void
 	 * */
 	public void addGameListener(GameListener gl)
 	{
@@ -544,8 +534,6 @@ public class Game implements PlayerListener {
 		for (Iterator iterator = this.listeners.iterator(); iterator.hasNext();) {
 			GameListener listener = (GameListener) iterator.next();
 			listener.actionPerformed(ge);
-			
-			
 		}
 	}
 	
@@ -561,10 +549,6 @@ public class Game implements PlayerListener {
 				//.filter(x -> x.getRoundBet() != this.getCurrentRoundBet() || x.getRound() != this.getRound())
 				.filter(x -> x.getRoundBet() != this.getCurrentRoundBet() )
 				.findAny().isPresent();
-		
-			
-			
-		
 	}
 	
 	
@@ -610,7 +594,7 @@ public class Game implements PlayerListener {
 	/**
 	 * Override the actionPerformed method to sure the Player has action need in the game. 
 	 * @param PlayerEvent pe.
-	 * @exception Player is not the current player or the player is not in game.
+	 * @throws AssertionError if the Player is not the current player or the player is not in game. The Round of Bet is not less than the current round bet.
 	 * @return void.
 	 * */
 	@Override
@@ -625,10 +609,8 @@ public class Game implements PlayerListener {
 			{
 				assert p.getRoundBet()>=this.currentRoundBet;
 				
-				
 				this.potBalance+= (long)event.agruments.get("amount");
 				this.currentRoundBet=p.getRoundBet(); // set current bet equal to this bet amount
-				
 				
 				//TODO Temporary set check next round for game
 				// if next round ready then next Player will be left person of dealer
@@ -638,15 +620,12 @@ public class Game implements PlayerListener {
 				}
 				else
 				{
-				
-				
 					Player next = this.getNextPlayer(p);
 					if(next!=null)
 					{
 						this.setCurrentPlayer(next);
 					}				
 				}
-				
 			}
 			
 			if(event.getAction()==PlayerAction.FOLD)
@@ -659,12 +638,10 @@ public class Game implements PlayerListener {
 			{
 				this.setCurrentPlayer(this.getNextPlayer(p));
 			}
+			
 			GameEvent ge = new GameEvent(this, GameAction.PLAYEREVENT);
 			ge.agruments.put("playerEvent", event);
-			
 			this.fireEvent(ge);
-			
-			
 		}
 		
 	}
@@ -680,7 +657,6 @@ public class Game implements PlayerListener {
 	/**
 	 * Set the player is current player.
 	 * @param Player p
-	 * @return void
 	 * */
 	public void setCurrentPlayer(Player p) {
 		this.currentPlayer = p;
@@ -699,7 +675,6 @@ public class Game implements PlayerListener {
 	/**
 	 * Set the current Bet for the player in the game
 	 * @param long currentBet
-	 * @return void
 	 * */
 	public void setCurrentBet(long currentBet) {
 		this.currentRoundBet = currentBet;
@@ -716,7 +691,6 @@ public class Game implements PlayerListener {
 	/**
 	 * Set the round for game.
 	 * @param short round
-	 * @return void
 	 * */
 	public void setRound(short round) {
 		this.round = round;

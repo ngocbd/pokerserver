@@ -20,6 +20,8 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver.gameserver;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -27,11 +29,15 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import javax.servlet.DispatcherType;
 
+import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -77,6 +83,20 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	private static  MqttServletGameServer instance =null;
 	
 	static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
+	static 
+	{
+		
+		final InputStream inputStream = MqttServletGameServer.class.getResourceAsStream("logging.properties");
+		try
+		{
+		    LogManager.getLogManager().readConfiguration(inputStream);
+		}
+		catch (final IOException e)
+		{
+		    Logger.getAnonymousLogger().severe("Could not load default logging.properties file");
+		    Logger.getAnonymousLogger().severe(e.getMessage());
+		}
+	}
 	
 	private  MqttServletGameServer() {
 		ServletHolder loginServlet = new ServletHolder(LoginServlet.class);
@@ -88,6 +108,19 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         Server server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         server.setHandler(context);
+        
+        NCSARequestLog requestLog = new NCSARequestLog();
+        String logFileName=System.getProperty("java.io.tmpdir")+"pokerserver-logs-yyyy_mm_dd.request.log";
+        logger.fine("Request log:"+logFileName);
+        
+        
+        requestLog.setFilename(logFileName);
+        requestLog.setFilenameDateFormat("yyyy_MM_dd");
+        requestLog.setRetainDays(90);
+        requestLog.setAppend(true);
+        requestLog.setExtended(true);
+        requestLog.setLogCookies(false);
+        requestLog.setLogTimeZone("GMT");
         
         context.addFilter(ObjectifyWebFilter.class, "/*",
                 EnumSet.of(DispatcherType.REQUEST));
@@ -106,20 +139,17 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         logger.warning("MqttServletGameServer starting..."+ ManagementFactory.getRuntimeMXBean().getName());
         try {
 			server.start();
-			 
+			try {
+				this.run();
+			} catch (MqttException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			logger.warning("MqttServletGameServer started at "+DateTime.now().toLocalDateTime().toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-       
-		try {
-			this.run();
-		} catch (MqttException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		logger.warning("MqttServletGameServer started at "+DateTime.now().toLocalDateTime().toString());
 
 	}
 	public static MqttServletGameServer getInstance()
@@ -270,7 +300,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	
 	@Override
 	public void actionPerformed(RoomEvent event) {
-		
+		logger.log(Level.SEVERE,event.toString() );
 		/*
 		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=ENDED&gameid=1533628053188
 		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=RIVER&gameid=1533628053188

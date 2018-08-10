@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -58,6 +60,7 @@ public class GameServlet extends HttpServlet {
 	
 
 	MqttServletGameServer server = MqttServletGameServer.getInstance();
+	static Logger logger = Logger.getLogger(GameServlet.class.getName());
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
@@ -94,10 +97,11 @@ public class GameServlet extends HttpServlet {
 //			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
 //			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
 			
-			System.out.println("\nStart Game Successful");
-			System.out.println("Dealer: {Name: "+ p.getCurrentGame().getDealer().getName() + " ; Balance: "+p.getCurrentGame().getDealer().getBalance()+"}");
-			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+//			System.out.println("\nStart Game Successful");
+//			System.out.println("Dealer: {Name: "+ p.getCurrentGame().getDealer().getName() + " ; Balance: "+p.getCurrentGame().getDealer().getBalance()+"}");
+//			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
+//			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
+			
 			
 			
 			return;
@@ -112,12 +116,19 @@ public class GameServlet extends HttpServlet {
 //			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
 //			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
 			
-			System.out.println("\nPreflop game");
+			System.out.println("warning");
+			logger.warning("habogay preflop");
+			System.out.println("finer");
+			logger.finer("finer");
+			System.out.println("fine");
+			logger.log(Level.FINE, "fine");
+			System.out.println("\nPreflop game 1");
 			System.out.println("Number of cards: "+p.getCurrentGame().getBoard().getCardNumber());
 //			System.out.println("Cards of Player: "+ p.getPlayerHand().getCard(0).toString()+" "+p.getPlayerHand().getCard(1).toString());
 			for(int i=0;i<p.getCurrentGame().getListPlayer().size();i++)
 			{
 				System.out.println("Cards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString());
+//				System.out.println("Player json: "+p.toString());
 			}
 			
 			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
