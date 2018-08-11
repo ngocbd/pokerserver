@@ -21,6 +21,7 @@ package com.fcs.pokerserver;
 
 /**
  * Enumeration of the card suits.
+ * @category com > fcs > pokerserver
  */
 public enum Suit {
 

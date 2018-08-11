@@ -51,8 +51,7 @@ import junit.framework.AssertionFailedError;
 
 /**
  * An instance of the Game class is created Game to Player play Poker Game. This is the most important file in system.
- * @category pokerserver
- * @author Ngocbd
+ * @category com > fcs > pokerserver
  * */
 public class Game implements PlayerListener {
 

@@ -41,8 +41,7 @@ import com.fcs.pokerserver.holder.Hand;
 
 /**
  * An instance of the Player class is created Player when user want to play Poker Game.
- * @category pokerserver
- * @author Ngocbd
+ * @category com > fcs > pokerserver
  * */
 public class Player {
 	private long balance;

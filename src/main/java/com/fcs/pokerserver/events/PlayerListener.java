@@ -22,7 +22,7 @@ package com.fcs.pokerserver.events;
 
 /**
  * The PlayerListener interface listen the Event of Player in the Game.
- * @category pokerserver.events
+ * @category com > fcs > pokerserver > events
  * */
 public interface PlayerListener {
 	public void actionPerformed(PlayerEvent event);

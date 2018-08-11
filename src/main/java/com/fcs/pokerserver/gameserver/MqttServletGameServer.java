@@ -74,8 +74,10 @@ import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
-/*
- * This class is for testing not for production
+
+/**
+ * The class is tested. It's not a production.
+ * @category com > fcs > pokerserver > gameserver
  * */
 public class MqttServletGameServer implements MqttCallback, RoomListener {
 
@@ -83,6 +85,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	private static  MqttServletGameServer instance =null;
 	
 	static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
+	
 	static 
 	{
 		
@@ -152,6 +155,11 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		}
 
 	}
+	
+	/**
+	 * Singleton pattern to get the MqttServletGameServer instance. 
+	 * @return MqttServletGameServer instance
+	 * */
 	public static MqttServletGameServer getInstance()
 	{
 		
@@ -163,14 +171,12 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		
 		return instance;
 	}
+	
+	/**
+	 * The Main method
+	 * */
 	public static void main(String[] args) {
-		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
-		
-		
-		
-		
-		
-       
+		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance(); 
 	}
 	
 	private List<Player> listPlayer = new ArrayList<Player>();
@@ -178,23 +184,50 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 	Algorithm algorithm = Algorithm.HMAC256("thisstringisverysecret");
 	Sender sender;
+	
+	/**
+	 * The the Player into the ListPlayer.
+	 * @param Player p
+	 * */
 	public void addPlayer(Player p) {
 		this.getListPlayer().add(p);
 
 	}
+	
+	/**
+	 * The method to add the room into the RoomListener.
+	 * @param Room r
+	 * */
 	public void addRoom(Room r) {
 		this.getListRoom().add(r);
 		r.addRoomListener(this);
-
 	}
+	
+	/**
+	 * The method to get the Name of the Player.
+	 * @param String name
+	 * @return Player playerName
+	 * */
 	public Player getPlayerByName(String name)
 	{
 		return this.getListPlayer().stream().filter(x -> name.equals(x.getName())).findFirst().orElse(null);
 	}
+	
+	/**
+	 * The method to get the Id of the Room.
+	 * @param long id
+	 * @return Room roomId
+	 * */
 	public Room getRoomByID(long id)
 	{
 		return this.getListRoom().stream().filter(x -> x.getRoomID()==id).findFirst().orElse(null);
 	}
+	
+	/**
+	 * The method to get the Query of the Map.
+	 * @param String query
+	 * @return Map<String, String> map
+	 * */
 	public static Map<String, String> getQueryMap(String query) {
 		String[] params = query.split("&");
 		Map<String, String> map = new HashMap<String, String>();
@@ -210,23 +243,13 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	MqttConnectOptions connOpt;
 
 	static final String BROKER_URL = "tcp://broker.mqttdashboard.com:1883";
-//	static final String BROKER_URL = "tcp://localhost:1883";
 	static final String SERVER_TOPIC = "/pokerserver/server";
 
-	/**
-	 * 
-	 * MAIN
-	 * 
-	 */
-	
 
 	/**
 	 * 
-	 * run The main functionality of this simple example. Create a MQTT client,
-	 * connect to broker, pub/sub, disconnect.
-	 * 
+	 * The simple example run the main function. Create a MQTT client. Connect  the Broker. Subscribe the server topic.
 	 * @throws MqttException
-	 * 
 	 */
 	public void run() throws MqttException {
 
@@ -234,9 +257,6 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 
 		connOpt.setCleanSession(true);
 		connOpt.setKeepAliveInterval(30);
-		
-		
-		
 
 		// Connect to Broker
 		try {
@@ -255,21 +275,33 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 
 	}
 
+	/**
+	 * The method to print the exception.
+	 * @param Throwable cause
+	 * */
 	@Override
 	public void connectionLost(Throwable cause) {
 		// TODO Auto-generated method stub
 		cause.printStackTrace(System.out);
 
 	}
+	
+	/**
+	 * The callback function print the messagne when it's called.
+	 * @param String topic, MqttMessage message 
+	 * */
 	public void processingMessage(String topic, MqttMessage message) throws Exception
 	{
 		// TODO Auto-generated method stub
 				String body = new String(message.getPayload(), Charset.forName("UTF-8"));
-				System.out.println("topic:" + topic + " msg:" + new String(message.getPayload()));
-				
-					
+				System.out.println("topic:" + topic + " msg:" + body);			
 				
 	}
+	
+	/**
+	 * Override the messageArrived method. 
+	 * @param String topic, MqttMessage message
+	 * */
 	@Override
 	public void messageArrived(String topic, MqttMessage message) {
 		try {
@@ -285,51 +317,48 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		// TODO Auto-generated method stub
 
 	}
+	
+	/**
+	 * The method to get the list of the room.
+	 * @return List<Room> listRoom
+	 * */
 	public List<Room> getListRoom() {
 		return listRoom;
 	}
+	
+	/**
+	 * The method to set the room list.
+	 * @param List<Room> listRoom
+	 * */
 	public void setListRoom(List<Room> listRoom) {
 		this.listRoom = listRoom;
 	}
+	
+	/**
+	 * The method to get the list of the player.
+	 * @return List<Player> listPlayer
+	 * */
 	public List<Player> getListPlayer() {
 		return listPlayer;
 	}
+	
+	/**
+	 * The method to set the player list.
+	 * @param List<Player> listPlayer
+	 * */
 	public void setListPlayer(List<Player> listPlayer) {
 		this.listPlayer = listPlayer;
 	}
 	
+	
+	/**
+	 * Override the actionPerformed to push the message to the MqttServer
+	 * @param RoomEvent event
+	 * */
 	@Override
 	public void actionPerformed(RoomEvent event) {
 		logger.log(Level.SEVERE,event.toString() );
-		/*
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=ENDED&gameid=1533628053188
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=RIVER&gameid=1533628053188
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628051383&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628053134&playeraction=fold
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052772&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052461&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052128&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=TURN&gameid=1533628053188
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628051383&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628053134&playeraction=fold
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052772&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052461&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052128&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=FLOP&gameid=1533628053188
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052128&playeraction=bet&amount=10
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628051383&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628053134&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052772&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PREFLOP&gameid=1533628053188
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052461&playeraction=bet&amount=20
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=PLAYEREVENT&gameid=1533628053188&pid=1533628052128&playeraction=bet&amount=10
-		 * cmd=GAMEACTION&roomid=1533628053187&gameEvent=WAITTING&gameid=1533628053188
-		 * cmd=PLAYERJOINEDROOM&roomid=1533628053187&pid=1533628053134
-		 * cmd=PLAYERJOINEDROOM&roomid=1533628053187&pid=1533628052772
-		 * cmd=PLAYERJOINEDROOM&roomid=1533628053187&pid=1533628052461
-		 * cmd=PLAYERJOINEDROOM&roomid=1533628053187&pid=1533628052128
-		 * 
-		 * */
+		
 		String content = "cmd="+event.getAction()+"&roomid="+event.getSource().getRoomID();
 		if(event.getAction()==RoomAction.GAMEACTION)
 		{
@@ -365,8 +394,6 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 			{
 				content +="&playerwin="+ge.agruments.get("playerwin")+"&rank="+ge.agruments.get("rank")+"&besthand="+ge.agruments.get("besthand");
 			}
-			
-			System.out.println(ge);
 		}else if(event.getAction()==RoomAction.PLAYERJOINEDROOM)
 		{
 			Player p = (Player) event.agruments.get("player");
