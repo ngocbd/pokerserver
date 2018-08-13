@@ -80,15 +80,11 @@ import com.google.cloud.datastore.Key;
  * @category com > fcs > pokerserver > gameserver
  * */
 public class MqttServletGameServer implements MqttCallback, RoomListener {
-
-	
 	private static  MqttServletGameServer instance =null;
-	
 	static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
 	
 	static 
 	{
-		
 		final InputStream inputStream = MqttServletGameServer.class.getResourceAsStream("logging.properties");
 		try
 		{
@@ -107,7 +103,6 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		ServletHolder roomServlet = new ServletHolder(RoomServlet.class);
 		ServletHolder gameServlet = new ServletHolder(GameServlet.class);
 
-		
         Server server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         server.setHandler(context);
@@ -115,8 +110,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         NCSARequestLog requestLog = new NCSARequestLog();
         String logFileName=System.getProperty("java.io.tmpdir")+"pokerserver-logs-yyyy_mm_dd.request.log";
         logger.fine("Request log:"+logFileName);
-        
-        
+
         requestLog.setFilename(logFileName);
         requestLog.setFilenameDateFormat("yyyy_MM_dd");
         requestLog.setRetainDays(90);
@@ -130,14 +124,11 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         
         context.addFilter(PokerTokenFilter.class, "/api/room",EnumSet.of(DispatcherType.REQUEST));
         context.addFilter(PokerTokenFilter.class, "/api/game",EnumSet.of(DispatcherType.REQUEST));
-        
-        
-        
+ 
         context.addServlet(loginServlet, "/api/login");
         context.addServlet(registerServlet, "/api/register");
         context.addServlet(roomServlet, "/api/room");
         context.addServlet(gameServlet, "/api/game");
-        
         
         logger.warning("MqttServletGameServer starting..."+ ManagementFactory.getRuntimeMXBean().getName());
         try {
@@ -162,8 +153,6 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	 * */
 	public static MqttServletGameServer getInstance()
 	{
-		
-		
 		if(instance==null)  
 		{
 			instance = new MqttServletGameServer();
@@ -389,6 +378,18 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 					Player p = pe.getSource();
 					content+="&pid="+p.getId()+"&playeraction=call";
 				}
+			}
+			if(ge.getAction()==GameAction.FLOP)
+			{
+				content +="&flopcard=" +ge.getSource().getBoard().getFlopCards().toString();
+			}
+			if(ge.getAction()==GameAction.TURN)
+			{
+				content +="&turncard=" +ge.getSource().getBoard().getTurnCard().toString();
+			}
+			if(ge.getAction()==GameAction.RIVER)
+			{
+				content +="&rivercard=" +ge.getSource().getBoard().getRiverCard().toString();
 			}
 			if(ge.getAction()==GameAction.ENDED)
 			{

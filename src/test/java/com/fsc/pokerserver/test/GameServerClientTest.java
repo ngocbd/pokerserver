@@ -45,8 +45,6 @@ import org.junit.Test;
 
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 
-
-
 /*
  * Url to get content
  * create player
@@ -211,7 +209,6 @@ public class GameServerClientTest implements MqttCallback {
 		{
 			String url = host+"api/login?username="+arr[i]+"&password=123456";
 			this.getContentFromUrl(url);
-//			System.out.println(this.getContentFromUrl(url));
 		}
 	}
 	
@@ -240,7 +237,6 @@ public class GameServerClientTest implements MqttCallback {
 		//create room
 		String url = host+"api/room?token="+token[0]+"&method=put";
 		this.getContentFromUrl(url);
-//		System.out.println("Room Id: "+this.getContentFromUrl(url));
 	}
 	
 	
@@ -381,7 +377,6 @@ public class GameServerClientTest implements MqttCallback {
 		}
 		
 		String urlGetListRoom = host+"api/room?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImdpbzEifQ.LUgFtexXVwBXQDPi3acL02tdpXZ4dtlNW7E700jilkI&method=get";
-//		System.out.println(this.getContentFromUrl(urlGetListRoom));
 		this.getContentFromUrl(urlGetListRoom);
 	}
 	
@@ -400,23 +395,16 @@ public class GameServerClientTest implements MqttCallback {
 		String roomId = this.getContentFromUrl(urlCreateRoom);
 		
 		//join room
-//		System.out.println("length of token: "+token.length);
-		
 		for(int i=1;i<token.length;i++)
 		{
-//			System.out.println("token at "+i+": "+token[i]);
 			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
-//			System.out.println("Url join: "+url);
 			this.getContentFromUrl(url);
-//			Document d = Jsoup.connect(url).get();
-//			System.out.println("Player"+i+" join game: "+d.text());
 		}
 		
 		//startgame
 		String startGame = host+"api/game?token="+token[0]+"&method=start";
 		this.getContentFromUrl(startGame);
-//		System.out.println("start Game: "+this.getContentFromUrl(startGame));
-	
+
 	}
 	
 	
@@ -435,16 +423,10 @@ public class GameServerClientTest implements MqttCallback {
 		String roomId = this.getContentFromUrl(urlCreateRoom);
 		
 		//join room
-//		System.out.println("length of token: "+token.length);
-		
 		for(int i=1;i<token.length;i++)
 		{
-//			System.out.println("token at "+i+": "+token[i]);
 			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
-//			System.out.println("Url join: "+url);
 			this.getContentFromUrl(url);
-//			Document d = Jsoup.connect(url).get();
-//			System.out.println("Player"+i+" join game: "+d.text());
 		}
 		
 		//startgame
@@ -456,7 +438,6 @@ public class GameServerClientTest implements MqttCallback {
 		String gioToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImdpbzEifQ.LUgFtexXVwBXQDPi3acL02tdpXZ4dtlNW7E700jilkI";
 		String startGame = host+"api/game?token="+gioToken+"&method=start";
 		this.getContentFromUrl(startGame);
-//		System.out.println("start Game: "+this.getContentFromUrl(startGame));
 	
 	}
 	
@@ -475,30 +456,19 @@ public class GameServerClientTest implements MqttCallback {
 		String roomId = this.getContentFromUrl(urlCreateRoom);
 		
 		//join room
-//		System.out.println("length of token: "+token.length);
-		
 		for(int i=1;i<token.length;i++)
 		{
-//			System.out.println("token at "+i+": "+token[i]);
 			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
-//			System.out.println("Url join: "+url);
 			this.getContentFromUrl(url);
-//			Document d = Jsoup.connect(url).get();
-//			System.out.println("Player"+i+" join game: "+this.getContentFromUrl(url));
 		}
 		
 		//startgame
 		String startGame = host+"api/game?token="+token[0]+"&method=start";
 		this.getContentFromUrl(startGame);
-//		System.out.println("start Game: "+this.getContentFromUrl(startGame));
 		
 		//preflop
 		String preFlop = host+"api/game?token="+token[0]+"&method=preflop";
 		this.getContentFromUrl(preFlop);
-//		System.out.println("preflop: "+ this.getContentFromUrl(preflop));
-		
-	
-		
 	}
 	
 	
@@ -518,22 +488,15 @@ public class GameServerClientTest implements MqttCallback {
 		String roomId = this.getContentFromUrl(urlCreateRoom);
 		
 		//join room
-//		System.out.println("length of token: "+token.length);
-		
 		for(int i=1;i<token.length;i++)
 		{
-//			System.out.println("token at "+i+": "+token[i]);
 			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
-//			System.out.println("Url join: "+url);
 			this.getContentFromUrl(url);
-//			Document d = Jsoup.connect(url).get();
-//			System.out.println("Player"+i+" join game: "+this.getContentFromUrl(url));
 		}
 		
 		//startgame
 		String startGame = host+"api/game?token="+token[0]+"&method=start";
 		this.getContentFromUrl(startGame);
-//		System.out.println("start Game: "+this.getContentFromUrl(startGame));
 		
 		//preflop
 		String preFlop = host+"api/game?token="+token[0]+"&method=preflop";
@@ -571,22 +534,15 @@ public class GameServerClientTest implements MqttCallback {
 		String roomId = this.getContentFromUrl(urlCreateRoom);
 		
 		//join room
-//		System.out.println("length of token: "+token.length);
-		
 		for(int i=1;i<token.length;i++)
 		{
-//			System.out.println("token at "+i+": "+token[i]);
 			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
-//			System.out.println("Url join: "+url);
 			this.getContentFromUrl(url);
-//			Document d = Jsoup.connect(url).get();
-//			System.out.println("Player"+i+" join game: "+this.getContentFromUrl(url));
 		}
 		
 		//startgame
 		String startGame = host+"api/game?token="+token[0]+"&method=start";
 		this.getContentFromUrl(startGame);
-//		System.out.println("start Game: "+this.getContentFromUrl(startGame));
 		
 		//preflop
 		String preFlop = host+"api/game?token="+token[0]+"&method=preflop";
@@ -635,29 +591,23 @@ public class GameServerClientTest implements MqttCallback {
 		// Players login and return Array Token of Players
 		String token[] = this.getTokenPlayer(arr);
 		
-		//create room
+		//Create room
 		String urlCreateRoom = host+"api/room?token="+token[0]+"&method=put";
 		String roomId = this.getContentFromUrl(urlCreateRoom);
 		
-		//join room
-//		System.out.println("length of token: "+token.length);
-		
+		//Join room
 		for(int i=1;i<token.length;i++)
 		{
-//			System.out.println("token at "+i+": "+token[i]);
 			String url = host+"api/room?token="+token[i]+"&method=join&id="+roomId;
-//			System.out.println("Url join: "+url);
 			this.getContentFromUrl(url);
-//			Document d = Jsoup.connect(url).get();
-//			System.out.println("Player"+i+" join game: "+this.getContentFromUrl(url));
 		}
 		
-		//startgame
+		//Start game
 		String startGame = host+"api/game?token="+token[0]+"&method=start";
 		this.getContentFromUrl(startGame);
 //		System.out.println("start Game: "+this.getContentFromUrl(startGame));
 		
-		//preflop
+		//Preflop
 		String preFlop = host+"api/game?token="+token[0]+"&method=preflop";
 		this.getContentFromUrl(preFlop);
 		
@@ -671,7 +621,7 @@ public class GameServerClientTest implements MqttCallback {
 		String danhBet = host+"api/game?token="+token[1]+"&method=bet&value=10";
 		this.getContentFromUrl(danhBet);
 		
-		//flop
+		//Flop
 		String flop = host+"api/game?token="+token[0]+"&method=flop";
 		this.getContentFromUrl(flop);
 		
@@ -688,7 +638,7 @@ public class GameServerClientTest implements MqttCallback {
 		String dealerToanBet2 = host+"api/game?token="+token[0]+"&method=bet&value=20"; 
 		this.getContentFromUrl(dealerToanBet2);
 		
-		//turn
+		//Turn
 		String turn = host+"api/game?token="+token[0]+"&method=turn";
 		this.getContentFromUrl(turn);
 		
@@ -704,11 +654,11 @@ public class GameServerClientTest implements MqttCallback {
 		String dealerToanBet3 = host+"api/game?token="+token[0]+"&method=bet&value=20"; 
 		this.getContentFromUrl(dealerToanBet3);
 		
-		//river
+		//River
 		String river = host+"api/game?token="+token[0]+"&method=river";
 		this.getContentFromUrl(river);
 		
-		//end game
+		//End game
 		String endGame = host+"api/game?token="+token[0]+"&method=end";
 		this.getContentFromUrl(endGame);
 		

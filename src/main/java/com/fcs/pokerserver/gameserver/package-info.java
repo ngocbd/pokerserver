@@ -18,4 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+/**
+ * The package is the implement of the gameserver.
+ * */
 package com.fcs.pokerserver.gameserver;
