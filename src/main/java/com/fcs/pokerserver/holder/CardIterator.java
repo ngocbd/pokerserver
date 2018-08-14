@@ -31,24 +31,37 @@ import com.google.common.collect.Iterators;
 
 /**
  * Iterator used for iterating over cards contained in several card holders.
+ * @category com > fcs > pokerserver > holder 
  */
 public class CardIterator implements Iterator<Card> {
 
 	private final Iterator<CardHolder> cardHolderIterator;
 	private Iterator<Card> cardIterator;
 
+	/**
+	 * The method to create the flexiable Card Holder 
+	 * */
 	public CardIterator(CardHolder... cardHolders) {
 		super();
 		this.cardHolderIterator = Iterators.forArray(cardHolders);
 		this.cardIterator = Collections.emptyIterator();
 	}
 
+	
+	/**
+	 * Override the hasNext method
+	 * @return boolean hasNext
+	 * */
 	@Override
 	public boolean hasNext() {
 		scrollToNonemptyCardHolder();
 		return cardIterator.hasNext();
 	}
 
+	/**
+	 * Return the next Card
+	 * @return Card card
+	 * */
 	@Override
 	public Card next() {
 		scrollToNonemptyCardHolder();
@@ -64,6 +77,9 @@ public class CardIterator implements Iterator<Card> {
 		}
 	}
 
+	/**
+	 * Override the remove method to throw to the UnsupportedOperationException
+	 * */
 	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("operation not supported");

@@ -37,6 +37,7 @@ import com.google.common.io.Closeables;
 
 /**
  * Utility class for loading configuration and resource files
+ * @category com > fcs > pokerserver > holder
  */
 public class ConfigurationLoader {
 	

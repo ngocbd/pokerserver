@@ -31,6 +31,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 /**
  * The messages is added into the MessageQueue
+ * @category com > fcs > pokerserver > gameserver
  * */
 class MessageQueue 
 {	

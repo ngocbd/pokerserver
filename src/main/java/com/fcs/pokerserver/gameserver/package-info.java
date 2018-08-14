@@ -20,5 +20,6 @@ THE SOFTWARE.
 
 /**
  * The package is the implement of the gameserver.
+ * @category com > fcs > pokerserver > gameserver
  * */
 package com.fcs.pokerserver.gameserver;

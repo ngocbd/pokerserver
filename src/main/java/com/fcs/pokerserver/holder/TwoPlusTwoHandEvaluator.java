@@ -27,8 +27,7 @@ import com.fcs.pokerserver.Card;
 
 /**
  * Poker hand Evaluation algorithm based on the two plus two 7 card hand evaluation algorithm.
- * 
- * @author ngocbd
+ * @category com > fcs > pokerserver > holder
  */
 public class TwoPlusTwoHandEvaluator  {
 
@@ -37,6 +36,9 @@ public class TwoPlusTwoHandEvaluator  {
 	
 	private static TwoPlusTwoHandEvaluator instance;
 	
+	/**
+	 * Create new the TwoPlusTwoHandEvaluator
+	 * */
 	public TwoPlusTwoHandEvaluator() throws Exception{
 		ConfigurationLoader reader = new ConfigurationLoader();
 		
@@ -45,7 +47,7 @@ public class TwoPlusTwoHandEvaluator  {
 	}
 	
 	/**
-	 * The two plust two lookup table is very memory intensive.  You should only ever create
+	 * The two plus two lookup table is very memory intensive.  You should only ever create
 	 * one instance of the class.  Use this method to keep the singleton pattern.
 	 * @return {@link TwoPlusTwoHandEvaluator} instance
 	 * @throws Exception 
@@ -62,7 +64,11 @@ public class TwoPlusTwoHandEvaluator  {
 		return instance;
 	}
 	
-	
+	/**
+	 * The method to evaluate the card on Player's hand
+	 * @return HandRand
+	 * @param Board board, Hand hand
+	 * */
 	public HandRank evaluate(Board board, Hand hand) {
 		Iterator<Card> cardIterator = new CardIterator(board, hand);
 		int p = 53;

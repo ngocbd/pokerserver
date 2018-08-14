@@ -34,6 +34,7 @@ import com.fcs.pokerserver.Card;
 
 /**
  * A container designed for storing cards.
+ * @category com > fcs > pokerserver > holder 
  */
 public class CardHolder implements Serializable {
 
@@ -46,11 +47,20 @@ public class CardHolder implements Serializable {
 		super();
 		this.cards.addAll(Arrays.asList(cards));
 	}
+	
+	/**
+	 * The constructor default.
+	 * */
 	public CardHolder()
 	{
 		
 		
 	}
+	
+	/**
+	 * Add flexiable cards in list.
+	 * @param Card... cards
+	 * */
 	public void addCard(Card... cards)
 	{
 		this.cards.addAll(Arrays.asList(cards));
@@ -66,7 +76,7 @@ public class CardHolder implements Serializable {
 		return cards.get(index);
 	}
 	
-	/*
+	/**
 	 * Get all cards on board
 	 * */
 	

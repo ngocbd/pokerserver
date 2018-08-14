@@ -25,6 +25,7 @@ import java.io.Serializable;
 
 /**
  * Representation of the poker hand strength.
+ * @category com > fcs > pokerserver > holder
  */
 public class HandRank implements Comparable<HandRank>, Serializable {
 
@@ -32,6 +33,10 @@ public class HandRank implements Comparable<HandRank>, Serializable {
 
 	private final int rankValue;
 
+	/**
+	 * Create new the HandRank with new value
+	 * @param int rankValue
+	 * */
 	public HandRank(int rankValue) {
 		super();
 		this.rankValue = rankValue;
@@ -43,7 +48,7 @@ public class HandRank implements Comparable<HandRank>, Serializable {
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 //	@Override
-//	public final int compareTo(HandRank rank) {
+//	public final int otherCompareTo(HandRank rank) {
 //		return rankValue < rank.rankValue ? -1
 //				: (rankValue == rank.rankValue ? 0 : 1);
 //	}
@@ -53,17 +58,29 @@ public class HandRank implements Comparable<HandRank>, Serializable {
 				
 	}
 
+	/**
+	 * Return the hasCode.
+	 * @return int rankValue.
+	 * */
 	@Override
 	public final int hashCode() {
 		return rankValue;
 	}
 
+	/**
+	 * Return value true or false when equal compare
+	 * @return boolean equals
+	 * */
 	@Override
 	public final boolean equals(Object obj) {
 		return (obj instanceof HandRank)
 				&& (rankValue == ((HandRank) obj).rankValue);
 	}
 
+	/**
+	 * Return the rankValue
+	 * @return int rankValue
+	 * */
 	public final int getValue() {
 		return rankValue;
 	}
@@ -79,6 +96,11 @@ public class HandRank implements Comparable<HandRank>, Serializable {
 		return HandType.values()[rankValue >> 12];
 	}
 	
+	/**
+	 * Override the toString method
+	 * @return String
+	 * */
+	@Override
 	public String toString()
 	{
 		return getHandType().toString();
