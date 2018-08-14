@@ -22,8 +22,7 @@ package com.fcs.pokerserver;
 
 /**
  * Enumeration of blind level 
- * @category pokerserver
- * @author Ngocbd
+ * @category com > fcs > pokerserver
  * */
 
 public enum BlindLevel {

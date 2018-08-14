@@ -49,7 +49,8 @@ THE SOFTWARE.
 
 
 /**
- * A {@link CardHolder} for storing five community cards.
+ * A {@link CardHolder} to store five community cards.
+ * @category com > fcs > pokerserver > holder
  */
 public class Board extends CardHolder {
 
@@ -67,22 +68,39 @@ public class Board extends CardHolder {
 	public Board(Card flop1, Card flop2, Card flop3, Card turn, Card river) {
 		super(flop1, flop2, flop3, turn, river);
 	}
+	
+	/**
+	 * The constructor default.
+	 * */
 	public Board() {
 		
 	}
+	
+	/**
+	 * Return the Cards in the Flop
+	 * @return List<Card> cards
+	 * */
 	public List<Card> getFlopCards()
 	{
-		
 		return this.cards.subList(0, 3);
 	}
+	
+	/**
+	 * Return the Cards in the Turn
+	 * @return Card card
+	 * */
 	public Card getTurnCard()
 	{
 		
 		return this.cards.get(3);
 	}
+	
+	/**
+	 * Return the Cards in the River
+	 * @return Card card
+	 * */
 	public Card getRiverCard()
 	{
-		
 		return this.cards.get(4);
 	}
 

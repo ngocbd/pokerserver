@@ -27,7 +27,7 @@ import com.fcs.pokerserver.Game;
 
 /**
  * An instance of the GameEvent class is described the Events of the Game.
- * @category pokerserver.events
+ * @category com > fcs > pokerserver > events
  * */
 public class GameEvent {
 	private Game source ;

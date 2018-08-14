@@ -42,8 +42,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 /**
  * Enumeration of all cards used in Texas Hold'em.
- * @category pokerserver
- * @author Ngocbd
+ * @category com > fcs > pokerserver
  */
 //Serialize a member of this enum to JSON using the enum's toString method
 @JsonSerialize(using=ToStringSerializer.class)

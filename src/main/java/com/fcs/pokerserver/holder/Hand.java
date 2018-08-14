@@ -27,6 +27,7 @@ import com.fcs.pokerserver.Card;
 
 /**
  * A CardHolder for storing 2 hole cards for a player
+ * @category com > fcs > pokerserver > holder
  */
 public class Hand extends CardHolder {
 
@@ -41,6 +42,12 @@ public class Hand extends CardHolder {
 	public Hand(Card card1, Card card2) {
 		super(card1, card2);
 	}
+	
+	/**
+	 * Override the toString method
+	 * @return String
+	 * */
+	@Override
 	public String toString()
 	{
 		return this.cards.toString();

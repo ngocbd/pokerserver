@@ -22,6 +22,7 @@ package com.fcs.pokerserver;
 
 /**
  * Enumeration of the card ranks.
+ * @category com > fcs > pokerserver
  */
 public enum Rank {
 

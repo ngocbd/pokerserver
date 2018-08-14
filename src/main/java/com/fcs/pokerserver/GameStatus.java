@@ -22,9 +22,7 @@ package com.fcs.pokerserver;
 
 /**
  * Enum to track the status of the Game from the perspective of the game organizer/controller.
- * 
- * @author ngocbd
- * Copyright (c) 2018
+ * @category com > fcs > pokerserver
  */
 
 public enum GameStatus {

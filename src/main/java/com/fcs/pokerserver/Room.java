@@ -33,8 +33,7 @@ import com.fcs.pokerserver.events.RoomListener;
 
 /**
  * An instance of the Room class is created Room when user want to play Poker Game.
- * @category pokerserver
- * @author Ngocbd
+ * @category com > fcs > pokerserver
  * */
 public class Room implements GameListener {
 	Game currentGame = null;

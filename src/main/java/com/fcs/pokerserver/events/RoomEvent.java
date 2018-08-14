@@ -27,7 +27,7 @@ import com.fcs.pokerserver.Room;
 
 /**
  * The RoomEvent class is described the Events in the Room.
- * @category pokerserver.events
+ * @category com > fcs > pokerserver > events
  * */
 public class RoomEvent {
 	private Room source ;

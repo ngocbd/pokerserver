@@ -26,8 +26,7 @@ import java.util.List;
 
 /**
  * Standard deck of cards for poker. 52 Cards. 13 Clubs, Diamonds, Spades, and Hearts.
- * @category pokerserver
- * @author Ngocbd
+ * @category com > fcs > pokerserver
  */
 public class Deck {
 	private List<Card> cards;

@@ -23,9 +23,7 @@ package com.fcs.pokerserver.holder;
  * 
  * The ordering here corresponds to the handtypes defined by the highest order
  * bit in the two plus two hand evaluation score.
- * 
- * @author ngocbd
- * Copyright (c) 2013
+ * @category com > fcs > pokerserver > holder
  */
 public enum HandType {
 	BAD,

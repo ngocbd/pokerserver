@@ -22,7 +22,7 @@ package com.fcs.pokerserver.events;
 
 /**
  * The RoomAction enum the action in the Room.
- * @category pokerserver.events
+ * @category com > fcs > pokerserver > events
  * */
 public enum RoomAction {
 
