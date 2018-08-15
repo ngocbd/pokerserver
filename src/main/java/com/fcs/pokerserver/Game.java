@@ -68,7 +68,9 @@ public class Game implements PlayerListener {
 	private Player bigBlind;
 	private Player smallBlind;
 	private Player currentPlayer = null;
-	
+	private Player winner=null;
+	private String rank ="";
+	private Hand bestHand = null;
 	
 	
 	private LocalDateTime startTime = null; // meaning not started  
@@ -248,11 +250,16 @@ public class Game implements PlayerListener {
 				break;
 			}
 		}
-		gameEvent.agruments.put("playerwin", playerWinner.getId());
 		//rank of winner player
 		HandRank rank1 = evaluator.evaluate(b, winHand);
-		gameEvent.agruments.put("rank", rank1.toString());
-		gameEvent.agruments.put("besthand", list.get(list.size()-1));
+		
+		winner = playerWinner;
+		rank = rank1.toString();
+		bestHand = list.get(list.size()-1);
+		
+		gameEvent.agruments.put("playerwin", winner.getId());
+		gameEvent.agruments.put("rank", rank);
+		gameEvent.agruments.put("besthand", bestHand);
 
 		
 		this.fireEvent(gameEvent);
@@ -693,6 +700,30 @@ public class Game implements PlayerListener {
 	 * */
 	public void setRound(short round) {
 		this.round = round;
+	}
+
+	public Player getWinner() {
+		return winner;
+	}
+
+	public void setWinner(Player winner) {
+		this.winner = winner;
+	}
+
+	public String getRank() {
+		return rank;
+	}
+
+	public void setRank(String rank) {
+		this.rank = rank;
+	}
+
+	public Hand getBestHand() {
+		return bestHand;
+	}
+
+	public void setBestHand(Hand bestHand) {
+		this.bestHand = bestHand;
 	}
 
 }

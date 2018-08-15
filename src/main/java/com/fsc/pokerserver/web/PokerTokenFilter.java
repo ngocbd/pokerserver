@@ -41,8 +41,10 @@ import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 import com.googlecode.objectify.ObjectifyFilter;
 
-
-
+/**
+ * The class to check and filter the Player's token.
+ * @category com > fcs > pokerserver > web
+ * */
 public class PokerTokenFilter implements Filter {
 	String secret = "thisstringisverysecret";
 	Algorithm algorithm = Algorithm.HMAC256(secret);
