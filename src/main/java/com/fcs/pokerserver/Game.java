@@ -45,9 +45,7 @@ import com.fcs.pokerserver.holder.Board;
 import com.fcs.pokerserver.holder.Hand;
 import com.fcs.pokerserver.holder.HandRank;
 import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
-import com.fsc.pokerserver.test.CardEvaluatorTest;
 
-import junit.framework.AssertionFailedError;
 
 /**
  * An instance of the Game class is created Game to Player play Poker Game. This is the most important file in system.
@@ -232,7 +230,7 @@ public class Game implements PlayerListener {
 		
 		list.sort(new Comparator<Hand>() {
 			public int compare(Hand o1, Hand o2) {
-				return CardEvaluatorTest.compare(o1, o2, b);
+				return TwoPlusTwoHandEvaluator.compare(o1, o2, b);
 				
 			}
 		});

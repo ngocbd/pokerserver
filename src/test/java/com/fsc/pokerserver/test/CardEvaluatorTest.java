@@ -52,14 +52,6 @@ public class CardEvaluatorTest extends TestCase {
 	
 	
 	public static void main(String[] args) {
-//		Hand h1 = new Hand(Card.ACE_OF_CLUBS, Card.ACE_OF_DIAMONDS);
-//		Hand h2 = new Hand(Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS);
-//		Hand h3 = new Hand(Card.EIGHT_OF_CLUBS, Card.KING_OF_DIAMONDS);
-		
-//		Hand h1 = new Hand(Card.JACK_OF_SPADES, Card.ACE_OF_DIAMONDS);
-//		Hand h2 = new Hand(Card.TWO_OF_HEARTS, Card.SIX_OF_CLUBS);
-//		Hand h3 = new Hand(Card.JACK_OF_CLUBS, Card.QUEEN_OF_DIAMONDS);
-		
 		Hand h1 = new Hand(Card.THREE_OF_CLUBS, Card.SEVEN_OF_HEARTS);
 		Hand h2 = new Hand(Card.TWO_OF_SPADES, Card.FOUR_OF_CLUBS);
 		Hand h3 = new Hand(Card.NINE_OF_SPADES, Card.TWO_OF_DIAMONDS);
@@ -104,17 +96,7 @@ public class CardEvaluatorTest extends TestCase {
 		
 		System.out.println("Best hand "+list.get(list.size()-1));
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	@Test
 	//test pair over pair
 	public void testPair1(){
