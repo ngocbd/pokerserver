@@ -661,8 +661,6 @@ public class GameServerClientTest implements MqttCallback {
 		//End game
 		String endGame = host+"api/game?token="+token[0]+"&method=end";
 		this.getContentFromUrl(endGame);
-		
-		
 	}
 	
 	

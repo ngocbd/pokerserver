@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -54,13 +55,30 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+/**
+ * The class to react of game server.
+ * @category com > fcs > pokerserver > web
+ * */
 @WebServlet(name = "GameServlet", urlPatterns = { "/api/game" })
-
 public class GameServlet extends HttpServlet {
 	
 
 	MqttServletGameServer server = MqttServletGameServer.getInstance();
 	static Logger logger = Logger.getLogger(GameServlet.class.getName());
+	
+	@Override 
+	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+	{ 
+		// TODO Auto-generated method stub.
+		resp.setHeader("Access-Control-Allow-Origin", "*"); 
+		resp.setHeader("Access-Control-Allow-Methods", "GET, POST"); 
+		resp.setHeader("Access-Control-Allow-Headers", "Content-Type, authorization"); 
+		resp.setHeader("Access-Control-Max-Age", "86400"); 
+		resp.setHeader("Cache-Control", "public, max-age=90000"); 
+		// Tell the browser what requests we allow.
+		resp.setHeader("Allow", "GET, HEAD, POST, PUT, TRACE, OPTIONS"); 
+	}
+	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
@@ -69,12 +87,12 @@ public class GameServlet extends HttpServlet {
 		{
 			doPut(request,response);
 			return;
-		}
+		}//The player join the room
 		else if("join".equalsIgnoreCase(method))
 		{
 			doPost(request,response);
 			return;
-		}
+		}//The player start the game
 		else if("start".equalsIgnoreCase(method))
 		{
 			
@@ -82,209 +100,131 @@ public class GameServlet extends HttpServlet {
 			p.getCurrentGame().setDealer(p);
 		
 			int sizeOfListPlayer = p.getCurrentGame().getListPlayer().size();
-//			response.getWriter().println("size of list players: "+sizeOfListPlayer);
 			for(int i=0;i<sizeOfListPlayer;i++)
 			{
 				p.getCurrentGame().getListPlayer().get(i).setBalance(1000);
-//				response.getWriter().println("Name number "+i+": "+p.getCurrentGame().getListPlayer().get(i).getName());;
 			}
 			
 			p.getCurrentGame().startGame();
 			
-			
-//			response.getWriter().println("Start Game Successful");
-//			response.getWriter().println("Dealer: {Name: "+ p.getCurrentGame().getDealer().getName() + " ; Balance: "+p.getCurrentGame().getDealer().getBalance()+"}");
-//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-			
-//			System.out.println("\nStart Game Successful");
-//			System.out.println("Dealer: {Name: "+ p.getCurrentGame().getDealer().getName() + " ; Balance: "+p.getCurrentGame().getDealer().getBalance()+"}");
-//			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-//			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-			
-			
-			
+			logger.log(Level.INFO, "Start Game\n\tDealer: "+ p.getCurrentGame().getDealer().getName()+"\n\tSmall Blind: " + p.getCurrentGame().getSmallBlind().getName()+"\n\tBig Blind: " + p.getCurrentGame().getBigBlind().getName());
+
 			return;
-		}
+		}//The preflop of the game
 		else if("preflop".equalsIgnoreCase(method))
 		{
 			
 			Player p = (Player) request.getAttribute("player");
 			
 			p.getCurrentGame().preflop();
-//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-//			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
 			
-			System.out.println("warning");
-			logger.warning("habogay preflop");
-			System.out.println("finer");
-			logger.finer("finer");
-			System.out.println("fine");
-			logger.log(Level.FINE, "fine");
-			System.out.println("\nPreflop game 1");
-			System.out.println("Number of cards: "+p.getCurrentGame().getBoard().getCardNumber());
-//			System.out.println("Cards of Player: "+ p.getPlayerHand().getCard(0).toString()+" "+p.getPlayerHand().getCard(1).toString());
-			for(int i=0;i<p.getCurrentGame().getListPlayer().size();i++)
-			{
-				System.out.println("Cards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString());
-//				System.out.println("Player json: "+p.toString());
-			}
-			
-			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-			
-			
-			System.out.println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
+			logger.log(Level.INFO, "The Preflop of the game\n\tNumber of the cards: "+p.getCurrentGame().getBoard().getCardNumber()+"\n\tSmallBlind's balance: " + p.getCurrentGame().getSmallBlind().getBalance()+"\n\tBigBlind's balance: " + p.getCurrentGame().getBigBlind().getBalance()+"\n\tCurrent Player: " + p.getCurrentGame().getCurrentPlayer().getName());
 			
 			return;
-		}
+		}//The player bet
 		else if("bet".equalsIgnoreCase(method))
 		{
 			Player p = (Player) request.getAttribute("player");
 			
 			long betValue = Long.parseLong(request.getParameter("value"));
+			
 			p.bet(betValue);
-//			response.getWriter().println("Player: "+p.getName()+"\n Bet value: "+betValue+" \n Balance of Current Player: "+p.getBalance());
-			System.out.println("Player: "+p.getName()+"\n Bet value: "+betValue+" \n Balance of Current Player: "+p.getBalance());
-		}
+			
+			logger.log(Level.INFO, "The Player's name : "+p.getName()+"\n\tBet value: "+betValue+"\n\tBalance of Current Player: "+p.getBalance());
+			return;
+		}//The player fold
 		else if("fold".equalsIgnoreCase(method))
 		{
 			Player p = (Player) request.getAttribute("player");
 			
 			p.fold();
-//			response.getWriter().println("Player: "+p.getName());
-			System.out.println("Player folded: "+p.getName());
-		}
+			logger.log(Level.INFO, "The Player folded: "+p.getName());
+			
+			return;
+		}//The flop of the game
 		else if("flop".equalsIgnoreCase(method))
 		{
 			
 			Player p = (Player) request.getAttribute("player");
 			
 			p.getCurrentGame().flop();
-//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-//			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
-//			response.getWriter().println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
-		
-			System.out.println("\nFlop game");
-			System.out.println("Number of cards: "+ p.getCurrentGame().getBoard().getCardNumber());
-			System.out.println("Cards in flop: "+ p.getCurrentGame().getBoard().getFlopCards().toString());
-//			System.out.println("Cards of player: "+ p.getPlayerHand().getCard(0).toString()+ "- "+p.getPlayerHand().getCard(1).toString());
-			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-			System.out.println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
-			System.out.println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
+
+			String strFlop = "The Flop of the game \n\tNumber of cards: "+ p.getCurrentGame().getBoard().getCardNumber() + "\n\tThe Cards in the flop: "+ p.getCurrentGame().getBoard().getFlopCards().toString();
+			for(int i=0;i<p.getCurrentGame().getListPlayer().size();i++)
+			{
+				strFlop+="\n\tCards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString();
+				strFlop+="\n\tBalance of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getBalance();
+			}
+			logger.log(Level.INFO, strFlop);
 			
 			return;
-		}
+		}//The turn of the game
 		else if("turn".equalsIgnoreCase(method))
 		{
 			
 			Player p = (Player) request.getAttribute("player");
 			
 			p.getCurrentGame().turn();
-//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-//			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
-//			response.getWriter().println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
-		
-			System.out.println("\nTurn game");
-			System.out.println("Number of cards: "+ p.getCurrentGame().getBoard().getCardNumber());
-			System.out.println("Cards in turn: "+ p.getCurrentGame().getBoard().getTurnCard().toString());
-			System.out.println("Cards of player: "+ p.getPlayerHand().getCard(0).toString()+ " "+p.getPlayerHand().getCard(1).toString());
-			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-			System.out.println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
-			System.out.println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
-			System.out.println("Cards in flop: "+ p.getCurrentGame().getBoard().getFlopCards().toString()+" \n Cards in Turn: "+p.getCurrentGame().getBoard().getTurnCard().toString());
+
+			String strFlop = "The Turn of the game\n\tNumber of cards: "+ p.getCurrentGame().getBoard().getCardNumber() + "\n\tThe Cards in the flop: "+ p.getCurrentGame().getBoard().getFlopCards().toString()+"\n\tThe Cards in the Turn: "+p.getCurrentGame().getBoard().getTurnCard().toString();
+			for(int i=0;i<p.getCurrentGame().getListPlayer().size();i++)
+			{
+				strFlop+="\n\tCards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString();
+				strFlop+="\n\tBalance of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getBalance();
+			}
+			logger.log(Level.INFO, strFlop);
 			
 			return;
-		}
+		}//The river of the game
 		else if("river".equalsIgnoreCase(method))
 		{
 			
 			Player p = (Player) request.getAttribute("player");
 			
 			p.getCurrentGame().river();
-//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-//			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
-//			response.getWriter().println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
 		
-			System.out.println("\nRiver game");
-			System.out.println("Number of cards: "+ p.getCurrentGame().getBoard().getCardNumber());
-			System.out.println("Cards in turn: "+ p.getCurrentGame().getBoard().getTurnCard());
+			String strFlop = "The River of the game\n\tNumber of cards: "+ p.getCurrentGame().getBoard().getCardNumber() + "\n\tThe Cards in the flop: "+ p.getCurrentGame().getBoard().getFlopCards().toString()+"\n\tThe Cards in the Turn: "+p.getCurrentGame().getBoard().getTurnCard().toString()+"\n\tThe Cards in the River: "+p.getCurrentGame().getBoard().getRiverCard().toString();
 			for(int i=0;i<p.getCurrentGame().getListPlayer().size();i++)
 			{
-				System.out.println("Cards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString());
+				strFlop+="\n\tCards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString();
+				strFlop+="\n\tBalance of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getBalance();
 			}
-//			System.out.println("Cards of player: "+ p.getPlayerHand().getCard(0).toString()+ "- "+p.getPlayerHand().getCard(1).toString());
-			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-			System.out.println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
-			System.out.println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
-			System.out.println("Cards in flop: "+ p.getCurrentGame().getBoard().getFlopCards().toString()+" \n Cards in Turn: "+p.getCurrentGame().getBoard().getTurnCard().toString()+" \n Cards in River: "+p.getCurrentGame().getBoard().getRiverCard().toString());
+			logger.log(Level.INFO, strFlop);
+			
 			return;
-		}
+		}//The end of the game
 		else if("end".equalsIgnoreCase(method))
 		{
 			
 			Player p = (Player) request.getAttribute("player");
 			
-//			
-//			List<Hand> list = new ArrayList<Hand>();
-//			for(int i=0;i<p.getCurrentGame().getListPlayer().size();i++)
-//			{
-//				list.add(p.getCurrentGame().getListPlayer().get(i).getPlayerHand());
-////				System.out.println("Cards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString());
-//			}
-//			Board b = p.getCurrentGame().getBoard();
-//			
-//			list.sort(new Comparator<Hand>() {
-//				public int compare(Hand o1, Hand o2) {
-//					return CardEvaluatorTest.compare(o1, o2, b);
-//					
-//				}
-//			});
-//			
-//			TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
-//			
-//			
-//			
-//			System.out.println("Best hand "+list.get(list.size()-1));
-			
 			p.getCurrentGame().endGame();
-//			response.getWriter().println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-//			response.getWriter().println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-//			response.getWriter().println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
-//			response.getWriter().println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
+			
+			
 		
-			System.out.println("Small Blind: {Name: "+ p.getCurrentGame().getSmallBlind().getName() + " ; Balance: "+p.getCurrentGame().getSmallBlind().getBalance()+"}");
-			System.out.println("Big Blind: {Name: "+ p.getCurrentGame().getBigBlind().getName() + " ; Balance: "+p.getCurrentGame().getBigBlind().getBalance()+"}");	
-			System.out.println("Current Player: "+ p.getCurrentGame().getCurrentPlayer().getName());
-			System.out.println("Total of cards: "+p.getCurrentGame().getBoard().getCardNumber());
+			String strFlop = "The End of the game\n\tNumber of cards: "+ p.getCurrentGame().getBoard().getCardNumber() + "\n\tThe Cards in the flop: "+ p.getCurrentGame().getBoard().getFlopCards().toString()+"\n\tThe Cards in the Turn: "+p.getCurrentGame().getBoard().getTurnCard().toString()+"\n\tThe Cards in the River: "+p.getCurrentGame().getBoard().getRiverCard().toString();
+			for(int i=0;i<p.getCurrentGame().getListPlayer().size();i++)
+			{
+				strFlop+="\n\tCards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString();
+				strFlop+="\n\tBalance of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getBalance();
+			}
+			strFlop += "\n\tThe winner: "+ p.getCurrentGame().getWinner()+"\n\tThe rank: "+p.getCurrentGame().getRank()+"\n\tThe best hand:" + p.getCurrentGame().getBestHand();
+			logger.log(Level.INFO, strFlop);
 			
 			return;
 		}
 		else
 		{
 				String data = Joiner.on(",").join(this.server.getListRoom());
-//				response.getWriter().println(data);	
-				System.out.println(data);
+				logger.log(Level.INFO, data);
 		}
 	}
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
-
-
 		Player p = (Player) request.getAttribute("player");
 		
-		
 		String id = request.getParameter("id");
-		
-		
 		
 		Room room = server.getRoomByID(Long.parseLong(id));
 		
@@ -296,16 +236,11 @@ public class GameServlet extends HttpServlet {
 		
 		response.getWriter().println(data);
 		
-		
 	}
 	
 	@Override
 	public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		
-
 		Player p = (Player) request.getAttribute("player");
-		
 		
 		Room room = p.getCurrentRoom();
 		
@@ -313,7 +248,6 @@ public class GameServlet extends HttpServlet {
 		
 		room.createNewGame();
 		
-		response.getWriter().println(room.getCurrentGame().getId());
-
+		response.getWriter().println(room.getCurrentGame().getId()); 
 	}
 }

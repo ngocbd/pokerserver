@@ -22,7 +22,9 @@ package com.fsc.pokerserver.web;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,11 +45,27 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+/**
+ * The class to the Player react with the room
+ * @category com > fcs > pokerserver > web
+ * */
 @WebServlet(name = "RoomServlet", urlPatterns = { "/api/room" })
-
 public class RoomServlet extends HttpServlet {
-
+	static Logger logger = Logger.getLogger(GameServlet.class.getName());
 	MqttServletGameServer server = MqttServletGameServer.getInstance();
+	
+	@Override 
+	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
+	{ 
+		// TODO Auto-generated method stub 
+		resp.setHeader("Access-Control-Allow-Origin", "*"); 
+		resp.setHeader("Access-Control-Allow-Methods", "GET, POST"); 
+		resp.setHeader("Access-Control-Allow-Headers", "Content-Type, authorization"); 
+		resp.setHeader("Access-Control-Max-Age", "86400"); 
+		resp.setHeader("Cache-Control", "public, max-age=90000"); 
+		// Tell the browser what requests we allow. 
+		resp.setHeader("Allow", "GET, HEAD, POST, PUT, TRACE, OPTIONS"); 
+	}
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -60,10 +78,7 @@ public class RoomServlet extends HttpServlet {
 			return;
 		} else {
 			//TODO return more data ex Blind level , number of player , game status ...
-/*
- * List All room
- * 
- * */
+//			List All room
 			String data = Joiner.on(",").join(this.server.getListRoom());
 			response.getWriter().println(data);
 
