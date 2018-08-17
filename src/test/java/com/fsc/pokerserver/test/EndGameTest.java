@@ -27,6 +27,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Deck;
@@ -34,6 +35,11 @@ import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 
+/**
+ * The class to test the end game.
+ * @category com > fcs > pokerserver > test
+ * */
+@Ignore
 public class EndGameTest {
 	Player master;
 	Room room;
@@ -47,7 +53,7 @@ public class EndGameTest {
 
 	/*--------------------- End Game -----------------------*/
 	
-	/*  
+	/**  
 	 * Error order number from player Check, bet, fold before end game.
 	 * */
 	@Test(expected = AssertionError.class)
@@ -104,7 +110,7 @@ public class EndGameTest {
 	}
 	
 	
-	/*  
+	/** 
 	 * call end game although current round bet not equal
 	 * */
 	@Test(expected = AssertionError.class)
@@ -161,7 +167,7 @@ public class EndGameTest {
 		
 	}
 	
-	/*  
+	/**  
 	 * Get pot from game after end game.
 	 * */
 	@Test
@@ -219,7 +225,7 @@ public class EndGameTest {
 		assertEquals(game.getPotBalance(), 240);
 	}
 	
-	/*  
+	/**  
 	 * Get cards from game after end game.
 	 * */
 	@Test
@@ -276,6 +282,4 @@ public class EndGameTest {
 		
 		assertEquals(game.getBoard().getCardNumber(),5);
 	} 
-	
-	
 }

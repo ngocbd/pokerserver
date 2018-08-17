@@ -79,4 +79,15 @@ public class TwoPlusTwoHandEvaluator  {
 		return new HandRank(p);
 	}
 
+	/**
+	 * The method to compare the 2 hands with the board. Return the hand has bigger value.
+	 * @param Hand h1, Hand h2, Board b
+	 * @return int value(+ or -) 
+	 * */
+	public static int compare(Hand h1, Hand h2, Board b){
+		TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
+		HandRank rank1 = evaluator.evaluate(b, h1);
+		HandRank rank2 = evaluator.evaluate(b, h2);
+		return rank1.compareTo(rank2);
+	}
 }

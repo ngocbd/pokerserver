@@ -27,6 +27,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Deck;
@@ -34,6 +35,11 @@ import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 
+/**
+ * The class to test the Preflop and Bet in the game.
+ * @category com > fcs > pokerserver > test
+ * */
+@Ignore
 public class PreflopAndBetGameTest {
 	Player master;
 	Room room;
@@ -49,7 +55,7 @@ public class PreflopAndBetGameTest {
 /*--------------------- Preflop And Bet -----------------------*/
 	
 	
-	/*
+	/**
 	 * Get the pot from the small blind in Preflop
 	 * */
 	@Test
@@ -80,7 +86,7 @@ public class PreflopAndBetGameTest {
 		assertEquals(master.getBalance(), 990);
 	}
 	
-	/*
+	/**
 	 * current player in Flop not bet
 	 * */
 	@Test
@@ -114,7 +120,7 @@ public class PreflopAndBetGameTest {
 //		assertEquals(game.getCurrentPlayer(), player3);
 	}
 	
-	/*  
+	/** 
 	 * Get current player in Flop.
 	 * */
 	@Test
@@ -153,7 +159,7 @@ public class PreflopAndBetGameTest {
 	}
 	
 	
-	/*
+	/**
 	 * Get the balance from the big blind in Preflop
 	 * */
 	@Test
@@ -184,7 +190,7 @@ public class PreflopAndBetGameTest {
 		assertEquals(player2.getBalance(), 980);
 	}
 	
-	/*
+	/**
 	 * Get the pot from the small blind and big blind in Preflop
 	 * */
 	@Test
@@ -215,7 +221,7 @@ public class PreflopAndBetGameTest {
 		assertEquals(game.getPotBalance(), 30);
 	}
 	
-	/*
+	/**
 	 * Get the pot after the player is under the gun bet in Preflop
 	 * */
 	@Test
@@ -249,7 +255,7 @@ public class PreflopAndBetGameTest {
 
 	}
 	
-	/*
+	/**
 	 * Get the pot from the small blind and big blind. Player3 and player4 bet in Preflop
 	 * */
 	@Test
@@ -284,7 +290,7 @@ public class PreflopAndBetGameTest {
 		assertEquals(game.getPotBalance(), 350);
 	}
 	
-	/*
+	/**
 	 * 5 players: master, player2(p2), player3(p3), player4(p4), player5(p5)
 	 * Dealer is p5. So, SB is master, BB is p2, UTG is the p3. 
 	 * In preflop, the first call is p3.  
@@ -327,7 +333,7 @@ public class PreflopAndBetGameTest {
 	}
 	
 	
-	/*
+	/**
 	 * Check turn player bet is correct.
 	 * */
 	@Test(expected = AssertionError.class)
@@ -364,7 +370,7 @@ public class PreflopAndBetGameTest {
 	}
 	
 	
-	/*
+	/**
 	 * Get current player in preflop.
 	 * */
 	@Test

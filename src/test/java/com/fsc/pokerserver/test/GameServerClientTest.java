@@ -106,18 +106,21 @@ import com.fcs.pokerserver.gameserver.MqttServletGameServer;
  * nghe1: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6Im5naGUxIn0.3Bx_3efkx4UYEuHwVz2CCSNEIS6i6qeRN89o6xafAaY
  * 
  * **/
-
+/**
+ * The class to test the Server and the Client in the game.
+ * @category com > fcs > pokerserver > test
+ * */
+@Ignore
 public class GameServerClientTest implements MqttCallback {
 
 	String host = "http://localhost:8080/";
-//	String host = "http://192.168.1.187:8080/";
 	@Before
 	public void setUp() throws Exception {
 //		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
 //		Thread.sleep(2000);
 	}
 	
-	/*
+	/**
 	 * Get content from the url
 	 * */
 	public String getContentFromUrl(String url)  throws ClientProtocolException, IOException
@@ -126,7 +129,7 @@ public class GameServerClientTest implements MqttCallback {
 		return contentDoc.body().text();
 	}
 	
-	/*
+	/**
 	 * Get token from Player
 	 * */
 	public String[] getTokenPlayer(String[] arr) throws ClientProtocolException, IOException
@@ -147,7 +150,7 @@ public class GameServerClientTest implements MqttCallback {
 	}
 	
 	
-	/*
+	/**
 	 * Check value is Numeric
 	 * */
 	public static boolean isNumeric(String str)  
@@ -163,26 +166,26 @@ public class GameServerClientTest implements MqttCallback {
 	  return true;  
 	}
 	
-//	/*
-//	 * Create player
-//	 * */
-////	@Test
-////	public void testCreatePlayer()  throws IOException, ClientProtocolException{
-//////		String arr[]= {"gio1","hbg1","poke1","agru1","kuki1"};
-//////		String arr[]= {"loi1","xeng1","thuy1","hoan1","lam1"};
-//////		String arr[]= {"tit1","thoa1","hung1","ngoc1","tuan1"};
-////		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
-////
-////		for(int i=0;i<arr.length;i++)
-////		{
-////			String url = host+"api/register?username="+arr[i]+"&password=123456";
-////			this.getContentFromUrl(url);
-////		}
-////		
-////	}
+	/**
+	 * Create player
+	 * */
+	@Test@Ignore
+	public void testCreatePlayer()  throws IOException, ClientProtocolException{
+//		String arr[]= {"gio1","hbg1","poke1","agru1","kuki1"};
+//		String arr[]= {"loi1","xeng1","thuy1","hoan1","lam1"};
+//		String arr[]= {"tit1","thoa1","hung1","ngoc1","tuan1"};
+		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
+
+		for(int i=0;i<arr.length;i++)
+		{
+			String url = host+"api/register?username="+arr[i]+"&password=123456";
+			this.getContentFromUrl(url);
+		}
+		
+	}
 
 	
-	/*
+	/**
 	 * Create player but player is exist
 	 * */
 	@Test(expected = AssertionError.class)@Ignore
@@ -194,7 +197,7 @@ public class GameServerClientTest implements MqttCallback {
 	}
 	
 	
-	/*
+	/**
 	 * Player login
 	 * */
 	@Test @Ignore
@@ -212,7 +215,7 @@ public class GameServerClientTest implements MqttCallback {
 		}
 	}
 	
-	/*
+	/**
 	 * Player login error
 	 * */
 	@Test(expected = AssertionError.class) @Ignore
@@ -224,7 +227,7 @@ public class GameServerClientTest implements MqttCallback {
 		assertEquals(this.getContentFromUrl(url), "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImFncnUxIn0._NXg4_vRYyu8ntaHROfVdu8snHxGirmzNlMav-96fZ4");
 	}
 	
-	/*
+	/**
 	 * Create room
 	 * */
 	@Test @Ignore
@@ -240,7 +243,7 @@ public class GameServerClientTest implements MqttCallback {
 	}
 	
 	
-	/*
+	/**
 	 * Create room With Token not login or Not Exist
 	 * */
 	@Test(expected = AssertionError.class)@Ignore
@@ -263,7 +266,7 @@ public class GameServerClientTest implements MqttCallback {
 	}
 	
 	
-	/*
+	/**
 	 * Join room.
 	 * */
 	@Test @Ignore
@@ -292,7 +295,7 @@ public class GameServerClientTest implements MqttCallback {
 	
 	}
 	
-	/*
+	/**
 	 * Join room With token error.
 	 * */
 	@SuppressWarnings("deprecation")
@@ -302,10 +305,7 @@ public class GameServerClientTest implements MqttCallback {
 		String arr[]= {"toan1","danh1","linh1","chau1","nghe1"};
 		// Players login and return Array Token of Players
 		String token[] = this.getTokenPlayer(arr);
-		
-		
-		
-		
+	
 		//create room
 		String urlCreateRoom = host+"api/room?token="+token[0]+"&method=put";
 		String id = this.getContentFromUrl(urlCreateRoom);
@@ -328,7 +328,7 @@ public class GameServerClientTest implements MqttCallback {
 	}
 	
 
-	/*
+	/**
 	 * Join room with room id error.
 	 * */
 	@Test(expected = AssertionError.class)@Ignore
@@ -354,7 +354,7 @@ public class GameServerClientTest implements MqttCallback {
 		assertNotEquals(value, 6);
 	}
 	
-	/*
+	/**
 	 * Get list of room
 	 * */
 	@Test @Ignore
@@ -380,7 +380,7 @@ public class GameServerClientTest implements MqttCallback {
 		this.getContentFromUrl(urlGetListRoom);
 	}
 	
-	/*
+	/**
 	 * Start Game in Room
 	 * */
 	@Test@Ignore
@@ -408,7 +408,7 @@ public class GameServerClientTest implements MqttCallback {
 	}
 	
 	
-	/*
+	/**
 	 * Start Game in Room but player dont login
 	 * */
 	@Test(expected = AssertionError.class)@Ignore
@@ -441,7 +441,7 @@ public class GameServerClientTest implements MqttCallback {
 	
 	}
 	
-	/*
+	/**
 	 * Game Preflop
 	 * */
 	@Test @Ignore
@@ -473,7 +473,7 @@ public class GameServerClientTest implements MqttCallback {
 	
 	
 	
-	/*
+	/**
 	 * Game Flop
 	 * */
 	@Test@Ignore
@@ -519,7 +519,7 @@ public class GameServerClientTest implements MqttCallback {
 	}
 	
 	
-	/*
+	/**
 	 * Game Turn
 	 * */
 	@Test@Ignore
@@ -581,7 +581,7 @@ public class GameServerClientTest implements MqttCallback {
 	}
 	
 	
-	/*
+	/**
 	 * Game River
 	 * */
 	@Test//@Ignore
@@ -662,8 +662,6 @@ public class GameServerClientTest implements MqttCallback {
 		String endGame = host+"api/game?token="+token[0]+"&method=end";
 		this.getContentFromUrl(endGame);
 	}
-	
-	
 	
 
 	@Override

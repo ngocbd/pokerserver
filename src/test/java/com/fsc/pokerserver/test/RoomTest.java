@@ -22,6 +22,7 @@ package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fcs.pokerserver.BlindLevel;
@@ -29,9 +30,16 @@ import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 
+/**
+ * The class to test to create a new Room in the game.
+ * @category com > fcs > pokerserver > test
+ * */
+@Ignore
 public class RoomTest {
 
-	
+	/**
+	 * The method to create new the room
+	 * */
 	@Test
 	public void testCreateRoom() {
 		Player master = new Player();
@@ -40,6 +48,10 @@ public class RoomTest {
 		assertEquals(room.getBlindLevel(),BlindLevel.BLIND_10_20);
 		
 	}
+	
+	/**
+	 * The method to create new the game
+	 * */
 	@Test
 	public void testCreateNewGame() {
 		Player master = new Player();
