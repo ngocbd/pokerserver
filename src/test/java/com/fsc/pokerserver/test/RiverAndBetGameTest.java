@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Deck;
@@ -14,6 +15,11 @@ import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 
+/**
+ * The class to test the River and Bet in the game.
+ * @category com > fcs > pokerserver > test
+ * */
+@Ignore
 public class RiverAndBetGameTest {
 	Player master;
 	Room room;
@@ -28,7 +34,7 @@ public class RiverAndBetGameTest {
 	
 /*--------------------- River And Bet -----------------------*/
 	
-	/*
+	/**
 	 * 5 players: master, player2(p2), player3(p3), player4(p4), player5(p5)
 	 * Dealer is p5. So, SB is master, BB is p2, UTG is the p3.   
 	 * Change position order number between player in fourth.
@@ -85,7 +91,7 @@ public class RiverAndBetGameTest {
 		
 	}
 	
-	/*  
+	/**  
 	 * Get cards after river.
 	 * */
 	@Test
@@ -140,7 +146,7 @@ public class RiverAndBetGameTest {
 		assertEquals(game.getBoard().getCardNumber(), 5);
 	}
 	
-	/*  
+	/**  
 	 * Get pot after river in game.
 	 * */
 	@Test

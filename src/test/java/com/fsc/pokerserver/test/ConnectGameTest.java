@@ -27,6 +27,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Deck;
@@ -34,6 +35,11 @@ import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 
+/**
+ * The class to test the connect to the game.
+ * @category com > fcs > pokerserver > test
+ * */
+@Ignore
 public class ConnectGameTest {
 	Player master;
 	Room room;
@@ -45,7 +51,7 @@ public class ConnectGameTest {
 		
 	}
 
-	/*
+	/**
 	 * Create new Game
 	 * */
 	@Test
@@ -54,7 +60,7 @@ public class ConnectGameTest {
 		assertNotNull(game);
 	}
 
-	/*
+	/**
 	 * Deck of cards is not null
 	 * */
 	@Test
@@ -64,7 +70,7 @@ public class ConnectGameTest {
 		assertNotNull(game.getDeck());
 	}
 
-	/*
+	/**
 	 * shuffle deck of cards
 	 * */
 	@Test
@@ -75,7 +81,7 @@ public class ConnectGameTest {
 		assertNotEquals(game.getDeck().exportDeck(), deck.exportDeck());
 	}
 
-	/*
+	/**
 	 * Game start
 	 * */
 	@Test

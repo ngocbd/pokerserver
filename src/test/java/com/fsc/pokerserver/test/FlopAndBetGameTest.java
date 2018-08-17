@@ -27,6 +27,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Deck;
@@ -34,6 +35,11 @@ import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 
+/**
+ * The class to test the Flop and the Player bet in the game.
+ * @category com > fcs > pokerserver > test
+ * */
+@Ignore
 public class FlopAndBetGameTest {
 	Player master;
 	Room room;
@@ -47,7 +53,7 @@ public class FlopAndBetGameTest {
 	
 	/*--------------------- Flop And Bet -----------------------*/
 	
-	/*
+	/**
 	 * 5 players: master, player2(p2), player3(p3), player4(p4), player5(p5)
 	 * Dealer is p5. So, SB is master, BB is p2, UTG is the p3. 
 	 * In preflop, the first call is p3.  
@@ -91,16 +97,7 @@ public class FlopAndBetGameTest {
 	}
 	
 	
-	
-	
-
-	/*  
-	 * Get current player in Flop.
-	 * */
-//	
-
-	
-	/*
+	/**
 	 * Check sum of Cards in Flop. it's correct if sum of cards is 2. It's not correct if sum of cards is not 2.
 	 * */
 	@Test(expected = AssertionError.class)
@@ -140,7 +137,7 @@ public class FlopAndBetGameTest {
 		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 3);
 	}
 	
-	/*
+	/**
 	 * Get current player.
 	 * */
 	public void testTurnGameInPreFlopPlayer3AndPlayer5() {
@@ -178,7 +175,7 @@ public class FlopAndBetGameTest {
 
 	}
 	
-	/*
+	/**
 	 * get pot of game from player bet after flop.
 	 * */
 	public void testPlayerBetAfterFlop() {
@@ -227,7 +224,7 @@ public class FlopAndBetGameTest {
 		assertEquals(game.getPotBalance(), 300);
 	}
 	
-	/*
+	/**
 	 * get pot of game from player bet after flop.
 	 * */
 	public void testPlayerBetCheckFoldAfterFlop() {
@@ -279,7 +276,7 @@ public class FlopAndBetGameTest {
 	
 	
 
-	/*
+	/**
 	 * get current player of game from bet, check, fold after flop.
 	 * */
 	public void testGetCurrentPlayerFromBetCheckFoldAfterFlop() {
@@ -329,7 +326,7 @@ public class FlopAndBetGameTest {
 		assertEquals(game.getCurrentPlayer(), master);
 	}
 	
-	/*
+	/**
 	 * Player3 still bet although player3 folded after flop.
 	 * */
 	@Test(expected = AssertionError.class)
@@ -378,7 +375,7 @@ public class FlopAndBetGameTest {
 	}
 	
 	
-	/*
+	/**
 	 * Change position of player bet after flop.
 	 * */
 	@Test(expected = AssertionError.class)
@@ -426,7 +423,7 @@ public class FlopAndBetGameTest {
 		player4.bet(10);
 	}
 	
-	/*
+	/**
 	 * get current pot of game from bet, check, fold after flop.
 	 * */
 	@Test(expected = AssertionError.class)
@@ -471,7 +468,7 @@ public class FlopAndBetGameTest {
 		player2.bet(10);
 	}
 	
-	/*
+	/**
 	 * check again the situation.
 	 * cay nay dang bi loi vi player3 da fold o vong preflop roi. vi vay, o vong flop, se ko dc. fold tiep.
 	 * get current pot of game from bet, check, fold after flop.

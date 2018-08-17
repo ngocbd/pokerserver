@@ -23,32 +23,40 @@ package com.fsc.pokerserver.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fcs.pokerserver.Deck;
 
 /**
- * @author DaiKa
- *
- */
+ * The class to test the connect to the game.
+ * @category com > fcs > pokerserver > test
+ * */
+@Ignore
 public class DeckTest {
-
-	 @Test public void initDeck() {
+	/**
+	 * The method to create the Deck
+	 * */	
+	 @Test 
+	 public void initDeck() {
 	       Deck deck = new Deck();
 	       deck.initDeck();
 	       deck.shuffleDeck();
 	       assertEquals(deck.exportDeck().size(),52);
 	    }
-	 @Test public void shuffleDeck() {
+	 
+	 /**
+	  * The method to shuffle the Deck
+	  * */
+	 @Test 
+	 public void shuffleDeck() {
 	       Deck deck = new Deck();
 	       deck.initDeck();
-	       
-	       
 	       
 	       Deck shuffledDeck = new Deck();
 	       shuffledDeck.initDeck();
 	       shuffledDeck.shuffleDeck();
 	       assertNotEquals(shuffledDeck.exportDeck(), deck.exportDeck());
-	    }
+	 }
 
 }

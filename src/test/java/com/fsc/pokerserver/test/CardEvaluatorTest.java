@@ -43,14 +43,10 @@ import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
  * The Evaluation algorithm ({@link TwoPlusTwoHandEvaluator}) needs to always determine
  * the winner between two (or more) hands.  It should also correctly determine
  * the type of the hand (pair, flush, etc.)
- * 
- * @author jacobhyphenated
+ * @category com > fcs > pokerserver > test
  */
 @Ignore
 public class CardEvaluatorTest extends TestCase {
-
-	
-	
 	public static void main(String[] args) {
 		Hand h1 = new Hand(Card.THREE_OF_CLUBS, Card.SEVEN_OF_HEARTS);
 		Hand h2 = new Hand(Card.TWO_OF_SPADES, Card.FOUR_OF_CLUBS);
@@ -97,8 +93,10 @@ public class CardEvaluatorTest extends TestCase {
 		System.out.println("Best hand "+list.get(list.size()-1));
 	}
 
+	/**
+	 * The method to test pair over pair
+	 * */
 	@Test
-	//test pair over pair
 	public void testPair1(){
 		Hand h1 = new Hand(Card.ACE_OF_CLUBS, Card.ACE_OF_DIAMONDS);
 		Hand h2 = new Hand(Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS);
@@ -108,8 +106,10 @@ public class CardEvaluatorTest extends TestCase {
 		assertTrue(comp > 0);
 	}
 	
+	/**
+	 * The method to test pair over pair in reverse
+	 * */
 	@Test
-	//test pair over pair in reverse
 	public void testPair2(){
 		Hand h2 = new Hand(Card.ACE_OF_CLUBS, Card.ACE_OF_DIAMONDS);
 		Hand h1 = new Hand(Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS);
@@ -118,9 +118,10 @@ public class CardEvaluatorTest extends TestCase {
 		int comp = compare(h1,h2,b);
 		assertTrue(comp < 0);
 	}
-	
+	/**
+	 * The method to Test pair over not pair
+	 * */
 	@Test
-	//Test pair over not pair
 	public void testPairvsNotPair(){
 		Hand h1 = new Hand(Card.NINE_OF_DIAMONDS, Card.SEVEN_OF_CLUBS);
 		Hand h2 = new Hand(Card.KING_OF_CLUBS, Card.NINE_OF_SPADES);
@@ -130,8 +131,10 @@ public class CardEvaluatorTest extends TestCase {
 		assertTrue(comp < 0);
 	}
 	
+	/**
+	 * The method to test two pair vs counterfeit two pair
+	 * */
 	@Test
-	//test two pair vs counterfeit two pair
 	public void testTwoPair(){
 		Hand h1 = new Hand(Card.NINE_OF_CLUBS, Card.THREE_OF_SPADES);
 		Hand h2 = new Hand(Card.EIGHT_OF_CLUBS, Card.KING_OF_CLUBS);
@@ -141,8 +144,10 @@ public class CardEvaluatorTest extends TestCase {
 		assertTrue(comp < 0);
 	}
 	
+	/**
+	 * The method to test flush over 3 of a kind
+	 * */
 	@Test
-	//test flush over 3 of a kind
 	public void testFlushThreeOfKind(){
 		Hand h1 = new Hand(Card.TEN_OF_CLUBS, Card.EIGHT_OF_CLUBS);
 		Hand h2 = new Hand(Card.KING_OF_SPADES, Card.KING_OF_DIAMONDS);
@@ -152,8 +157,10 @@ public class CardEvaluatorTest extends TestCase {
 		assertTrue(comp > 0);
 	}
 	
+	/**
+	 * The method to test flush over straight
+	 * */
 	@Test
-	//test flush over straight
 	public void testFlushStraight(){
 		Hand h1 = new Hand(Card.TEN_OF_CLUBS, Card.EIGHT_OF_CLUBS);
 		Hand h2 = new Hand(Card.FIVE_OF_SPADES, Card.SIX_OF_DIAMONDS);
@@ -163,8 +170,10 @@ public class CardEvaluatorTest extends TestCase {
 		assertTrue(comp > 0);
 	}
 	
+	/**
+	 * The method to test straight over pair
+	 * */
 	@Test
-	//test straight over pair
 	public void testStraight(){
 		Hand h1 = new Hand(Card.KING_OF_SPADES, Card.EIGHT_OF_DIAMONDS);
 		Hand h2 = new Hand(Card.FIVE_OF_SPADES, Card.SIX_OF_DIAMONDS);
@@ -174,8 +183,10 @@ public class CardEvaluatorTest extends TestCase {
 		assertTrue(comp < 0);
 	}
 	
+	/**
+	 * The method to test split
+	 * */
 	@Test
-	//test split
 	public void testSplit(){
 		Hand h1 = new Hand(Card.TEN_OF_CLUBS, Card.EIGHT_OF_CLUBS);
 		Hand h2 = new Hand(Card.TEN_OF_DIAMONDS, Card.NINE_OF_HEARTS);
@@ -185,8 +196,10 @@ public class CardEvaluatorTest extends TestCase {
 		assertTrue(comp == 0);
 	}
 	
+	/**
+	 * The method to test 3 pair.
+	 * */
 	@Test
-	//test 3 pair vs. 2 pair
 	public void testThreePair(){
 		Hand h1 = new Hand(Card.TEN_OF_DIAMONDS, Card.TEN_OF_CLUBS);
 		Hand h2 = new Hand(Card.ACE_OF_DIAMONDS, Card.QUEEN_OF_SPADES);
@@ -196,6 +209,9 @@ public class CardEvaluatorTest extends TestCase {
 		assertTrue("Comp is " + comp,comp > 0);
 	}
 	
+	/**
+	 * The method to test the one pair.
+	 * */
 	@Test
 	public void testOnePairType(){
 		Hand h1 = new Hand(Card.TEN_OF_DIAMONDS, Card.NINE_OF_CLUBS);
@@ -206,6 +222,9 @@ public class CardEvaluatorTest extends TestCase {
 		assertEquals(HandType.PAIR, rank.getHandType());
 	}
 	
+	/**
+	 * The method to test two pair.
+	 * */
 	@Test 
 	public void testTwoPairType(){
 		Hand h1 = new Hand(Card.TEN_OF_DIAMONDS, Card.NINE_OF_CLUBS);
@@ -216,6 +235,9 @@ public class CardEvaluatorTest extends TestCase {
 		assertEquals(HandType.TWO_PAIR, rank.getHandType());
 	}
 	
+	/**
+	 * The method to test the Three Of A Kind.
+	 * */
 	@Test
 	public void testThreeOfAKindType(){
 		Hand h1 = new Hand(Card.JACK_OF_DIAMONDS, Card.FIVE_OF_CLUBS);
@@ -226,6 +248,9 @@ public class CardEvaluatorTest extends TestCase {
 		assertEquals(HandType.THREE_OF_A_KIND, rank.getHandType());
 	}
 	
+	/**
+	 * The method to test the Full House.
+	 * */
 	@Test
 	public void testFullHouseType(){
 		Hand h1 = new Hand(Card.JACK_OF_DIAMONDS, Card.NINE_OF_CLUBS);
@@ -236,6 +261,9 @@ public class CardEvaluatorTest extends TestCase {
 		assertEquals(HandType.FULL_HOUSE, rank.getHandType());
 	}
 	
+	/**
+	 * The method to test the Straight.
+	 * */
 	@Test
 	public void testStraightType(){
 		Hand h1 = new Hand(Card.JACK_OF_DIAMONDS, Card.NINE_OF_CLUBS);
@@ -246,6 +274,9 @@ public class CardEvaluatorTest extends TestCase {
 		assertEquals(HandType.STRAIGHT, rank.getHandType());
 	}
 	
+	/**
+	 * The method to test the Flush.
+	 * */
 	@Test
 	public void testFlushType(){
 		Hand h1 = new Hand(Card.JACK_OF_DIAMONDS, Card.NINE_OF_DIAMONDS);
@@ -256,6 +287,9 @@ public class CardEvaluatorTest extends TestCase {
 		assertEquals(HandType.FLUSH, rank.getHandType());
 	}
 	
+	/**
+	 * The method to test the Four Of A Kind.
+	 * */
 	@Test
 	public void testFourOfAKindType(){
 		Hand h1 = new Hand(Card.TWO_OF_DIAMONDS, Card.SIX_OF_CLUBS);
@@ -266,6 +300,9 @@ public class CardEvaluatorTest extends TestCase {
 		assertEquals(HandType.FOUR_OF_A_KIND, rank.getHandType());
 	}
 	
+	/**
+	 * The method to test the Straight Flush.
+	 * */
 	@Test
 	public void testStraightFlushType(){
 		Hand h1 = new Hand(Card.JACK_OF_DIAMONDS, Card.NINE_OF_CLUBS);
@@ -276,7 +313,11 @@ public class CardEvaluatorTest extends TestCase {
 		assertEquals(HandType.STRAIGHT_FLUSH, rank.getHandType());
 	}
 	
-	//Compareto equivalent to h1.compareTo(h2) using Two Plus Two Algorithm
+	/**
+	 * The method to compare the 2 hands with the board. Return the hand has bigger value. Compareto equivalent to h1.compareTo(h2) using Two Plus Two Algorithm
+	 * @param Hand h1, Hand h2, Board b
+	 * @return int value(+ or -) 
+	 * */
 	public static int compare(Hand h1, Hand h2, Board b){
 		TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
 		HandRank rank1 = evaluator.evaluate(b, h1);
