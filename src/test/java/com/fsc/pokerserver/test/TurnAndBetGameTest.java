@@ -27,6 +27,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Deck;
@@ -34,6 +35,11 @@ import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 
+/**
+ * The class to test the Turn and Bet in the game.
+ * @category com > fcs > pokerserver > test
+ * */
+@Ignore
 public class TurnAndBetGameTest {
 	Player master;
 	Room room;
@@ -46,7 +52,7 @@ public class TurnAndBetGameTest {
 	}	
 /*--------------------- Turn And Bet -----------------------*/
 	
-	/*
+	/**
 	 * 5 players: master, player2(p2), player3(p3), player4(p4), player5(p5)
 	 * Dealer is p5. So, SB is master, BB is p2, UTG is the p3.   
 	 * Change position order number between player in third.
@@ -99,7 +105,7 @@ public class TurnAndBetGameTest {
 		
 	}
 	
-	/*  
+	/**  
 	 * Get Cards on the Table After Turn
 	 * */
 	@Test
@@ -150,7 +156,7 @@ public class TurnAndBetGameTest {
 		assertEquals(game.getCurrentPlayer(), player2);
 	}
 	
-	/*  
+	/**  
 	 * Get Cards on the Table After Turn
 	 * */
 	@Test
@@ -208,7 +214,7 @@ public class TurnAndBetGameTest {
 		assertEquals(game.getBoard().getCardNumber(),4);
 	}
 	
-	/*  
+	/**  
 	 * Get pot on the table in Turn.
 	 * */
 	@Test
@@ -259,7 +265,7 @@ public class TurnAndBetGameTest {
 		assertEquals(game.getPotBalance(),210);
 	}
 	
-	/*  
+	/**  
 	 * Player bet, check, fold in Preflop, flop, turn
 	 * */
 	@Test
@@ -310,7 +316,7 @@ public class TurnAndBetGameTest {
 		assertEquals(game.getPotBalance(),190);
 	}
 	
-	/*  
+	/**  
 	 * Get pot from Player bet, check, fold after turn
 	 * */
 	@Test
