@@ -240,7 +240,7 @@ public class Player {
 	 * The method to set the cards on hand of the Player
 	 * @param Hand playerHand
 	 * */
-	void setPlayerHand(Hand playerHand) {
+	public void setPlayerHand(Hand playerHand) {
 		this.playerHand = playerHand;
 	}
 	
