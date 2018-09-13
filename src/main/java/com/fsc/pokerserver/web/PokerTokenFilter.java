@@ -39,15 +39,14 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
-import com.googlecode.objectify.ObjectifyFilter;
 
 /**
  * The class to check and filter the Player's token.
  * @category com > fcs > pokerserver > web
  * */
 public class PokerTokenFilter implements Filter {
-	String secret = "thisstringisverysecret";
-	Algorithm algorithm = Algorithm.HMAC256(secret);
+	private String secret = "thisstringisverysecret";
+	private Algorithm algorithm = Algorithm.HMAC256(secret);
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {

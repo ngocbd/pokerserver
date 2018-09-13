@@ -38,11 +38,11 @@ import com.fcs.pokerserver.Room;
  * */
 @Ignore
 public class ConnectGameTest {
-	private Player master;
 	private Room room;
 
 	@Before
 	public void setUp() throws Exception {
+		Player master;
 		master = new Player("Room master");
 		room = new Room(master, BlindLevel.BLIND_10_20);
 		

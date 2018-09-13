@@ -40,6 +40,7 @@ public class Room implements GameListener {
     private Game currentGame = null;
     private long RoomID;
     private Player master;
+    private BlindLevel blindLevel;
 
     private List<Player> listPlayer = new ArrayList<Player>();
 
@@ -98,9 +99,9 @@ public class Room implements GameListener {
      *
      * @param List<Player> listPlayer
      */
-    private void setListPlayer(List<Player> listPlayer) {
-        this.listPlayer = listPlayer;
-    }
+//    private void setListPlayer(List<Player> listPlayer) {
+//        this.listPlayer = listPlayer;
+//    }
 
     /**
      * Return the current game in the room.
@@ -174,7 +175,7 @@ public class Room implements GameListener {
         this.blindLevel = blindLevel;
     }
 
-    BlindLevel blindLevel;
+
 
     /**
      * The constructor with 2 params are Player and BlindLevel

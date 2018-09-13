@@ -58,9 +58,9 @@ class MessageQueue
 	 * The method to set value for topic
 	 * @param String topic
 	 * */
-	public void setTopic(String topic) {
-		this.topic = topic;
-	}
+//	public void setTopic(String topic) {
+//		this.topic = topic;
+//	}
 	
 	/**
 	 * Return the Content.
@@ -74,9 +74,9 @@ class MessageQueue
 	 * The method to set value for the content.
 	 * @param String content
 	 * */
-	public void setContent(String content) {
-		this.content = content;
-	}
+//	public void setContent(String content) {
+//		this.content = content;
+//	}
 }
 
 /**
@@ -134,7 +134,7 @@ public class Sender extends Thread{
 		MqttConnectOptions connOpt;
 
 		String BROKER_URL = "tcp://broker.hivemq.com:1883";
-		String SERVER_TOPIC = "/pokerserver/server";
+//		String SERVER_TOPIC = "/pokerserver/server";
 		
 		connOpt = new MqttConnectOptions();
 		connOpt.setCleanSession(true);

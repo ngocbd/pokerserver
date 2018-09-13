@@ -21,7 +21,6 @@ THE SOFTWARE.
 package com.fsc.pokerserver.web;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,7 +43,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * */
 @WebServlet(name = "RoomServlet", urlPatterns = { "/api/room" })
 public class RoomServlet extends HttpServlet {
-	private static Logger logger = Logger.getLogger(GameServlet.class.getName());
 	private MqttServletGameServer server = MqttServletGameServer.getInstance();
 	
 	@Override 
