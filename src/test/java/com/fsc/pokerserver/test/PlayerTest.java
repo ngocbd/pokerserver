@@ -55,7 +55,7 @@ public class PlayerTest implements PlayerListener  {
 		p.addPlayerListener(this);
 		p.bet(100);
 		assertEquals(p.getBalance(), 50000-100);
-		assertTrue(true);
+
 	}
 
 	

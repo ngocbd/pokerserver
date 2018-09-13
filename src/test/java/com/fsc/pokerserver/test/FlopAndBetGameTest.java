@@ -90,7 +90,6 @@ public class FlopAndBetGameTest {
 		game.flop();
 
 		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 2);
-		assertTrue(true);
 	}
 	
 	

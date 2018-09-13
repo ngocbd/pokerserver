@@ -219,7 +219,6 @@ public class EndGameTest {
 		game.endGame();
 		
 		assertEquals(game.getPotBalance(), 240);
-		assertTrue(true);
 	}
 	
 	/**  

@@ -45,7 +45,6 @@ public class DeckTest {
         deck.initDeck();
         deck.shuffleDeck();
         assertEquals(deck.exportDeck().size(), 52);
-        assertTrue(true);
     }
 
     /**

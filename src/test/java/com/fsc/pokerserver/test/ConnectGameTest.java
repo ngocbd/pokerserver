@@ -66,7 +66,6 @@ public class ConnectGameTest {
 		Game game = room.createNewGame();
 
 		assertNotNull(game.getDeck());
-		assertTrue(true);
 	}
 
 	/**

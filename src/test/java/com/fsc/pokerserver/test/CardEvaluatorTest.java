@@ -273,7 +273,6 @@ public class CardEvaluatorTest extends TestCase {
 		TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
 		HandRank rank = evaluator.evaluate(b, h1);
 		assertEquals(HandType.STRAIGHT, rank.getHandType());
-		assertTrue(true);
 	}
 	
 	/**
