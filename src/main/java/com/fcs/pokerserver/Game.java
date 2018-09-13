@@ -23,7 +23,6 @@ THE SOFTWARE.
 */
 package com.fcs.pokerserver;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,9 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fcs.pokerserver.events.GameAction;
 import com.fcs.pokerserver.events.GameEvent;
 import com.fcs.pokerserver.events.GameListener;
@@ -277,9 +273,9 @@ public class Game implements PlayerListener {
 	 * Set value for Deck
 	 * @param Deck deck 
 	 * */
-	public void setDeck(Deck deck) {
-		this.deck = deck;
-	}
+//	public void setDeck(Deck deck) {
+//		this.deck = deck;
+//	}
 
 	/**
 	 * Get "the money or chips"(Pot) in the center of a table that players try to win
@@ -294,9 +290,9 @@ public class Game implements PlayerListener {
 	 * @param add more the money or chips(long pot) of players  in the center of a table.
 	 * @return void
 	 * */
-	public void setPotBalance(long potBalance) {
-		this.potBalance = potBalance;
-	}
+//	public void setPotBalance(long potBalance) {
+//		this.potBalance = potBalance;
+//	}
 
 	/**
 	 * Get room in game
@@ -488,9 +484,9 @@ public class Game implements PlayerListener {
 	 * Set the player is Big Blind in the game
 	 * @param Player bigBlind
 	 * */
-	public void setBigBlind(Player bigBlind) {
-		this.bigBlind = bigBlind;
-	}
+//	public void setBigBlind(Player bigBlind) {
+//		this.bigBlind = bigBlind;
+//	}
 
 	/**
 	 * Return Player is Small Blind
@@ -504,9 +500,9 @@ public class Game implements PlayerListener {
 	 * Set the player is Small Blind in the game
 	 * @param Player smallBlind
 	 * */
-	public void setSmallBlind(Player smallBlind) {
-		this.smallBlind = smallBlind;
-	}
+//	public void setSmallBlind(Player smallBlind) {
+//		this.smallBlind = smallBlind;
+//	}
 
 	/**
 	 * Return The cards of Board on the table in the game
@@ -520,9 +516,9 @@ public class Game implements PlayerListener {
 	 * Set cards of Board on the table in game
 	 * @param Board board
 	 * */
-	public void setBoard(Board board) {
-		this.board = board;
-	}
+//	public void setBoard(Board board) {
+//		this.board = board;
+//	}
 	
 	/**
 	 * Add Listener for the game
@@ -560,40 +556,40 @@ public class Game implements PlayerListener {
 	 * Return the Player has problem. The player has current Round Bet is different for other players.
 	 * @return Player PlayerHasProblem
 	 * */
-	public Player getPlayerHasProblem()
-	{
-		//TODO need more test and code review
-		return this.listPlayer.stream()
-				.filter(x->!x.isSittingOut())		
-				.filter(x -> x.getRoundBet() != this.getCurrentRoundBet() || x.getRound() != this.getRound())
-				.findAny().orElse(null);
-	}
+//	public Player getPlayerHasProblem()
+//	{
+//		//TODO need more test and code review
+//		return this.listPlayer.stream()
+//				.filter(x->!x.isSittingOut())
+//				.filter(x -> x.getRoundBet() != this.getCurrentRoundBet() || x.getRound() != this.getRound())
+//				.findAny().orElse(null);
+//	}
 	
 	/**
 	 * Return all list of players to become playerListString.
 	 * @return String dumpListPlayer.
 	 * */
-	public String dumpListPlayer()
-	{
-		ObjectMapper mapper = new ObjectMapper();
-		
-
-
-		String jsonInString ="Error when dump Object";
-		try {
-			 jsonInString = mapper.writeValueAsString(this.listPlayer);
-		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return jsonInString;
-	}
+//	public String dumpListPlayer()
+//	{
+//		ObjectMapper mapper = new ObjectMapper();
+//
+//
+//
+//		String jsonInString ="Error when dump Object";
+//		try {
+//			 jsonInString = mapper.writeValueAsString(this.listPlayer);
+//		} catch (JsonGenerationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (JsonMappingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return jsonInString;
+//	}
 	
 	/**
 	 * Override the actionPerformed method to sure the Player has action need in the game. 
@@ -704,24 +700,24 @@ public class Game implements PlayerListener {
 		return winner;
 	}
 
-	public void setWinner(Player winner) {
-		this.winner = winner;
-	}
+//	public void setWinner(Player winner) {
+//		this.winner = winner;
+//	}
 
 	public String getRank() {
 		return rank;
 	}
 
-	public void setRank(String rank) {
-		this.rank = rank;
-	}
+//	public void setRank(String rank) {
+//		this.rank = rank;
+//	}
 
 	public Hand getBestHand() {
 		return bestHand;
 	}
 
-	public void setBestHand(Hand bestHand) {
-		this.bestHand = bestHand;
-	}
+//	public void setBestHand(Hand bestHand) {
+//		this.bestHand = bestHand;
+//	}
 
 }

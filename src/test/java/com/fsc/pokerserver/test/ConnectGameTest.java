@@ -89,9 +89,7 @@ public class ConnectGameTest {
 		game.addPlayer(player2);
 		Player player3 = new Player();
 		game.addPlayer(player3);
-		
 		game.setDealer(player2);
-		
 		game.startGame();
 	}
 	

@@ -276,5 +276,5 @@ public class EndGameTest {
 		game.endGame();
 		
 		assertEquals(game.getBoard().getCardNumber(),5);
-	} 
+	}
 }

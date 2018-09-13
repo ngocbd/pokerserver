@@ -36,8 +36,6 @@ import com.fcs.pokerserver.holder.HandRank;
 import com.fcs.pokerserver.holder.HandType;
 import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
 
-
-
 /**
  * JUnit tests for the Seven Card Poker Hand Evaluation.
  * The Evaluation algorithm ({@link TwoPlusTwoHandEvaluator}) needs to always determine
