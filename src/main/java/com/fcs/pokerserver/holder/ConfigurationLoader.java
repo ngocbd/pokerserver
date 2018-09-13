@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import com.google.common.io.Closeables;
@@ -47,14 +46,10 @@ public class ConfigurationLoader {
         ByteArrayOutputStream byteos = new ByteArrayOutputStream();
 
         ZipInputStream zis = new ZipInputStream(new BufferedInputStream(ConfigurationLoader.class.getResourceAsStream(zipname)));
-        ZipEntry entry;
-
-        while ((entry = zis.getNextEntry()) != null) {
-
-
+//        ZipEntry entry = zis.getNextEntry();
+        while (zis.getNextEntry() != null) {
             int size;
             byte[] buffer = new byte[2048];
-
 
             BufferedOutputStream bos = new BufferedOutputStream(byteos, buffer.length);
 

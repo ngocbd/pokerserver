@@ -20,7 +20,6 @@ THE SOFTWARE.
 
 package com.fsc.pokerserver.web;
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
