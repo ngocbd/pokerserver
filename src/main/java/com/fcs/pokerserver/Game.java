@@ -156,7 +156,7 @@ public class Game implements PlayerListener {
 			player.nextRound();
 			
 		}
-		Card ignoreCard = this.deck.dealCard(); // ignore top card 
+//		Card ignoreCard = this.deck.dealCard(); // ignore top card
 		for (int i = 0; i < 3; i++) {
 			Card card = this.deck.dealCard();
 			getBoard().addCard(card);

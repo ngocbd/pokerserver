@@ -37,7 +37,6 @@ import javax.servlet.DispatcherType;
 
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -49,12 +48,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.joda.time.DateTime;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fcs.pokerserver.BlindLevel;
+
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 import com.fcs.pokerserver.events.GameAction;
@@ -72,8 +67,7 @@ import com.fsc.pokerserver.web.PokerTokenFilter;
 import com.fsc.pokerserver.web.RegisterServlet;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
+
 
 /**
  * The class is tested. It's not a production.
@@ -164,14 +158,14 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	/**
 	 * The Main method
 	 * */
-	public static void main(String[] args) {
-		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance(); 
-	}
+//	public static void main(String[] args) {
+//		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
+//	}
 	
 	private List<Player> listPlayer = new ArrayList<Player>();
 	private List<Room> listRoom = new ArrayList<Room>();
-	Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-	Algorithm algorithm = Algorithm.HMAC256("thisstringisverysecret");
+//	Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+//	Algorithm algorithm = Algorithm.HMAC256("thisstringisverysecret");
 	Sender sender;
 	
 	/**

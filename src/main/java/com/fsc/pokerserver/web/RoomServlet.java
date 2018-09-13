@@ -21,7 +21,6 @@ THE SOFTWARE.
 package com.fsc.pokerserver.web;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -30,20 +29,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 import com.google.common.base.Joiner;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * The class to the Player react with the room

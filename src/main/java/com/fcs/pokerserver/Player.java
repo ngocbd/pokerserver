@@ -23,20 +23,13 @@ THE SOFTWARE.
 */
 package com.fcs.pokerserver;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fcs.pokerserver.events.GameEvent;
-import com.fcs.pokerserver.events.GameListener;
 import com.fcs.pokerserver.events.PlayerAction;
 import com.fcs.pokerserver.events.PlayerEvent;
 import com.fcs.pokerserver.events.PlayerListener;
-import com.fcs.pokerserver.holder.CardHolder;
 import com.fcs.pokerserver.holder.Hand;
 
 /**
@@ -119,12 +112,12 @@ public class Player {
 	 * The Player create a new game.
 	 * 
 	 * */
-	public void newGame()
-	{
-		this.setRoundBet(0);
-		this.gameBet=0;
-		this.round=0;
-	}
+//	public void newGame()
+//	{
+//		this.setRoundBet(0);
+//		this.gameBet=0;
+//		this.round=0;
+//	}
 	
 	/**
 	 * The Player want to fold in the game.
