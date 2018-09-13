@@ -21,6 +21,7 @@ THE SOFTWARE.
 package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class PlayerTest implements PlayerListener  {
 		p.addPlayerListener(this);
 		p.bet(100);
 		assertEquals(p.getBalance(), 50000-100);
-		
+		assertTrue(true);
 	}
 
 	

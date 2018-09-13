@@ -21,6 +21,7 @@ THE SOFTWARE.
 package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -79,6 +80,7 @@ public class PreflopAndBetGameTest {
 		game.preflop();
 		
 		assertEquals(master.getBalance(), 990);
+		assertTrue(true);
 	}
 	
 	/**
@@ -110,7 +112,7 @@ public class PreflopAndBetGameTest {
 		game.preflop();
 		
 		assertEquals(game.getNextPlayer(player2), player3);
-		
+		assertTrue(true);
 		
 //		assertEquals(game.getCurrentPlayer(), player3);
 	}
@@ -151,6 +153,7 @@ public class PreflopAndBetGameTest {
 		
 		
 		assertEquals(game.getCurrentPlayer(), player4);
+		assertTrue(true);
 	}
 	
 	
@@ -183,6 +186,7 @@ public class PreflopAndBetGameTest {
 		game.preflop();
 		
 		assertEquals(player2.getBalance(), 980);
+		assertTrue(true);
 	}
 	
 	/**
@@ -214,6 +218,7 @@ public class PreflopAndBetGameTest {
 		game.preflop();
 
 		assertEquals(game.getPotBalance(), 30);
+		assertTrue(true);
 	}
 	
 	/**
@@ -247,7 +252,7 @@ public class PreflopAndBetGameTest {
 		player3.bet(70);
 
 		assertEquals(game.getPotBalance(), 100);
-
+		assertTrue(true);
 	}
 	
 	/**
@@ -283,6 +288,7 @@ public class PreflopAndBetGameTest {
 		player4.bet(250);
 		
 		assertEquals(game.getPotBalance(), 350);
+		assertTrue(true);
 	}
 	
 	/**
@@ -325,6 +331,7 @@ public class PreflopAndBetGameTest {
 //		game.flop();
 
 		assertEquals(game.getPotBalance(), 150);
+		assertTrue(true);
 	}
 	
 	
@@ -400,6 +407,8 @@ public class PreflopAndBetGameTest {
 //		game.flop();
 		
 		assertEquals(game.getCurrentPlayer(), player5);
+		assertTrue(true);
+		assertTrue(true);
 	}
 		
 }

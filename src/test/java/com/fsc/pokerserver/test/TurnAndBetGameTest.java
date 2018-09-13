@@ -21,6 +21,7 @@ THE SOFTWARE.
 package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -149,6 +150,7 @@ public class TurnAndBetGameTest {
 		master.fold();
 		
 		assertEquals(game.getCurrentPlayer(), player2);
+		assertTrue(true);
 	}
 	
 	/**  
@@ -207,6 +209,7 @@ public class TurnAndBetGameTest {
 		game.turn();
 		
 		assertEquals(game.getBoard().getCardNumber(),4);
+		assertTrue(true);
 	}
 	
 	/**  
@@ -258,6 +261,7 @@ public class TurnAndBetGameTest {
 		master.bet(20);
 		
 		assertEquals(game.getPotBalance(),210);
+		assertTrue(true);
 	}
 	
 	/**  
@@ -309,6 +313,7 @@ public class TurnAndBetGameTest {
 		master.fold();
 		
 		assertEquals(game.getPotBalance(),190);
+		assertTrue(true);
 	}
 	
 	/**  
@@ -361,6 +366,7 @@ public class TurnAndBetGameTest {
 		player2.bet(10);
 		
 		assertEquals(game.getPotBalance(),210);
+		assertTrue(true);
 	}
 	
 }

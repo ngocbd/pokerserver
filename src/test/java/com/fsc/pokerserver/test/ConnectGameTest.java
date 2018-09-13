@@ -22,6 +22,7 @@ package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -65,6 +66,7 @@ public class ConnectGameTest {
 		Game game = room.createNewGame();
 
 		assertNotNull(game.getDeck());
+		assertTrue(true);
 	}
 
 	/**
@@ -76,6 +78,7 @@ public class ConnectGameTest {
 		Deck deck = new Deck();
 		deck.initDeck();
 		assertNotEquals(game.getDeck().exportDeck(), deck.exportDeck());
+		assertTrue(true);
 	}
 
 	/**
@@ -89,9 +92,7 @@ public class ConnectGameTest {
 		game.addPlayer(player2);
 		Player player3 = new Player();
 		game.addPlayer(player3);
-		
 		game.setDealer(player2);
-		
 		game.startGame();
 	}
 	
