@@ -37,7 +37,6 @@ import javax.servlet.DispatcherType;
 
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -49,12 +48,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.joda.time.DateTime;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 import com.fcs.pokerserver.events.GameAction;
@@ -70,10 +63,6 @@ import com.fsc.pokerserver.web.LoginServlet;
 import com.fsc.pokerserver.web.ObjectifyWebFilter;
 import com.fsc.pokerserver.web.PokerTokenFilter;
 import com.fsc.pokerserver.web.RegisterServlet;
-import com.google.cloud.datastore.Datastore;
-import com.google.cloud.datastore.DatastoreOptions;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
 
 /**
  * The class is tested. It's not a production.
@@ -81,9 +70,16 @@ import com.google.cloud.datastore.Key;
  * */
 public class MqttServletGameServer implements MqttCallback, RoomListener {
 	private static  MqttServletGameServer instance =null;
-	static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
-	
-	static 
+	private List<Player> listPlayer = new ArrayList<Player>();
+	private List<Room> listRoom = new ArrayList<Room>();
+	private MqttClient myClient;
+	private MqttConnectOptions connOpt;
+	private static final String BROKER_URL = "tcp://broker.mqttdashboard.com:1883";
+	private static final String SERVER_TOPIC = "/pokerserver/server";
+	private Sender sender;
+	private static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
+
+	static
 	{
 		final InputStream inputStream = MqttServletGameServer.class.getResourceAsStream("logging.properties");
 		try
@@ -96,7 +92,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		    Logger.getAnonymousLogger().severe(e.getMessage());
 		}
 	}
-	
+
 	private  MqttServletGameServer() {
 		ServletHolder loginServlet = new ServletHolder(LoginServlet.class);
 		ServletHolder registerServlet = new ServletHolder(RegisterServlet.class);
@@ -106,7 +102,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         Server server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         server.setHandler(context);
-        
+
         NCSARequestLog requestLog = new NCSARequestLog();
         String logFileName=System.getProperty("java.io.tmpdir")+"pokerserver-logs-yyyy_mm_dd.request.log";
         logger.fine("Request log:"+logFileName);
@@ -118,18 +114,18 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         requestLog.setExtended(true);
         requestLog.setLogCookies(false);
         requestLog.setLogTimeZone("GMT");
-        
+
         context.addFilter(ObjectifyWebFilter.class, "/*",
                 EnumSet.of(DispatcherType.REQUEST));
-        
+
         context.addFilter(PokerTokenFilter.class, "/api/room",EnumSet.of(DispatcherType.REQUEST));
         context.addFilter(PokerTokenFilter.class, "/api/game",EnumSet.of(DispatcherType.REQUEST));
- 
+
         context.addServlet(loginServlet, "/api/login");
         context.addServlet(registerServlet, "/api/register");
         context.addServlet(roomServlet, "/api/room");
         context.addServlet(gameServlet, "/api/game");
-        
+
         logger.warning("MqttServletGameServer starting..."+ ManagementFactory.getRuntimeMXBean().getName());
         try {
 			server.start();
@@ -146,43 +142,40 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		}
 
 	}
-	
+
 	/**
-	 * Singleton pattern to get the MqttServletGameServer instance. 
+	 * Singleton pattern to get the MqttServletGameServer instance.
 	 * @return MqttServletGameServer instance
 	 * */
 	public static MqttServletGameServer getInstance()
 	{
-		if(instance==null)  
+		if(instance==null)
 		{
 			instance = new MqttServletGameServer();
 		}
-		
+
 		return instance;
 	}
-	
+
 	/**
 	 * The Main method
 	 * */
-	public static void main(String[] args) {
-		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance(); 
-	}
-	
-	private List<Player> listPlayer = new ArrayList<Player>();
-	private List<Room> listRoom = new ArrayList<Room>();
-	Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-	Algorithm algorithm = Algorithm.HMAC256("thisstringisverysecret");
-	Sender sender;
-	
+//	public static void main(String[] args) {
+//		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
+//	}
+
+
+//	Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+//	Algorithm algorithm = Algorithm.HMAC256("thisstringisverysecret");
+
 	/**
 	 * The the Player into the ListPlayer.
 	 * @param Player p
 	 * */
 	public void addPlayer(Player p) {
 		this.getListPlayer().add(p);
-
 	}
-	
+
 	/**
 	 * The method to add the room into the RoomListener.
 	 * @param Room r
@@ -191,7 +184,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		this.getListRoom().add(r);
 		r.addRoomListener(this);
 	}
-	
+
 	/**
 	 * The method to get the Name of the Player.
 	 * @param String name
@@ -201,7 +194,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	{
 		return this.getListPlayer().stream().filter(x -> name.equals(x.getName())).findFirst().orElse(null);
 	}
-	
+
 	/**
 	 * The method to get the Id of the Room.
 	 * @param long id
@@ -211,7 +204,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	{
 		return this.getListRoom().stream().filter(x -> x.getRoomID()==id).findFirst().orElse(null);
 	}
-	
+
 	/**
 	 * The method to get the Query of the Map.
 	 * @param String query
@@ -228,15 +221,11 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		return map;
 	}
 
-	MqttClient myClient;
-	MqttConnectOptions connOpt;
 
-	static final String BROKER_URL = "tcp://broker.mqttdashboard.com:1883";
-	static final String SERVER_TOPIC = "/pokerserver/server";
 
 
 	/**
-	 * 
+	 *
 	 * The simple example run the main function. Create a MQTT client. Connect  the Broker. Subscribe the server topic.
 	 * @throws MqttException
 	 */
@@ -253,7 +242,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 			myClient.setCallback(this);
 			myClient.connect(connOpt);
 			this.sender= new Sender(myClient);
-			
+
 		} catch (MqttException e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -274,21 +263,21 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		cause.printStackTrace(System.out);
 
 	}
-	
+
 	/**
 	 * The callback function print the messagne when it's called.
-	 * @param String topic, MqttMessage message 
+	 * @param String topic, MqttMessage message
 	 * */
 	public void processingMessage(String topic, MqttMessage message) throws Exception
 	{
 		// TODO Auto-generated method stub
 				String body = new String(message.getPayload(), Charset.forName("UTF-8"));
-				System.out.println("topic:" + topic + " msg:" + body);			
-				
+				System.out.println("topic:" + topic + " msg:" + body);
+
 	}
-	
+
 	/**
-	 * Override the messageArrived method. 
+	 * Override the messageArrived method.
 	 * @param String topic, MqttMessage message
 	 * */
 	@Override
@@ -306,7 +295,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	/**
 	 * The method to get the list of the room.
 	 * @return List<Room> listRoom
@@ -314,7 +303,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	public List<Room> getListRoom() {
 		return listRoom;
 	}
-	
+
 	/**
 	 * The method to set the room list.
 	 * @param List<Room> listRoom
@@ -322,7 +311,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	public void setListRoom(List<Room> listRoom) {
 		this.listRoom = listRoom;
 	}
-	
+
 	/**
 	 * The method to get the list of the player.
 	 * @return List<Player> listPlayer
@@ -330,7 +319,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	public List<Player> getListPlayer() {
 		return listPlayer;
 	}
-	
+
 	/**
 	 * The method to set the player list.
 	 * @param List<Player> listPlayer
@@ -338,8 +327,8 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	public void setListPlayer(List<Player> listPlayer) {
 		this.listPlayer = listPlayer;
 	}
-	
-	
+
+
 	/**
 	 * Override the actionPerformed to push the message to the MqttServer
 	 * @param RoomEvent event
@@ -347,7 +336,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 	@Override
 	public void actionPerformed(RoomEvent event) {
 		logger.log(Level.SEVERE,event.toString() );
-		
+
 		String content = "cmd="+event.getAction()+"&roomid="+event.getSource().getRoomID();
 		if(event.getAction()==RoomAction.GAMEACTION)
 		{
@@ -356,7 +345,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 			if(ge.getAction()==GameAction.PLAYEREVENT)
 			{
 				PlayerEvent pe = (PlayerEvent) ge.agruments.get("playerEvent");
-				
+
 				if(pe.getAction()==PlayerAction.BET)
 				{
 					long amount = (long) pe.agruments.get("amount");
@@ -399,12 +388,12 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		{
 			Player p = (Player) event.agruments.get("player");
 			content+="&pid="+p.getId();
-			
+
 		}
-		
+
 		this.sender.add(MqttServletGameServer.SERVER_TOPIC+"/room/"+event.getSource().getRoomID(), content);
-		
+
 	}
-	
+
 
 }

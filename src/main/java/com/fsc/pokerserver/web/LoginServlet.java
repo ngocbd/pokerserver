@@ -22,7 +22,6 @@ package com.fsc.pokerserver.web;
 
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -51,8 +50,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
     urlPatterns = {"/api/login"}
 )
 public class LoginServlet extends HttpServlet {
-	String secret = "thisstringisverysecret";
-	Algorithm algorithm = Algorithm.HMAC256(secret);
+	private String secret = "thisstringisverysecret";
+	private Algorithm algorithm = Algorithm.HMAC256(secret);
 	
 	@Override 
 	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 

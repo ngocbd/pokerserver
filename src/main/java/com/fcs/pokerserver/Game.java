@@ -156,7 +156,7 @@ public class Game implements PlayerListener {
 			player.nextRound();
 			
 		}
-		Card ignoreCard = this.deck.dealCard(); // ignore top card 
+//		Card ignoreCard = this.deck.dealCard(); // ignore top card
 		for (int i = 0; i < 3; i++) {
 			Card card = this.deck.dealCard();
 			getBoard().addCard(card);
@@ -344,9 +344,9 @@ public class Game implements PlayerListener {
 		return listPlayer;
 	}
 
-	private void setListPlayer(List<Player> listPlayer) {
-		this.listPlayer = listPlayer;
-	}
+//	private void setListPlayer(List<Player> listPlayer) {
+//		this.listPlayer = listPlayer;
+//	}
 
 	/**
 	 * Return Id of Game
@@ -384,15 +384,15 @@ public class Game implements PlayerListener {
 		return dealer;
 	}
 
-	private int getIndexPlayerList(Player player) {
-		int index = 0;
-		for (; index < this.getListPlayer().size(); index++) {
-			if (this.getListPlayer().get(index) == player) {
-				break;
-			}
-		}
-		return index;
-	}
+//	private int getIndexPlayerList(Player player) {
+//		int index = 0;
+//		for (; index < this.getListPlayer().size(); index++) {
+//			if (this.getListPlayer().get(index) == player) {
+//				break;
+//			}
+//		}
+//		return index;
+//	}
 	
 	/**
 	 * Return Player is Next Player of Game

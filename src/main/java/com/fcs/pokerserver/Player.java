@@ -23,20 +23,13 @@ THE SOFTWARE.
 */
 package com.fcs.pokerserver;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fcs.pokerserver.events.GameEvent;
-import com.fcs.pokerserver.events.GameListener;
 import com.fcs.pokerserver.events.PlayerAction;
 import com.fcs.pokerserver.events.PlayerEvent;
 import com.fcs.pokerserver.events.PlayerListener;
-import com.fcs.pokerserver.holder.CardHolder;
 import com.fcs.pokerserver.holder.Hand;
 
 /**
@@ -55,7 +48,13 @@ public class Player {
 	private Room currentRoom = null;
 	private String token = null;
 	private boolean commandThisTurn=false;
-	 
+
+	private Hand playerHand = new Hand();
+	private List<PlayerListener> listeners = new ArrayList<PlayerListener>();
+
+	private Game currentGame = null;
+
+
 	/**
 	 * Constructor set Id for the Player is current time millis 
 	 * */
@@ -73,9 +72,7 @@ public class Player {
 		this.name=name;
 		this.setId(String.valueOf(System.currentTimeMillis()));
 	}
-	private Hand playerHand = new Hand();
-	
-	private List<PlayerListener> listeners = new ArrayList<PlayerListener>();
+
 	
 	/**
 	 * The method to the Player bet the chip in the current game.
@@ -86,7 +83,7 @@ public class Player {
 	{
 		assert amount<this.balance;
 		
-		assert this.sittingOut==false;
+		assert this.sittingOut=false;
 		this.setRoundBet(this.getRoundBet() + amount);
 		this.gameBet+=amount;
 		this.balance=this.balance-amount;
@@ -119,12 +116,12 @@ public class Player {
 	 * The Player create a new game.
 	 * 
 	 * */
-	public void newGame()
-	{
-		this.setRoundBet(0);
-		this.gameBet=0;
-		this.round=0;
-	}
+//	public void newGame()
+//	{
+//		this.setRoundBet(0);
+//		this.gameBet=0;
+//		this.round=0;
+//	}
 	
 	/**
 	 * The Player want to fold in the game.
@@ -168,7 +165,7 @@ public class Player {
 	
 	public void myTurn()
 	{
-		
+		// where to write code
 		
 	}
 	
@@ -240,7 +237,7 @@ public class Player {
 	 * The method to set the cards on hand of the Player
 	 * @param Hand playerHand
 	 * */
-	void setPlayerHand(Hand playerHand) {
+	public void setPlayerHand(Hand playerHand) {
 		this.playerHand = playerHand;
 	}
 	
@@ -325,8 +322,7 @@ public class Player {
 	}
 	
 	
-	private Game currentGame = null;
-	
+
 	/**
 	 * Return the Player's information by Json type.
 	 * @return String jsonString 
