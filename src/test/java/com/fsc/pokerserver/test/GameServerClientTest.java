@@ -204,7 +204,6 @@ public class GameServerClientTest implements MqttCallback {
 		{
 			String url = host+"api/login?username="+arr[i]+"&password=123456";
 			this.getContentFromUrl(url);
-			assertTrue(true);
 		}
 	}
 	
