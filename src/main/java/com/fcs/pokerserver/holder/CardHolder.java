@@ -38,10 +38,10 @@ import com.fcs.pokerserver.Card;
  */
 public class CardHolder implements Serializable {
 
-	Logger log = Logger.getLogger(CardHolder.class.getName());
+//	Logger log = Logger.getLogger(CardHolder.class.getName());
 	private static final long serialVersionUID = -6289334212535961129L;
 
-	List<Card> cards = new ArrayList<Card>();
+	private List<Card> cards = new ArrayList<Card>();
 
 	protected CardHolder(Card... cards) {
 		super();

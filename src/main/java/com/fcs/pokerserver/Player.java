@@ -48,7 +48,13 @@ public class Player {
 	private Room currentRoom = null;
 	private String token = null;
 	private boolean commandThisTurn=false;
-	 
+
+	private Hand playerHand = new Hand();
+	private List<PlayerListener> listeners = new ArrayList<PlayerListener>();
+
+	private Game currentGame = null;
+
+
 	/**
 	 * Constructor set Id for the Player is current time millis 
 	 * */
@@ -66,9 +72,7 @@ public class Player {
 		this.name=name;
 		this.setId(String.valueOf(System.currentTimeMillis()));
 	}
-	private Hand playerHand = new Hand();
-	
-	private List<PlayerListener> listeners = new ArrayList<PlayerListener>();
+
 	
 	/**
 	 * The method to the Player bet the chip in the current game.
@@ -79,7 +83,7 @@ public class Player {
 	{
 		assert amount<this.balance;
 		
-		assert this.sittingOut==false;
+		assert this.sittingOut=false;
 		this.setRoundBet(this.getRoundBet() + amount);
 		this.gameBet+=amount;
 		this.balance=this.balance-amount;
@@ -318,8 +322,7 @@ public class Player {
 	}
 	
 	
-	private Game currentGame = null;
-	
+
 	/**
 	 * Return the Player's information by Json type.
 	 * @return String jsonString 

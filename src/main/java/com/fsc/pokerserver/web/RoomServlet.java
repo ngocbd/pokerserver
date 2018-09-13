@@ -44,8 +44,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * */
 @WebServlet(name = "RoomServlet", urlPatterns = { "/api/room" })
 public class RoomServlet extends HttpServlet {
-	static Logger logger = Logger.getLogger(GameServlet.class.getName());
-	MqttServletGameServer server = MqttServletGameServer.getInstance();
+	private static Logger logger = Logger.getLogger(GameServlet.class.getName());
+	private MqttServletGameServer server = MqttServletGameServer.getInstance();
 	
 	@Override 
 	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 

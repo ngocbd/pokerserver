@@ -38,8 +38,8 @@ import com.fcs.pokerserver.Room;
  * */
 @Ignore
 public class ConnectGameTest {
-	Player master;
-	Room room;
+	private Player master;
+	private Room room;
 
 	@Before
 	public void setUp() throws Exception {

@@ -105,7 +105,7 @@ import org.junit.Test;
 @Ignore
 public class GameServerClientTest implements MqttCallback {
 
-	String host = "http://localhost:8080/";
+	private String host = "http://localhost:8080/";
 	@Before
 	public void setUp() throws Exception {
 //		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
@@ -664,7 +664,7 @@ public class GameServerClientTest implements MqttCallback {
 
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
-		
+		// TODO Auto-generated method stub
 	}
 
 	@Override

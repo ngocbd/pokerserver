@@ -83,8 +83,8 @@ class MessageQueue
  * The class to get the messages in the Queue to send.
  * */
 public class Sender extends Thread{
-	Queue<MessageQueue> queue = new LinkedBlockingDeque<MessageQueue> ();
-	MqttClient client;
+	private Queue<MessageQueue> queue = new LinkedBlockingDeque<MessageQueue> ();
+	private MqttClient client;
 	
 	/**
 	 * The constructor with the parameter is MqqtClient and start thread. 

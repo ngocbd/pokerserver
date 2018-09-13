@@ -48,8 +48,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.joda.time.DateTime;
 
-import com.auth0.jwt.algorithms.Algorithm;
-
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 import com.fcs.pokerserver.events.GameAction;
@@ -65,9 +63,6 @@ import com.fsc.pokerserver.web.LoginServlet;
 import com.fsc.pokerserver.web.ObjectifyWebFilter;
 import com.fsc.pokerserver.web.PokerTokenFilter;
 import com.fsc.pokerserver.web.RegisterServlet;
-import com.google.cloud.datastore.Datastore;
-import com.google.cloud.datastore.DatastoreOptions;
-
 
 /**
  * The class is tested. It's not a production.
@@ -75,7 +70,14 @@ import com.google.cloud.datastore.DatastoreOptions;
  * */
 public class MqttServletGameServer implements MqttCallback, RoomListener {
 	private static  MqttServletGameServer instance =null;
-	static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
+	private List<Player> listPlayer = new ArrayList<Player>();
+	private List<Room> listRoom = new ArrayList<Room>();
+	private MqttClient myClient;
+	private MqttConnectOptions connOpt;
+	private static final String BROKER_URL = "tcp://broker.mqttdashboard.com:1883";
+	private static final String SERVER_TOPIC = "/pokerserver/server";
+	private Sender sender;
+	private static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
 	
 	static 
 	{
@@ -162,19 +164,16 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 //		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
 //	}
 	
-	private List<Player> listPlayer = new ArrayList<Player>();
-	private List<Room> listRoom = new ArrayList<Room>();
+
 //	Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 //	Algorithm algorithm = Algorithm.HMAC256("thisstringisverysecret");
-	Sender sender;
-	
+
 	/**
 	 * The the Player into the ListPlayer.
 	 * @param Player p
 	 * */
 	public void addPlayer(Player p) {
 		this.getListPlayer().add(p);
-
 	}
 	
 	/**
@@ -222,11 +221,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 		return map;
 	}
 
-	MqttClient myClient;
-	MqttConnectOptions connOpt;
 
-	static final String BROKER_URL = "tcp://broker.mqttdashboard.com:1883";
-	static final String SERVER_TOPIC = "/pokerserver/server";
 
 
 	/**
