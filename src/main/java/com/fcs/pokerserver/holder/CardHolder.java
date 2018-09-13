@@ -41,7 +41,7 @@ public class CardHolder implements Serializable {
 //	Logger log = Logger.getLogger(CardHolder.class.getName());
 	private static final long serialVersionUID = -6289334212535961129L;
 
-	private List<Card> cards = new ArrayList<Card>();
+	public List<Card> cards = new ArrayList<Card>();
 
 	protected CardHolder(Card... cards) {
 		super();

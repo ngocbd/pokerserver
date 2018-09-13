@@ -37,9 +37,9 @@ import com.fcs.pokerserver.events.RoomListener;
  * @category com > fcs > pokerserver
  */
 public class Room implements GameListener {
-    Game currentGame = null;
-    long RoomID;
-    Player master;
+    private Game currentGame = null;
+    private long RoomID;
+    private Player master;
 
     private List<Player> listPlayer = new ArrayList<Player>();
 
