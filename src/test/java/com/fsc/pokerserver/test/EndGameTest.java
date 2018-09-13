@@ -21,7 +21,6 @@ THE SOFTWARE.
 package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -277,6 +276,5 @@ public class EndGameTest {
 		game.endGame();
 		
 		assertEquals(game.getBoard().getCardNumber(),5);
-		assertTrue(true);
-	} 
+	}
 }

@@ -219,7 +219,6 @@ public class GameServerClientTest implements MqttCallback {
 		String url = host+"api/login?username="+username+"&password=123456";
 		this.getContentFromUrl(url);
 		assertEquals(this.getContentFromUrl(url), "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb2tlcnNlcnZlciIsImp0aSI6ImFncnUxIn0._NXg4_vRYyu8ntaHROfVdu8snHxGirmzNlMav-96fZ4");
-		assertTrue(true);
 	}
 	
 	/**
@@ -321,8 +320,7 @@ public class GameServerClientTest implements MqttCallback {
 		}
 		float value = sumLengthUrlJoin/(token.length-1);
 		assertEquals(value, lengthUrlJoinFirst);
-		assertTrue(true);
-		
+
 	}
 	
 

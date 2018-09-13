@@ -21,7 +21,6 @@ THE SOFTWARE.
 package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -47,7 +46,6 @@ public class RoomTest {
 		Room room = new Room(master,BlindLevel.BLIND_10_20);
 		
 		assertEquals(room.getBlindLevel(),BlindLevel.BLIND_10_20);
-		assertTrue(true);
 	}
 	
 	/**
@@ -61,6 +59,5 @@ public class RoomTest {
 		
 		
 		assertEquals(game.getListPlayer().size(),1);
-		assertTrue(true);
 	}
 }

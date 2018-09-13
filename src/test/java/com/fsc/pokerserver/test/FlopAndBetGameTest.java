@@ -22,7 +22,6 @@ package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -131,7 +130,6 @@ public class FlopAndBetGameTest {
 		game.flop();
 
 		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 3);
-		assertTrue(true);
 	}
 	
 	/**
@@ -219,7 +217,6 @@ public class FlopAndBetGameTest {
 		 
 
 		assertEquals(game.getPotBalance(), 300);
-		assertTrue(true);
 	}
 	
 	/**
@@ -270,7 +267,6 @@ public class FlopAndBetGameTest {
 		 
 
 		assertEquals(game.getPotBalance(), 190);
-		assertTrue(true);
 	}
 	
 	
@@ -323,7 +319,6 @@ public class FlopAndBetGameTest {
 		 
 
 		assertEquals(game.getCurrentPlayer(), master);
-		assertTrue(true);
 	}
 	
 	/**
@@ -516,7 +511,6 @@ public class FlopAndBetGameTest {
 		player2.bet(10); 	 
 
 		assertEquals(game.getPotBalance(), 150);
-		assertTrue(true);
 	}
 		
 }

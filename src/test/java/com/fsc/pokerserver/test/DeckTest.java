@@ -22,7 +22,6 @@ package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -59,7 +58,6 @@ public class DeckTest {
         shuffledDeck.initDeck();
         shuffledDeck.shuffleDeck();
         assertNotEquals(shuffledDeck.exportDeck(), deck.exportDeck());
-        assertTrue(true);
     }
 
 }

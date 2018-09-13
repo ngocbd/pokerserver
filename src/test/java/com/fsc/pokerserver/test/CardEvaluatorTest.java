@@ -36,9 +36,6 @@ import com.fcs.pokerserver.holder.HandRank;
 import com.fcs.pokerserver.holder.HandType;
 import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
 
-import static org.junit.Assert.assertTrue;
-
-
 /**
  * JUnit tests for the Seven Card Poker Hand Evaluation.
  * The Evaluation algorithm ({@link TwoPlusTwoHandEvaluator}) needs to always determine
@@ -286,7 +283,6 @@ public class CardEvaluatorTest extends TestCase {
 		TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
 		HandRank rank = evaluator.evaluate(b, h1);
 		assertEquals(HandType.FLUSH, rank.getHandType());
-		assertTrue(true);
 	}
 	
 	/**
@@ -300,7 +296,6 @@ public class CardEvaluatorTest extends TestCase {
 		TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
 		HandRank rank = evaluator.evaluate(b, h1);
 		assertEquals(HandType.FOUR_OF_A_KIND, rank.getHandType());
-		assertTrue(true);
 	}
 	
 	/**
@@ -314,7 +309,6 @@ public class CardEvaluatorTest extends TestCase {
 		TwoPlusTwoHandEvaluator evaluator =  TwoPlusTwoHandEvaluator.getInstance();
 		HandRank rank = evaluator.evaluate(b, h1);
 		assertEquals(HandType.STRAIGHT_FLUSH, rank.getHandType());
-		assertTrue(true);
 	}
 	
 	/**
