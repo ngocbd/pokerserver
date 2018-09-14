@@ -135,18 +135,18 @@ public class Room implements GameListener {
      *
      * @param long roomId
      */
-    public void setRoomID(long roomID) {
-        RoomID = roomID;
-    }
+//    public void setRoomID(long roomID) {
+//        RoomID = roomID;
+//    }
 
     /**
      * Return the Player is the Master
      *
      * @return Player master
      */
-    public Player getMaster() {
-        return master;
-    }
+//    public Player getMaster() {
+//        return master;
+//    }
 
     /**
      * The method to set the Player is the master
@@ -171,9 +171,9 @@ public class Room implements GameListener {
      *
      * @param BlindLevel blindLevel
      */
-    public void setBlindLevel(BlindLevel blindLevel) {
-        this.blindLevel = blindLevel;
-    }
+//    public void setBlindLevel(BlindLevel blindLevel) {
+//        this.blindLevel = blindLevel;
+//    }
 
 
 

@@ -110,8 +110,7 @@ public class PreflopAndBetGameTest {
 		game.preflop();
 		
 		assertEquals(game.getNextPlayer(player2), player3);
-		
-		
+
 //		assertEquals(game.getCurrentPlayer(), player3);
 	}
 	
@@ -247,7 +246,6 @@ public class PreflopAndBetGameTest {
 		player3.bet(70);
 
 		assertEquals(game.getPotBalance(), 100);
-
 	}
 	
 	/**

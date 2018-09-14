@@ -139,6 +139,7 @@ public class RiverAndBetGameTest {
 		player5.fold();
 		
 		assertEquals(game.getBoard().getCardNumber(), 5);
+
 	}
 	
 	/**  

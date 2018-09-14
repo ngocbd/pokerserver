@@ -30,33 +30,34 @@ import com.fcs.pokerserver.Deck;
 
 /**
  * The class to test the connect to the game.
+ *
  * @category com > fcs > pokerserver > test
- * */
+ */
 @Ignore
 public class DeckTest {
-	/**
-	 * The method to create the Deck
-	 * */	
-	 @Test 
-	 public void initDeck() {
-	       Deck deck = new Deck();
-	       deck.initDeck();
-	       deck.shuffleDeck();
-	       assertEquals(deck.exportDeck().size(),52);
-	    }
-	 
-	 /**
-	  * The method to shuffle the Deck
-	  * */
-	 @Test 
-	 public void shuffleDeck() {
-	       Deck deck = new Deck();
-	       deck.initDeck();
-	       
-	       Deck shuffledDeck = new Deck();
-	       shuffledDeck.initDeck();
-	       shuffledDeck.shuffleDeck();
-	       assertNotEquals(shuffledDeck.exportDeck(), deck.exportDeck());
-	 }
+    /**
+     * The method to create the Deck
+     */
+    @Test
+    public void initDeck() {
+        Deck deck = new Deck();
+        deck.initDeck();
+        deck.shuffleDeck();
+        assertEquals(deck.exportDeck().size(), 52);
+    }
+
+    /**
+     * The method to shuffle the Deck
+     */
+    @Test
+    public void shuffleDeck() {
+        Deck deck = new Deck();
+        deck.initDeck();
+
+        Deck shuffledDeck = new Deck();
+        shuffledDeck.initDeck();
+        shuffledDeck.shuffleDeck();
+        assertNotEquals(shuffledDeck.exportDeck(), deck.exportDeck());
+    }
 
 }

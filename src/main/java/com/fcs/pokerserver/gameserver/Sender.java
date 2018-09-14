@@ -153,7 +153,7 @@ public class Sender extends Thread{
 			
 		} catch (MqttException e) {
 			e.printStackTrace();
-			System.exit(-1);
+//			System.exit(-1);
 		}
 	}
 }

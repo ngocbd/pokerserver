@@ -244,7 +244,6 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 
         } catch (MqttException e) {
             e.printStackTrace();
-            System.exit(-1);
         }
     }
 
@@ -307,9 +306,9 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
      *
      * @param List<Room> listRoom
      */
-    public void setListRoom(List<Room> listRoom) {
-        this.listRoom = listRoom;
-    }
+//    public void setListRoom(List<Room> listRoom) {
+//        this.listRoom = listRoom;
+//    }
 
     /**
      * The method to get the list of the player.
@@ -325,9 +324,9 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
      *
      * @param List<Player> listPlayer
      */
-    public void setListPlayer(List<Player> listPlayer) {
-        this.listPlayer = listPlayer;
-    }
+//    public void setListPlayer(List<Player> listPlayer) {
+//        this.listPlayer = listPlayer;
+//    }
 
 
     /**
