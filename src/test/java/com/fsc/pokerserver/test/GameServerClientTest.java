@@ -285,6 +285,7 @@ public class GameServerClientTest implements MqttCallback {
 //			this.getContentFromUrl(url);
             Document d = Jsoup.connect(url).get();
             System.out.println("Player" + i + " join game: " + d.text());
+            assertEquals(isNumeric(d.body().text()), true);
         }
 
     }
