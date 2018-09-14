@@ -146,9 +146,6 @@ public class PreflopAndBetGameTest {
 		player5.bet(30);
 		master.bet(20);
 		player2.bet(10);
-		
-		
-		
 		assertEquals(game.getCurrentPlayer(), player4);
 	}
 	
