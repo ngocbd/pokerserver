@@ -20,6 +20,7 @@ THE SOFTWARE.
 
 package com.fsc.pokerserver.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -91,6 +92,8 @@ public class ConnectGameTest {
 		game.addPlayer(player3);
 		game.setDealer(player2);
 		game.startGame();
+
+		assertEquals(game.getStatus(), "started");
 	}
 	
 }

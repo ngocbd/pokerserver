@@ -101,6 +101,4 @@ public class CardHolder implements Serializable {
 		return cards.iterator();
 	}
 
-	
-
 }

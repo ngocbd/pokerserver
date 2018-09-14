@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipInputStream;
@@ -93,7 +94,7 @@ public class ConfigurationLoader {
             }
             return handRankArray;
         } catch (IOException e) {
-            throw new RuntimeException("cannot read resource " + name, e);
+            throw new ExecutionException(   "cannot read resource " + name, e);
         }
     }
 
