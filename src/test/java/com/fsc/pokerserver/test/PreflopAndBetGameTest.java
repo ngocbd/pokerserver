@@ -21,16 +21,11 @@ THE SOFTWARE.
 package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import com.fcs.pokerserver.BlindLevel;
-import com.fcs.pokerserver.Deck;
 import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
@@ -41,8 +36,8 @@ import com.fcs.pokerserver.Room;
  * */
 @Ignore
 public class PreflopAndBetGameTest {
-	Player master;
-	Room room;
+	private Player master;
+	private Room room;
 
 	@Before
 	public void setUp() throws Exception {
@@ -115,8 +110,7 @@ public class PreflopAndBetGameTest {
 		game.preflop();
 		
 		assertEquals(game.getNextPlayer(player2), player3);
-		
-		
+
 //		assertEquals(game.getCurrentPlayer(), player3);
 	}
 	
@@ -152,9 +146,6 @@ public class PreflopAndBetGameTest {
 		player5.bet(30);
 		master.bet(20);
 		player2.bet(10);
-		
-		
-		
 		assertEquals(game.getCurrentPlayer(), player4);
 	}
 	
@@ -252,7 +243,6 @@ public class PreflopAndBetGameTest {
 		player3.bet(70);
 
 		assertEquals(game.getPotBalance(), 100);
-
 	}
 	
 	/**

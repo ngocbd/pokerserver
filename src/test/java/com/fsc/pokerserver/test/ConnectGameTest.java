@@ -23,9 +23,7 @@ package com.fsc.pokerserver.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -41,11 +39,11 @@ import com.fcs.pokerserver.Room;
  * */
 @Ignore
 public class ConnectGameTest {
-	Player master;
-	Room room;
+	private Room room;
 
 	@Before
 	public void setUp() throws Exception {
+		Player master;
 		master = new Player("Room master");
 		room = new Room(master, BlindLevel.BLIND_10_20);
 		
@@ -92,10 +90,10 @@ public class ConnectGameTest {
 		game.addPlayer(player2);
 		Player player3 = new Player();
 		game.addPlayer(player3);
-		
 		game.setDealer(player2);
-		
 		game.startGame();
+
+		assertEquals(game.getStatus(), "started");
 	}
 	
 }

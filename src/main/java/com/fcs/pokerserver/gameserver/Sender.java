@@ -20,7 +20,6 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver.gameserver;
 
-import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -59,9 +58,9 @@ class MessageQueue
 	 * The method to set value for topic
 	 * @param String topic
 	 * */
-	public void setTopic(String topic) {
-		this.topic = topic;
-	}
+//	public void setTopic(String topic) {
+//		this.topic = topic;
+//	}
 	
 	/**
 	 * Return the Content.
@@ -75,17 +74,17 @@ class MessageQueue
 	 * The method to set value for the content.
 	 * @param String content
 	 * */
-	public void setContent(String content) {
-		this.content = content;
-	}
+//	public void setContent(String content) {
+//		this.content = content;
+//	}
 }
 
 /**
  * The class to get the messages in the Queue to send.
  * */
 public class Sender extends Thread{
-	Queue<MessageQueue> queue = new LinkedBlockingDeque<MessageQueue> ();
-	MqttClient client;
+	private Queue<MessageQueue> queue = new LinkedBlockingDeque<MessageQueue> ();
+	private MqttClient client;
 	
 	/**
 	 * The constructor with the parameter is MqqtClient and start thread. 
@@ -135,7 +134,7 @@ public class Sender extends Thread{
 		MqttConnectOptions connOpt;
 
 		String BROKER_URL = "tcp://broker.hivemq.com:1883";
-		String SERVER_TOPIC = "/pokerserver/server";
+//		String SERVER_TOPIC = "/pokerserver/server";
 		
 		connOpt = new MqttConnectOptions();
 		connOpt.setCleanSession(true);
@@ -154,7 +153,7 @@ public class Sender extends Thread{
 			
 		} catch (MqttException e) {
 			e.printStackTrace();
-			System.exit(-1);
+//			System.exit(-1);
 		}
 	}
 }

@@ -22,7 +22,6 @@ package com.fcs.pokerserver.events;
 
 import java.util.HashMap;
 
-import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Room;
 
 /**

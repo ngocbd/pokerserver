@@ -45,8 +45,8 @@ import com.google.common.base.Joiner;
 public class GameServlet extends HttpServlet {
 	
 
-	MqttServletGameServer server = MqttServletGameServer.getInstance();
-	static Logger logger = Logger.getLogger(GameServlet.class.getName());
+	public MqttServletGameServer server = MqttServletGameServer.getInstance();
+	private static Logger logger = Logger.getLogger(GameServlet.class.getName());
 	
 	@Override 
 	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 

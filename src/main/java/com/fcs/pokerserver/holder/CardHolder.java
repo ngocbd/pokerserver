@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.fcs.pokerserver.Card;
 
@@ -38,10 +37,9 @@ import com.fcs.pokerserver.Card;
  */
 public class CardHolder implements Serializable {
 
-	Logger log = Logger.getLogger(CardHolder.class.getName());
 	private static final long serialVersionUID = -6289334212535961129L;
 
-	List<Card> cards = new ArrayList<Card>();
+	public List<Card> cards = new ArrayList<Card>();
 
 	protected CardHolder(Card... cards) {
 		super();
@@ -102,7 +100,5 @@ public class CardHolder implements Serializable {
 	public Iterator<Card> iterator() {
 		return cards.iterator();
 	}
-
-	
 
 }

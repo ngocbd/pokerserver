@@ -22,7 +22,6 @@ package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -38,9 +37,9 @@ import com.fcs.pokerserver.events.PlayerListener;
 @Ignore
 public class PlayerTest implements PlayerListener  {
 
-	@Before
-	public void setUp() throws Exception {
-	}
+//	@Before
+//	public void setUp() throws Exception {
+//	}
 
 	/**
 	 * The method to test to create new Player.
@@ -55,7 +54,7 @@ public class PlayerTest implements PlayerListener  {
 		p.addPlayerListener(this);
 		p.bet(100);
 		assertEquals(p.getBalance(), 50000-100);
-		
+
 	}
 
 	
@@ -63,9 +62,12 @@ public class PlayerTest implements PlayerListener  {
 	public void actionPerformed(PlayerEvent event) {
 		if(event.getAction()==PlayerAction.BET)
 		{
-			//System.out.println(event.getSource().getName()+" bet "+event.getSource().getRoundBet());
+			System.out.println(event.getSource().getName()+" bet "+event.getSource().getRoundBet());
 		}
-		
+
 	}
+	/**
+	 * Test Travis
+	 * */
 
 }

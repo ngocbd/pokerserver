@@ -21,7 +21,6 @@ THE SOFTWARE.
 package com.fcs.pokerserver.events;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.fcs.pokerserver.Game;
 
