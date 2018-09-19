@@ -8,7 +8,8 @@
 
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java'
-
+apply plugin: 'maven'
+apply plugin: 'jacoco'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -46,5 +47,13 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.11.3'
     
 }
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+check.dependsOn jacocoTestReport
 
 
