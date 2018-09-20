@@ -157,7 +157,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
         logger.warning("MqttServletGameServer starting..." + ManagementFactory.getRuntimeMXBean().getName());
         try {
             server.start();
-            server.join();
+            
             try {
                 this.run();
             } catch (MqttException e) {
