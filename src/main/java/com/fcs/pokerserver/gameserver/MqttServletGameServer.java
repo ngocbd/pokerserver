@@ -105,6 +105,8 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
         ServletHolder gameServlet = new ServletHolder(GameServlet.class);
         
         Server server = new Server(8080);
+        
+        
         MBeanContainer mbContainer=new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
         LocateRegistry.createRegistry(1234);
         String jmxuser = "fcs";
@@ -155,6 +157,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
         logger.warning("MqttServletGameServer starting..." + ManagementFactory.getRuntimeMXBean().getName());
         try {
             server.start();
+            server.join();
             try {
                 this.run();
             } catch (MqttException e) {
