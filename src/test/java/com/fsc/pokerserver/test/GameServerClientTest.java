@@ -30,6 +30,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Before;
@@ -108,12 +109,13 @@ import org.junit.Test;
 public class GameServerClientTest implements MqttCallback {
 
     private String host = "http://localhost:8080/";
+    MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
 
-//    @Before
-//    public void setUp() throws Exception {
-//        MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
-//        Thread.sleep(2000);
-//    }
+    @Before
+    public void setUp() throws Exception {
+
+        Thread.sleep(2000);
+    }
 
     /**
      * Get content from the url
@@ -121,6 +123,14 @@ public class GameServerClientTest implements MqttCallback {
     public String getContentFromUrl(String url) throws ClientProtocolException, IOException {
         Document contentDoc = Jsoup.connect(url).get();
         return contentDoc.body().text();
+    }
+
+    /**
+     * Get status code from the url
+     */
+    public int getStatusCodeFromUrl(String url) throws ClientProtocolException, IOException {
+        return  Jsoup.connect(url).method(Connection.Method.GET).execute().statusCode();
+
     }
 
     /**
@@ -197,11 +207,8 @@ public class GameServerClientTest implements MqttCallback {
 
         for (int i = 0; i < arr.length; i++) {
             String url = host + "api/login?username=" + arr[i] + "&password=123456";
-//            Document document = Jsoup.connect(url).get();
-
             this.getContentFromUrl(url);
-            System.out.println(this.getContentFromUrl(url));
-//            assertEquals(isNumeric(this.getContentFromUrl(url)), true);
+            assertEquals(200, this.getStatusCodeFromUrl(url));
         }
     }
 
