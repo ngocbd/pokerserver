@@ -61,6 +61,7 @@ import com.fsc.pokerserver.web.LoginServlet;
 import com.fsc.pokerserver.web.ObjectifyWebFilter;
 import com.fsc.pokerserver.web.PokerTokenFilter;
 import com.fsc.pokerserver.web.RegisterServlet;
+import com.fsc.pokerserver.web.RoomServlet;
 
 
 /**
