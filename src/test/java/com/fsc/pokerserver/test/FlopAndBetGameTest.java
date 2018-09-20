@@ -273,6 +273,7 @@ public class FlopAndBetGameTest {
 	/**
 	 * get current player of game from bet, check, fold after flop.
 	 * */
+	@Test
 	public void testGetCurrentPlayerFromBetCheckFoldAfterFlop() {
 		Game game = room.createNewGame();
 
@@ -513,3 +514,4 @@ public class FlopAndBetGameTest {
 	}
 		
 }
+

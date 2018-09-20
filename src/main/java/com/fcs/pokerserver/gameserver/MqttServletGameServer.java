@@ -1,3 +1,4 @@
+
 /*
 The MIT License (MIT)
 Copyright (c) 2018 by habogay
@@ -63,8 +64,7 @@ import com.fsc.pokerserver.web.LoginServlet;
 import com.fsc.pokerserver.web.ObjectifyWebFilter;
 import com.fsc.pokerserver.web.PokerTokenFilter;
 import com.fsc.pokerserver.web.RegisterServlet;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+
 
 /**
  * The class is tested. It's not a production.
@@ -387,6 +387,5 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         this.sender.add(MqttServletGameServer.SERVER_TOPIC + "/room/" + event.getSource().getRoomID(), content);
 
     }
-
 
 }
