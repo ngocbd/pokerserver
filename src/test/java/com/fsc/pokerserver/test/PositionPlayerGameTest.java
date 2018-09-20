@@ -35,7 +35,7 @@ import com.fcs.pokerserver.Room;
  * The class to test the Player's position in the game.
  * @category com > fcs > pokerserver > test
  * */
-@Ignore
+
 public class PositionPlayerGameTest {
 	private Player master;
 	private Room room;

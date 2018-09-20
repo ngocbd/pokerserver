@@ -34,7 +34,7 @@ import com.fcs.pokerserver.Room;
  * The class to test to create a new Room in the game.
  * @category com > fcs > pokerserver > test
  * */
-@Ignore
+
 public class RoomTest {
 
 	/**

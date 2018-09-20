@@ -95,7 +95,7 @@ public class ConfigurationLoader {
             }
             return handRankArray;
         } catch (IOException e) {
-            throw new ExecutionException(   "cannot read resource " + name, e);
+            throw new ExecutionException("cannot read resource " + name, e);
         }
     }
 

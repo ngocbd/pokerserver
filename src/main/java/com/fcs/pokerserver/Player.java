@@ -83,7 +83,7 @@ public class Player {
 	{
 		assert amount<this.balance;
 		
-		assert this.sittingOut=false;
+		assert this.sittingOut==false;
 		this.setRoundBet(this.getRoundBet() + amount);
 		this.gameBet+=amount;
 		this.balance=this.balance-amount;

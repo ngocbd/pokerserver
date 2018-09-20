@@ -92,9 +92,9 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
         final InputStream inputStream = classloader.getResourceAsStream("logging.properties");
         try {
             LogManager.getLogManager().readConfiguration(inputStream);
-        } catch (final IOException e) {
-            Logger.getAnonymousLogger().warning("Could not load default logging.properties file");
-            Logger.getAnonymousLogger().warning(e.getMessage());
+        } catch (final Exception e) {
+            Logger.getAnonymousLogger().severe("Could not load default logging.properties file");
+            Logger.getAnonymousLogger().severe(e.getMessage());
         }
     }
 
@@ -195,7 +195,9 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
      * The Main method
      * @throws Exception 
      * */
+
 	public static void main(String[] args) throws Exception {
+
 		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
 	}
 

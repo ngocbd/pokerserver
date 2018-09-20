@@ -31,6 +31,7 @@ import com.fcs.pokerserver.Card;
  */
 public class TwoPlusTwoHandEvaluator  {
 
+
 	private static final String HAND_RANKS = "HandRanks.zip";
 	
 	private int[] handRanks;

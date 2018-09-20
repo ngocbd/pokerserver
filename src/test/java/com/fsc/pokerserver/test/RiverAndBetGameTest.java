@@ -14,7 +14,7 @@ import com.fcs.pokerserver.Room;
  * The class to test the River and Bet in the game.
  * @category com > fcs > pokerserver > test
  * */
-@Ignore
+
 public class RiverAndBetGameTest {
 	private Player master;
 	private Room room;

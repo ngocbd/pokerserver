@@ -34,7 +34,7 @@ import com.fcs.pokerserver.Room;
  * The class to test the end game.
  * @category com > fcs > pokerserver > test
  * */
-@Ignore
+
 public class EndGameTest {
 	private Player master;
 	private Room room;
@@ -159,7 +159,7 @@ public class EndGameTest {
 		player2.bet(20);
 		
 		game.endGame();
-		
+		assertEquals(game.getPotBalance(), 270);
 	}
 	
 	/**  
