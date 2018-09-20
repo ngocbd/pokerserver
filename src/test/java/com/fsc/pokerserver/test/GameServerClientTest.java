@@ -199,7 +199,7 @@ public class GameServerClientTest implements MqttCallback {
             String url = host + "api/login?username=" + arr[i] + "&password=123456";
 //            Document document = Jsoup.connect(url).get();
 
-           this.getContentFromUrl(url);
+            this.getContentFromUrl(url);
             System.out.println(this.getContentFromUrl(url));
 //            assertEquals(isNumeric(this.getContentFromUrl(url)), true);
         }

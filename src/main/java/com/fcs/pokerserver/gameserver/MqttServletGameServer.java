@@ -21,7 +21,6 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver.gameserver;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
