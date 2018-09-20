@@ -34,7 +34,7 @@ import com.fcs.pokerserver.Room;
  * The class to test the Flop and the Player bet in the game.
  * @category com > fcs > pokerserver > test
  * */
-@Ignore
+
 public class FlopAndBetGameTest {
 	private Player master;
 	private Room room;

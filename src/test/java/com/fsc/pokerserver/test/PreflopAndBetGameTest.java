@@ -34,7 +34,7 @@ import com.fcs.pokerserver.Room;
  * The class to test the Preflop and Bet in the game.
  * @category com > fcs > pokerserver > test
  * */
-@Ignore
+
 public class PreflopAndBetGameTest {
 	private Player master;
 	private Room room;

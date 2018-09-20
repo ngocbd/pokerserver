@@ -21,6 +21,8 @@ THE SOFTWARE.
 package com.fsc.pokerserver.web;
 
 
+import com.googlecode.objectify.ObjectifyService;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.googlecode.objectify.ObjectifyService.ofy;
@@ -42,6 +44,7 @@ import javax.servlet.http.HttpServletResponse;
     urlPatterns = {"/api/register"}
 )
 public class RegisterServlet extends HttpServlet {
+
 	@Override 
 	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
 	{ 
@@ -79,16 +82,9 @@ public class RegisterServlet extends HttpServlet {
     User user  = new User();
     user.setUsername(username);
     user.setPassword(password);
-    
-    
-    ofy().save().entity(user);
-    
-    
-    
-    
-    
-    response.getWriter().printf("%s",username);
-    
 
+    ofy().save().entity(user);
+
+    response.getWriter().printf("%s",username);
   }
 }
