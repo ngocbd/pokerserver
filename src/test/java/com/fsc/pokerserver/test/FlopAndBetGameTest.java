@@ -309,7 +309,7 @@ public class FlopAndBetGameTest {
 		game.flop();
 		master.check();
 		player2.check();
-		player3.fold();
+//		player3.fold();
 		player4.fold();
 		player5.bet(10);
 		master.bet(10);

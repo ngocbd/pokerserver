@@ -31,12 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
-import com.fcs.pokerserver.events.GameAction;
-import com.fcs.pokerserver.events.GameEvent;
-import com.fcs.pokerserver.events.GameListener;
-import com.fcs.pokerserver.events.PlayerAction;
-import com.fcs.pokerserver.events.PlayerEvent;
-import com.fcs.pokerserver.events.PlayerListener;
+import com.fcs.pokerserver.events.*;
 import com.fcs.pokerserver.holder.Board;
 import com.fcs.pokerserver.holder.Hand;
 import com.fcs.pokerserver.holder.HandRank;
@@ -47,7 +42,8 @@ import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
  * An instance of the Game class is created Game to Player play Poker Game. This is the most important file in system.
  * @category com > fcs > pokerserver
  * */
-public class Game implements PlayerListener {
+//public class Game implements PlayerListener {
+public class Game implements AbstractPlayerListener {
 
 	private List<Player> listPlayer = new ArrayList<Player>();
 	private Board board = new Board();
@@ -321,7 +317,8 @@ public class Game implements PlayerListener {
 		if(this.startTime==null || Duration.between(this.startTime  , LocalDateTime.now()).getSeconds()<=15 )
 		{
 			this.listPlayer.add(p);
-			p.addPlayerListener(this);
+//			p.addPlayerListener(this);
+			p.attachListener(this);
 			p.setCurrentGame(this);
 			
 		}
@@ -597,21 +594,72 @@ public class Game implements PlayerListener {
 	 * @throws AssertionError if the Player is not the current player or the player is not in game. The Round of Bet is not less than the current round bet.
 	 * @return void.
 	 * */
+//	@Override
+//	public void actionPerformed(PlayerEvent event) {
+//		Player p = event.getSource();
+//
+//		assert p==this.getCurrentPlayer();
+////		System.out.println(event.getAction());
+//		if(listPlayer.contains(p))
+//		{
+//			if(event.getAction()==PlayerAction.BET)
+//			{
+//				assert p.getRoundBet()>=this.currentRoundBet;
+//
+//				this.potBalance+= (long)event.agruments.get("amount");
+//				this.currentRoundBet=p.getRoundBet(); // set current bet equal to this bet amount
+//
+//				//TODO Temporary set check next round for game
+//				// if next round ready then next Player will be left person of dealer
+//				if(isNextRoundReady())
+//				{
+//					this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+//				}
+//				else
+//				{
+//					Player next = this.getNextPlayer(p);
+//					if(next!=null)
+//					{
+//						this.setCurrentPlayer(next);
+//					}
+//				}
+//			}
+//
+//			if(event.getAction()==PlayerAction.FOLD)
+//			{
+//				p.setSittingOut(true);
+//				this.setCurrentPlayer(this.getNextPlayer(p));
+//			}
+//
+//			if(event.getAction()==PlayerAction.CHECK)
+//			{
+//				this.setCurrentPlayer(this.getNextPlayer(p));
+//			}
+//
+//			GameEvent ge = new GameEvent(this, GameAction.PLAYEREVENT);
+//			ge.agruments.put("playerEvent", event);
+//			this.fireEvent(ge);
+//		}
+//
+//	}
+	/**
+	 * Override the actionPerformed method according to Type of EVENT to make sure the Player has action need in the game.
+	 * @param AbstractPlayerEvent e.
+	 * @throws AssertionError if the Player is not the current player or the player is not in game. The Round of Bet is not less than the current round bet.
+	 * @return void.
+	 * */
 	@Override
-	public void actionPerformed(PlayerEvent event) {
-		Player p = event.getSource();
-		
-		assert p==this.getCurrentPlayer();
-//		System.out.println(event.getAction());
-		if(listPlayer.contains(p))
-		{
-			if(event.getAction()==PlayerAction.BET)
-			{
+	public void actionPerformed(AbstractPlayerEvent e){
+		Player p = e.getSrc();
+		assert p== this.getCurrentPlayer();
+		if (listPlayer.contains(p)){
+			if (e instanceof PlayerBetEvent){
+				PlayerBetEvent pbe = (PlayerBetEvent) e;
 				assert p.getRoundBet()>=this.currentRoundBet;
-				
-				this.potBalance+= (long)event.agruments.get("amount");
+
+				this.potBalance+= pbe.getAmount();
 				this.currentRoundBet=p.getRoundBet(); // set current bet equal to this bet amount
-				
+
 				//TODO Temporary set check next round for game
 				// if next round ready then next Player will be left person of dealer
 				if(isNextRoundReady())
@@ -624,28 +672,30 @@ public class Game implements PlayerListener {
 					if(next!=null)
 					{
 						this.setCurrentPlayer(next);
-					}				
+					}
 				}
+				GameEvent ge = new GameEvent(this, GameAction.PLAYEREVENT);
+				ge.agruments.put("playerEvent", pbe);
+				this.fireEvent(ge);
 			}
-			
-			if(event.getAction()==PlayerAction.FOLD)
-			{
+			if (e instanceof PlayerFoldEvent){
+				PlayerFoldEvent pfe = (PlayerFoldEvent) e;
 				p.setSittingOut(true);
 				this.setCurrentPlayer(this.getNextPlayer(p));
+				GameEvent ge = new GameEvent(this, GameAction.PLAYEREVENT);
+				ge.agruments.put("playerEvent", pfe);
+				this.fireEvent(ge);
 			}
-			
-			if(event.getAction()==PlayerAction.CHECK)
-			{
+			if (e instanceof PlayerCheckEvent){
+				PlayerCheckEvent pce = (PlayerCheckEvent)e;
 				this.setCurrentPlayer(this.getNextPlayer(p));
+				GameEvent ge = new GameEvent(this, GameAction.PLAYEREVENT);
+				ge.agruments.put("playerEvent", pce);
+				this.fireEvent(ge);
 			}
-			
-			GameEvent ge = new GameEvent(this, GameAction.PLAYEREVENT);
-			ge.agruments.put("playerEvent", event);
-			this.fireEvent(ge);
-		}
-		
-	}
 
+		}
+	}
 	/**
 	 * Return the current Player in Game
 	 * @return Player current player

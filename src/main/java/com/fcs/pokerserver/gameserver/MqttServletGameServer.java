@@ -42,6 +42,7 @@ import javax.management.remote.JMXServiceURL;
 import javax.naming.Context;
 import javax.servlet.DispatcherType;
 
+import com.fcs.pokerserver.events.*;
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
@@ -58,13 +59,6 @@ import org.joda.time.DateTime;
 
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
-import com.fcs.pokerserver.events.GameAction;
-import com.fcs.pokerserver.events.GameEvent;
-import com.fcs.pokerserver.events.PlayerAction;
-import com.fcs.pokerserver.events.PlayerEvent;
-import com.fcs.pokerserver.events.RoomAction;
-import com.fcs.pokerserver.events.RoomEvent;
-import com.fcs.pokerserver.events.RoomListener;
 import com.fsc.pokerserver.web.GameServlet;
 import com.fsc.pokerserver.web.LoginServlet;
 import com.fsc.pokerserver.web.ObjectifyWebFilter;
@@ -385,23 +379,25 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
             GameEvent ge = (GameEvent) event.agruments.get("gameevent");
             content += "&gameEvent=" + ge.getAction() + "&gameid=" + ge.getSource().getId();
             if (ge.getAction() == GameAction.PLAYEREVENT) {
-                PlayerEvent pe = (PlayerEvent) ge.agruments.get("playerEvent");
+                AbstractPlayerEvent e = (AbstractPlayerEvent) ge.agruments.get("playerEvent");
 
-                if (pe.getAction() == PlayerAction.BET) {
-                    long amount = (long) pe.agruments.get("amount");
-                    Player p = pe.getSource();
+                if (e instanceof PlayerBetEvent) {
+                    PlayerBetEvent pe = (PlayerBetEvent)e;
+                    long amount = pe.getAmount();
+                    Player p = pe.getSrc();
                     content += "&pid=" + p.getId() + "&playeraction=bet&amount=" + amount;
                 }
-                if (pe.getAction() == PlayerAction.FOLD) {
-                    Player p = pe.getSource();
+                if (e instanceof PlayerFoldEvent) {
+                    PlayerFoldEvent pe = (PlayerFoldEvent) e;
+                    Player p = pe.getSrc();
                     content += "&pid=" + p.getId() + "&playeraction=fold";
                 }
-                if (pe.getAction() == PlayerAction.CHECK) {
-                    Player p = pe.getSource();
+                if (e instanceof PlayerCheckEvent) {
+                    Player p = e.getSrc();
                     content += "&pid=" + p.getId() + "&playeraction=check";
                 }
-                if (pe.getAction() == PlayerAction.CALL) {
-                    Player p = pe.getSource();
+                if (e instanceof PlayerCallEvent) {
+                    Player p = e.getSrc();
                     content += "&pid=" + p.getId() + "&playeraction=call";
                 }
             }
