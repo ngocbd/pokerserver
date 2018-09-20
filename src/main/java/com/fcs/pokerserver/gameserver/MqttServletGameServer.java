@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -35,12 +34,12 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import javax.management.DynamicMBean;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
+import javax.naming.Context;
 import javax.servlet.DispatcherType;
 
 import org.eclipse.jetty.jmx.MBeanContainer;
@@ -66,12 +65,12 @@ import com.fcs.pokerserver.events.PlayerEvent;
 import com.fcs.pokerserver.events.RoomAction;
 import com.fcs.pokerserver.events.RoomEvent;
 import com.fcs.pokerserver.events.RoomListener;
-import com.fsc.pokerserver.web.RoomServlet;
 import com.fsc.pokerserver.web.GameServlet;
 import com.fsc.pokerserver.web.LoginServlet;
 import com.fsc.pokerserver.web.ObjectifyWebFilter;
 import com.fsc.pokerserver.web.PokerTokenFilter;
 import com.fsc.pokerserver.web.RegisterServlet;
+import com.fsc.pokerserver.web.RoomServlet;
 
 /**
  * The class is tested. It's not a production.
@@ -86,10 +85,11 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
     private static final String BROKER_URL = "tcp://broker.mqttdashboard.com:1883";
     private static final String SERVER_TOPIC = "/pokerserver/server";
     private Sender sender;
+    static private ClassLoader classloader = Thread.currentThread().getContextClassLoader();
     private static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
 
     static {
-        final InputStream inputStream = MqttServletGameServer.class.getResourceAsStream("logging.properties");
+        final InputStream inputStream = classloader.getResourceAsStream("logging.properties");
         try {
             LogManager.getLogManager().readConfiguration(inputStream);
         } catch (final IOException e) {
@@ -107,15 +107,23 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
         Server server = new Server(8080);
         MBeanContainer mbContainer=new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
         LocateRegistry.createRegistry(1234);
+        String jmxuser = "fcs";
+        String jmxpassword = "secret";
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        final Map<String, Object> environment = new HashMap<>();
+        environment.put("jmx.remote.credentials", new String[]{jmxuser,jmxpassword});
+        environment.put(Context.SECURITY_PRINCIPAL, jmxuser);
+        environment.put(Context.SECURITY_CREDENTIALS, jmxpassword);
         mbs.registerMBean( this,new ObjectName("com.fcs.pokerserver.gameserver:MqttServletGameServer=MqttServletGameServer"));
-        JMXServiceURL url = new JMXServiceURL("service:jmx:rmi://localhost/jndi/rmi://localhost:1234/jmxrmi");
-        JMXConnectorServer svr = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs);
+        JMXServiceURL url = new JMXServiceURL("service:jmx:rmi://0.0.0.0/jndi/rmi://0.0.0.0:1234/jmxrmi");
+        JMXConnectorServer svr = JMXConnectorServerFactory.newJMXConnectorServer(url, environment, mbs);
         
         svr.start();
         server.addEventListener(mbContainer);
         server.addBean(mbContainer);
-
+        server.addBean(mbs);
+        
+        
         // Add loggers MBean to server (will be picked up by MBeanContainer above)
         server.addBean(logger);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
