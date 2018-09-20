@@ -24,14 +24,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.fcs.pokerserver.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import com.fcs.pokerserver.BlindLevel;
-import com.fcs.pokerserver.Deck;
-import com.fcs.pokerserver.Game;
-import com.fcs.pokerserver.Player;
-import com.fcs.pokerserver.Room;
 
 /**
  * The class to test the connect to the game.
@@ -93,7 +89,7 @@ public class ConnectGameTest {
 		game.setDealer(player2);
 		game.startGame();
 
-		assertEquals(game.getStatus(), "started");
+		assertEquals(game.getStatus(), GameStatus.SEATING);
 	}
 	
 }

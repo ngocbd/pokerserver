@@ -35,6 +35,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.DispatcherType;
 
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreOptions;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -80,7 +82,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
     private static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
 
     static {
-        final InputStream inputStream = MqttServletGameServer.class.getResourceAsStream("logging.properties");
+        final InputStream inputStream = MqttServletGameServer.class.getResourceAsStream("/logging.properties");
         try {
             LogManager.getLogManager().readConfiguration(inputStream);
         } catch (final IOException e) {
@@ -155,12 +157,12 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
     /**
      * The Main method
      * */
-//	public static void main(String[] args) {
-//		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
-//	}
+	public static void main(String[] args) {
+		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
+	}
 
 
-//	Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+	Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 //	Algorithm algorithm = Algorithm.HMAC256("thisstringisverysecret");
 
     /**

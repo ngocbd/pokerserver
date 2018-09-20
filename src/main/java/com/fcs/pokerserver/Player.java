@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.fcs.pokerserver.events.PlayerAction;
+import com.fcs.pokerserver.events.PlayerBetListener;
 import com.fcs.pokerserver.events.PlayerEvent;
 import com.fcs.pokerserver.events.PlayerListener;
 import com.fcs.pokerserver.holder.Hand;
@@ -52,6 +53,8 @@ public class Player {
 	private Hand playerHand = new Hand();
 	private List<PlayerListener> listeners = new ArrayList<PlayerListener>();
 
+	private List<PlayerBetListener> betListeners = new ArrayList<>();
+
 	private Game currentGame = null;
 
 
@@ -73,6 +76,17 @@ public class Player {
 		this.setId(String.valueOf(System.currentTimeMillis()));
 	}
 
+	public void attachBetListener(PlayerBetListener listener){
+		betListeners.add(listener);
+	}
+	public PlayerBetListener detachBetListener(PlayerBetListener listener){
+		if (betListeners.contains(listener)){
+			return null;
+		}else {
+			betListeners.remove(listener);
+			return listener;
+		}
+	}
 	
 	/**
 	 * The method to the Player bet the chip in the current game.
@@ -83,7 +97,7 @@ public class Player {
 	{
 		assert amount<this.balance;
 		
-		assert this.sittingOut=false;
+		assert this.sittingOut==false;
 		this.setRoundBet(this.getRoundBet() + amount);
 		this.gameBet+=amount;
 		this.balance=this.balance-amount;
