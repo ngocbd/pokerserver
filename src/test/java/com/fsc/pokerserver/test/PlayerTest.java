@@ -34,7 +34,7 @@ import com.fcs.pokerserver.events.PlayerListener;
  * The class to test the Server and the Client in the game.
  * @category com > fcs > pokerserver > test
  * */
-@Ignore
+
 public class PlayerTest implements PlayerListener  {
 
 //	@Before

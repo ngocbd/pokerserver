@@ -33,6 +33,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
+import com.googlecode.objectify.ObjectifyService;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

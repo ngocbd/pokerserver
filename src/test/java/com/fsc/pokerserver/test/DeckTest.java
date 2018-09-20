@@ -33,7 +33,7 @@ import com.fcs.pokerserver.Deck;
  *
  * @category com > fcs > pokerserver > test
  */
-@Ignore
+
 public class DeckTest {
     /**
      * The method to create the Deck

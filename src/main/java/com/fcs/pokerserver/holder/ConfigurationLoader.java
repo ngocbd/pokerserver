@@ -42,11 +42,12 @@ public class ConfigurationLoader {
 
     private static final int HAND_RANK_SIZE = 32487834;
     private static Logger log = Logger.getLogger(ConfigurationLoader.class.getName());
+    static private ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
     public byte[] readZipFile(String zipname) throws Exception {
         ByteArrayOutputStream byteos = new ByteArrayOutputStream();
 
-        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(ConfigurationLoader.class.getResourceAsStream(zipname)));
+        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(classloader.getResourceAsStream(zipname)));
 //        ZipEntry entry = zis.getNextEntry();
         while (zis.getNextEntry() != null) {
             int size;
@@ -94,7 +95,7 @@ public class ConfigurationLoader {
             }
             return handRankArray;
         } catch (IOException e) {
-            throw new ExecutionException(   "cannot read resource " + name, e);
+            throw new ExecutionException("cannot read resource " + name, e);
         }
     }
 

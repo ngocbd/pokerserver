@@ -45,7 +45,7 @@ import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
  *
  * @category com > fcs > pokerserver > test
  */
-@Ignore
+
 public class CardEvaluatorTest extends TestCase {
 //	public static void main(String[] args) {
 //		Hand h1 = new Hand(Card.THREE_OF_CLUBS, Card.SEVEN_OF_HEARTS);

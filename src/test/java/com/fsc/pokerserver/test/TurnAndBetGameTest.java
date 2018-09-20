@@ -34,7 +34,7 @@ import com.fcs.pokerserver.Room;
  * The class to test the Turn and Bet in the game.
  * @category com > fcs > pokerserver > test
  * */
-@Ignore
+
 public class TurnAndBetGameTest {
 	private Player master;
 	private Room room;

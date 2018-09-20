@@ -33,6 +33,7 @@ import com.googlecode.objectify.ObjectifyService;
 public class ObjectifyWebFilter extends ObjectifyFilter {
 	static {
 		ObjectifyService.init();
+		ObjectifyService.begin();
 		ObjectifyService.register(User.class);
 	}
 	

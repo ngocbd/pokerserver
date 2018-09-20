@@ -33,7 +33,7 @@ import org.junit.Test;
  * The class to test the connect to the game.
  * @category com > fcs > pokerserver > test
  * */
-@Ignore
+
 public class ConnectGameTest {
 	private Room room;
 
