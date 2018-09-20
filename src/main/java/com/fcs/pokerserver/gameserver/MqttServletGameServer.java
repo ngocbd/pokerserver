@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
+import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -33,8 +34,15 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.management.remote.JMXConnectorServer;
+import javax.management.remote.JMXConnectorServerFactory;
+import javax.management.remote.JMXServiceURL;
+import javax.naming.Context;
 import javax.servlet.DispatcherType;
 
+import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -57,19 +65,19 @@ import com.fcs.pokerserver.events.PlayerEvent;
 import com.fcs.pokerserver.events.RoomAction;
 import com.fcs.pokerserver.events.RoomEvent;
 import com.fcs.pokerserver.events.RoomListener;
-import com.fsc.pokerserver.web.RoomServlet;
 import com.fsc.pokerserver.web.GameServlet;
 import com.fsc.pokerserver.web.LoginServlet;
 import com.fsc.pokerserver.web.ObjectifyWebFilter;
 import com.fsc.pokerserver.web.PokerTokenFilter;
 import com.fsc.pokerserver.web.RegisterServlet;
+import com.fsc.pokerserver.web.RoomServlet;
 
 /**
  * The class is tested. It's not a production.
  *
  * @category com > fcs > pokerserver > gameserver
  */
-public class MqttServletGameServer implements MqttCallback, RoomListener {
+public class MqttServletGameServer implements MqttCallback, RoomListener,MqttServletGameServerMBean {
     private static MqttServletGameServer instance = null;
     private List<Player> listPlayer = new ArrayList<Player>();
     private List<Room> listRoom = new ArrayList<Room>();
@@ -77,10 +85,11 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
     private static final String BROKER_URL = "tcp://broker.mqttdashboard.com:1883";
     private static final String SERVER_TOPIC = "/pokerserver/server";
     private Sender sender;
+    static private ClassLoader classloader = Thread.currentThread().getContextClassLoader();
     private static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
 
     static {
-        final InputStream inputStream = MqttServletGameServer.class.getResourceAsStream("logging.properties");
+        final InputStream inputStream = classloader.getResourceAsStream("logging.properties");
         try {
             LogManager.getLogManager().readConfiguration(inputStream);
         } catch (final Exception e) {
@@ -89,13 +98,36 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         }
     }
 
-    private MqttServletGameServer() {
+    private MqttServletGameServer() throws Exception {
         ServletHolder loginServlet = new ServletHolder(LoginServlet.class);
         ServletHolder registerServlet = new ServletHolder(RegisterServlet.class);
         ServletHolder roomServlet = new ServletHolder(RoomServlet.class);
         ServletHolder gameServlet = new ServletHolder(GameServlet.class);
-
+        
         Server server = new Server(8080);
+        
+        
+        MBeanContainer mbContainer=new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
+        LocateRegistry.createRegistry(1234);
+        String jmxuser = "fcs";
+        String jmxpassword = "secret";
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        final Map<String, Object> environment = new HashMap<>();
+        environment.put("jmx.remote.credentials", new String[]{jmxuser,jmxpassword});
+        environment.put(Context.SECURITY_PRINCIPAL, jmxuser);
+        environment.put(Context.SECURITY_CREDENTIALS, jmxpassword);
+        mbs.registerMBean( this,new ObjectName("com.fcs.pokerserver.gameserver:MqttServletGameServer=MqttServletGameServer"));
+        JMXServiceURL url = new JMXServiceURL("service:jmx:rmi://0.0.0.0/jndi/rmi://0.0.0.0:1234/jmxrmi");
+        JMXConnectorServer svr = JMXConnectorServerFactory.newJMXConnectorServer(url, environment, mbs);
+        
+        svr.start();
+        server.addEventListener(mbContainer);
+        server.addBean(mbContainer);
+        server.addBean(mbs);
+        
+        
+        // Add loggers MBean to server (will be picked up by MBeanContainer above)
+        server.addBean(logger);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         server.setHandler(context);
 
@@ -110,7 +142,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         requestLog.setExtended(true);
         requestLog.setLogCookies(false);
         requestLog.setLogTimeZone("GMT");
-
+        
         context.addFilter(ObjectifyWebFilter.class, "/*",
                 EnumSet.of(DispatcherType.REQUEST));
 
@@ -125,6 +157,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         logger.warning("MqttServletGameServer starting..." + ManagementFactory.getRuntimeMXBean().getName());
         try {
             server.start();
+            server.join();
             try {
                 this.run();
             } catch (MqttException e) {
@@ -143,10 +176,16 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
      * Singleton pattern to get the MqttServletGameServer instance.
      *
      * @return MqttServletGameServer instance
+     * @throws Exception 
      */
     public static MqttServletGameServer getInstance() {
         if (instance == null) {
-            instance = new MqttServletGameServer();
+            try {
+				instance = new MqttServletGameServer();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
 
         return instance;
@@ -154,8 +193,11 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 
     /**
      * The Main method
+     * @throws Exception 
      * */
-	public static void main(String[] args) {
+
+	public static void main(String[] args) throws Exception {
+
 		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
 	}
 
