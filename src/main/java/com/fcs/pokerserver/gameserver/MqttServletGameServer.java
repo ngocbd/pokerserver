@@ -75,7 +75,7 @@ import com.fsc.pokerserver.web.RoomServlet;
  *
  * @category com > fcs > pokerserver > gameserver
  */
-public class MqttServletGameServer implements MqttCallback, RoomListener,MqttServletGameServerMBean {
+public class MqttServletGameServer implements MqttCallback, RoomListener, MqttServletGameServerMBean {
     private static MqttServletGameServer instance = null;
     private List<Player> listPlayer = new ArrayList<Player>();
     private List<Room> listRoom = new ArrayList<Room>();
@@ -104,10 +104,10 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
         ServletHolder gameServlet = new ServletHolder(GameServlet.class);
 
         Server server = new Server(8080);
-        MBeanContainer mbContainer=new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
+        MBeanContainer mbContainer = new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
         LocateRegistry.createRegistry(1234);
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        mbs.registerMBean( this,new ObjectName("com.fcs.pokerserver.gameserver:MqttServletGameServer=MqttServletGameServer"));
+        mbs.registerMBean(this, new ObjectName("com.fcs.pokerserver.gameserver:MqttServletGameServer=MqttServletGameServer"));
         JMXServiceURL url = new JMXServiceURL("service:jmx:rmi://localhost/jndi/rmi://0.0.0.0:1234/jmxrmi");
         JMXConnectorServer svr = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs);
 
@@ -366,8 +366,8 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
         logger.log(Level.SEVERE, event.toString());
         String content = "";
         if (event instanceof GameActRoomEvent) {
-            content+="cmd=" + RoomAction.GAMEACTION + "&roomid=" + event.getSrc().getRoomID();
-            GameActRoomEvent gare = (GameActRoomEvent)event;
+            content += "cmd=" + RoomAction.GAMEACTION + "&roomid=" + event.getSrc().getRoomID();
+            GameActRoomEvent gare = (GameActRoomEvent) event;
             AbstractGameEvent ge = gare.getE();
             content += "&gameEvent=" + ge.getType() + "&gameid=" + ge.getSrc().getId();
             if (ge instanceof PlayerActionGameEvent) {
@@ -396,6 +396,17 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
             }
             if (ge instanceof RoundGameEvent) {
                 RoundGameEvent rge = (RoundGameEvent) ge;
+                if (rge.getType() == GameAction.PREFLOP) {
+                    List<Player> players = rge.getSrc().getListPlayer();
+                    StringBuffer playerHands = new StringBuffer();
+                    playerHands.append("[");
+                    for (Player player : players) {
+                        if (!player.isSittingOut()) playerHands.append(player.toString() + ",");
+                    }
+                    playerHands.setLength(playerHands.length() - 1);
+                    playerHands.append("]");
+                    content+="&preflopHands="+playerHands.toString();
+                }
                 if (rge.getType() == GameAction.FLOP) {
                     content += "&flopcard=" + rge.getSrc().getBoard().getFlopCards().toString();
                 }
@@ -414,7 +425,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
         } else if (event instanceof VisitRoomEvent) {
             VisitRoomEvent vre = (VisitRoomEvent) event;
             if (vre.getType() == RoomAction.PLAYERJOINEDROOM) {
-                content+="cmd=" + RoomAction.PLAYERJOINEDROOM + "&roomid=" + event.getSrc().getRoomID();
+                content += "cmd=" + RoomAction.PLAYERJOINEDROOM + "&roomid=" + event.getSrc().getRoomID();
                 Player p = vre.getP();
                 content += "&pid=" + p.getId();
             }
@@ -423,7 +434,6 @@ public class MqttServletGameServer implements MqttCallback, RoomListener,MqttSer
         this.sender.add(MqttServletGameServer.SERVER_TOPIC + "/room/" + event.getSrc().getRoomID(), content);
 
     }
-
 
 
 }
