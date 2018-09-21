@@ -35,7 +35,7 @@ import javax.management.MXBean;
  *
  * @category com > fcs > pokerserver
  */
-@MXBean
+
 public class Room implements GameListener {
     private Game currentGame = null;
     private long RoomID;
@@ -211,7 +211,7 @@ public class Room implements GameListener {
         this.fireEvent(re);
         return this.currentGame;
     }
-    @ManagedOperation
+
     public List<Player> getListPlayers(){
         return listPlayer;
     }

@@ -15,4 +15,9 @@ public class GameActRoomEvent extends AbstractRoomEvent {
     public void setE(AbstractGameEvent e) {
         this.e = e;
     }
+
+    @Override
+    public String toString() {
+        return getSrc().getRoomID() + " "+ RoomAction.GAMEACTION+" gameevent: "+e;
+    }
 }

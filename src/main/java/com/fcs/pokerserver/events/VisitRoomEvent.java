@@ -25,4 +25,9 @@ public class VisitRoomEvent extends AbstractRoomEvent {
     public void setP(Player p) {
         this.p = p;
     }
+
+    @Override
+    public String toString() {
+        return getSrc().getRoomID() + type.toString()+" player: "+p;
+    }
 }

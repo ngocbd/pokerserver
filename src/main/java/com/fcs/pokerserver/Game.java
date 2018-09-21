@@ -699,7 +699,7 @@ public class Game implements AbstractPlayerListener {
                 PlayerCheckEvent pce = (PlayerCheckEvent) e;
                 this.setCurrentPlayer(this.getNextPlayer(p));
                 PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
-                ge.setE();
+                ge.setE(pce);
                 this.fireEvent(ge);
             }
 
