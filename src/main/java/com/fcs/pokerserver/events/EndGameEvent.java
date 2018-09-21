@@ -36,4 +36,9 @@ public class EndGameEvent extends AbstractGameEvent {
     public void setBestHand(Hand bestHand) {
         this.bestHand = bestHand;
     }
+
+    @Override
+    public String toString() {
+        return super.getSrc().getId() + " " + GameAction.ENDED.toString() + " winner: " + getPlayerwinId() + " rank: " + getRank() + " bestHand: " + getBestHand();
+    }
 }

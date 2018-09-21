@@ -20,6 +20,6 @@ public class PlayerFoldEvent extends AbstractPlayerEvent {
 
     @Override
     public String toString() {
-        return src.getId() + "FOLD";
+        return super.toString() + " FOLD";
     }
 }

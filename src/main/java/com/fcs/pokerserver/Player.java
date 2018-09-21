@@ -111,9 +111,9 @@ public class Player {
      *
      * @param PlayerListener pl
      */
-//    public void addPlayerListener(AbstractPlayerListener pl) {
-//        this.listeners.add(pl);
-//    }
+    public void addPlayerListener(AbstractPlayerListener pl) {
+        this.listeners.add(pl);
+    }
 
 
     /**
@@ -163,6 +163,12 @@ public class Player {
         }
     }
 
+//    private void fireEvent(PlayerEvent pe) {
+//        for (Iterator<AbstractPlayerListener> iterator = this.listeners.iterator(); iterator.hasNext(); ) {
+//            AbstractPlayerListener listener = iterator.next();
+//            listener.actionPerformed(pe);
+//        }
+//    }
 
     /**
      * Return the Balance of the Player

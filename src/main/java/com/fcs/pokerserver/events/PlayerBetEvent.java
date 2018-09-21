@@ -23,6 +23,6 @@ public class PlayerBetEvent extends AbstractPlayerEvent {
     @Override
     public String toString()
     {
-        return src.getId() + "BET: "+amount;
+        return super.toString() + " BET: "+amount;
     }
 }
