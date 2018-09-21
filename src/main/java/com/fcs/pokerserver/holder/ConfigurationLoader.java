@@ -42,7 +42,7 @@ public class ConfigurationLoader {
 
     private static final int HAND_RANK_SIZE = 32487834;
     private static Logger log = Logger.getLogger(ConfigurationLoader.class.getName());
-    public static ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+    static private ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
     public byte[] readZipFile(String zipname) throws Exception {
         ByteArrayOutputStream byteos = new ByteArrayOutputStream();
