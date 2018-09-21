@@ -21,6 +21,7 @@ public class Main {
 		System.out.println(queue.poll());
 		System.out.println(queue.poll());
 		System.out.println(queue.poll());
+		System.out.println(System.getProperty("java.io.tmpdir"));
 		
 
 	}

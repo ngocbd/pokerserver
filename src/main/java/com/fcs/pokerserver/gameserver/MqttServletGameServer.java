@@ -37,6 +37,8 @@ import javax.servlet.DispatcherType;
 
 
 import com.fcs.pokerserver.events.*;
+import com.fcs.pokerserver.holder.ConfigurationLoader;
+
 import org.eclipse.jetty.jmx.MBeanContainer;
 
 import org.eclipse.jetty.server.NCSARequestLog;
@@ -81,7 +83,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 
     static {
 
-        final InputStream inputStream = MqttServletGameServer.class.getResourceAsStream("logging.properties");
+        final InputStream inputStream = ConfigurationLoader.classloader.getResourceAsStream("logging.properties");
 
         try {
             LogManager.getLogManager().readConfiguration(inputStream);
@@ -102,17 +104,20 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         server.setHandler(context);
 
         NCSARequestLog requestLog = new NCSARequestLog();
-        String logFileName = System.getProperty("java.io.tmpdir") + "pokerserver-logs-yyyy_mm_dd.request.log";
-        logger.fine("Request log:" + logFileName);
+        String logFileName = System.getProperty("user.home") + "/pokerserver_access_yyyy_MM_dd.log";
+        logger.warning("Request log:" + logFileName);
 
         requestLog.setFilename(logFileName);
         requestLog.setFilenameDateFormat("yyyy_MM_dd");
-        requestLog.setRetainDays(90);
+        requestLog.setRetainDays(1);
         requestLog.setAppend(true);
         requestLog.setExtended(true);
-        requestLog.setLogCookies(false);
-        requestLog.setLogTimeZone("GMT");
-
+        requestLog.setLogCookies(true);
+        requestLog.setLogTimeZone("GMT+7");
+        
+        server.setRequestLog(requestLog);
+        
+        
         context.addFilter(ObjectifyWebFilter.class, "/*",
                 EnumSet.of(DispatcherType.REQUEST));
 
