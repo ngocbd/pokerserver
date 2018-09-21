@@ -1,7 +1,6 @@
 package com.fsc.pokerserver.test;
 
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
-import org.apache.http.client.ClientProtocolException;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -15,11 +14,10 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-public class ClientLoginTest implements MqttCallback {
-
+public class ClientCreatedAndJoinRoomTest implements MqttCallback {
     private String host = "http://localhost:8080/";
     private String token[];
-    private String arr[] = {"toan1", "danh1", "linh1", "chau1", "nghe1"};
+    private String arr[] = {"toan2", "danh2", "linh2", "chau2", "nghe2"};
     MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
 
     @Before
@@ -27,36 +25,26 @@ public class ClientLoginTest implements MqttCallback {
         Thread.sleep(2000);
     }
 
-    public int getStatusCodeFromUrl(String url) throws ClientProtocolException, IOException {
+    public int getStatusCodeFromUrl(String url) throws IOException {
         return Jsoup.connect(url).method(Connection.Method.GET).execute().statusCode();
 
     }
 
-    @Test
-    public void testCreatePlayer() throws IOException, ClientProtocolException {
+    public String[] getTokenPlayer() throws  IOException {
         for (int i = 0; i < arr.length; i++) {
-            String url = host + "api/register?username=" + arr[i] + "&password=123456";
-            assertEquals(200, this.getStatusCodeFromUrl(url));
+            Document tokenDoc = Jsoup.connect(host + "api/login?username=" + arr[i] + "&password=123456").get();
+            token[i] = tokenDoc.body().text();
         }
-
+        return token;
     }
-
     @Test
-    public void TestLogin() throws IOException {
-        for (int i = 0; i < arr.length; i++) {
-            String url = host + "api/login?username=" + arr[i] + "&password=123456";
-//            Document tokenDoc = Jsoup.connect(url).get();
-//            token[i] = tokenDoc.body().text();
-            assertEquals(200, this.getStatusCodeFromUrl(url));
-        }
-    }
+    public void createdRoom() throws IOException {
+        // Players login and return Array Token of Players
+        token = this.getTokenPlayer();
 
-    @Test
-    public void deleteUser() throws IOException {
-        for (int i = 0; i < arr.length; i++) {
-            String url = host + "api/deluser?user=" + arr[i];
-            assertEquals(200, this.getStatusCodeFromUrl(url));
-        }
+        //create room
+        String url = host + "api/room?token=" + token[0] + "&method=put";
+        assertEquals(200, this.getStatusCodeFromUrl(url));
     }
 
 
