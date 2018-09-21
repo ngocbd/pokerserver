@@ -39,86 +39,85 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The class to the Player react with the room
+ *
  * @category com > fcs > pokerserver > web
- * */
-@WebServlet(name = "RoomServlet", urlPatterns = { "/api/room" })
+ */
+@WebServlet(name = "RoomServlet", urlPatterns = {"/api/room"})
 public class RoomServlet extends HttpServlet {
-	private MqttServletGameServer server = MqttServletGameServer.getInstance();
-	
-	@Override 
-	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
-	{ 
-		// TODO Auto-generated method stub 
-		resp.setHeader("Access-Control-Allow-Origin", "*"); 
-		resp.setHeader("Access-Control-Allow-Methods", "GET, POST"); 
-		resp.setHeader("Access-Control-Allow-Headers", "Content-Type, authorization"); 
-		resp.setHeader("Access-Control-Max-Age", "86400"); 
-		resp.setHeader("Cache-Control", "public, max-age=90000"); 
-		// Tell the browser what requests we allow. 
-		resp.setHeader("Allow", "GET, HEAD, POST, PUT, TRACE, OPTIONS"); 
-	}
+    private MqttServletGameServer server = MqttServletGameServer.getInstance();
 
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String method = request.getParameter("method");
-		if ("put".equalsIgnoreCase(method)) {
-			doPut(request, response);
-			return;
-		} else if ("join".equalsIgnoreCase(method)) {
-			doPost(request, response);
-			return;
-		} else {
-			//TODO return more data ex Blind level , number of player , game status ...
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type, authorization");
+        resp.setHeader("Access-Control-Max-Age", "86400");
+        resp.setHeader("Cache-Control", "public, max-age=90000");
+        // Tell the browser what requests we allow.
+        resp.setHeader("Allow", "GET, HEAD, POST, PUT, TRACE, OPTIONS");
+    }
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        doOptions(request, response);
+        String method = request.getParameter("method");
+        if ("put".equalsIgnoreCase(method)) {
+            doPut(request, response);
+            return;
+        } else if ("join".equalsIgnoreCase(method)) {
+            doPost(request, response);
+            return;
+        } else {
+            //TODO return more data ex Blind level , number of player , game status ...
 //			List All room
-			String data = Joiner.on(",").join(this.server.getListRoom());
-			response.getWriter().println(data);
+            String data = Joiner.on(",").join(this.server.getListRoom());
+            response.getWriter().println(data);
 
-		}
-	}
+        }
+    }
 
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		Player p = (Player) request.getAttribute("player");
+        Player p = (Player) request.getAttribute("player");
 
-		String id = request.getParameter("id");
+        String id = request.getParameter("id");
 
-		Room room = server.getRoomByID(Long.parseLong(id));
+        Room room = server.getRoomByID(Long.parseLong(id));
 
-		checkNotNull(room, "Room " + id + " not found");
-		
+        checkNotNull(room, "Room " + id + " not found");
+
 //		System.out.println("player name: "+p.getName());
 //		System.out.println("Room Id: "+room.getRoomID());
-		
-		
-		
-		
-		room.addPlayer(p);
-		
-		//TODO return more data ex Blind level ,  player balance  , game status ...
-		String data = Joiner.on(",").join(room.getListPlayer());
 
-		response.getWriter().println(data);
+
+        room.addPlayer(p);
+
+        //TODO return more data ex Blind level ,  player balance  , game status ...
+        String data = Joiner.on(",").join(room.getListPlayer());
+
+        response.getWriter().println(data);
 //		for (int i = 0; i < room.getListPlayer().size(); i++) {
 //			System.out.println("Player Name in Room: "+room.getListPlayer().get(i).getName());
 //		}
 //		System.out.println("Player in room: "+room.getListPlayer().size());
-	}
+    }
 
-	@Override
-	public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
-		Player p = (Player) request.getAttribute("player");
-		
-		checkNotNull(p,"Player not found");
-		
-		Room room = new Room(p, BlindLevel.BLIND_10_20);
-	
+    @Override
+    public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		server.addRoom(room);
-		
-		
-		response.getWriter().println(room.getRoomID());
+        Player p = (Player) request.getAttribute("player");
 
-	}
+        checkNotNull(p, "Player not found");
+
+        Room room = new Room(p, BlindLevel.BLIND_10_20);
+
+
+        server.addRoom(room);
+
+
+        response.getWriter().println(room.getRoomID());
+
+    }
 }

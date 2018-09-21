@@ -43,7 +43,7 @@ import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
  *
  * @category com > fcs > pokerserver
  */
-//public class Game implements PlayerListener {
+
 public class Game implements AbstractPlayerListener {
 
     private List<Player> listPlayer = new ArrayList<Player>();

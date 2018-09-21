@@ -363,7 +363,7 @@ public class Player {
      * @return String jsonString
      */
     public String toString() {
-        return "{" + "\"Name\": \"" + this.getName() + "\", \"Balance\": " + this.balance + ", \"RoundBet\": " + this.roundBet + "}";
+        return "{" +"\"Id\": \""+this.getId()+"\"Hand\": \""+this.getPlayerHand()+ "\"Name\": \"" + this.getName() + "\", \"Balance\": " + this.balance + ", \"RoundBet\": " + this.roundBet + "}";
     }
 
     /**
