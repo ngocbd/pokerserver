@@ -22,6 +22,8 @@ package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -29,6 +31,9 @@ import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
+import com.fcs.pokerserver.events.AbstractRoomEvent;
+import com.fcs.pokerserver.events.RoomListener;
+import com.fcs.pokerserver.events.VisitRoomEvent;
 
 /**
  * The class to test to create a new Room in the game.
@@ -37,6 +42,23 @@ import com.fcs.pokerserver.Room;
 
 public class RoomTest {
 
+	/**
+	 * candidateRoom is temporary object holder for equality check in testcase
+	 * 
+	 * */
+	Room candidateRoom ;
+	
+	/**
+	 * candidateRoom is temporary object holder for equality check in testcase
+	 * 
+	 * */
+	Player candidatePlayer ;
+	
+	@Before
+	public void setUp()
+	{
+		candidateRoom = null;
+	}
 	/**
 	 * The method to create new the room
 	 * */
@@ -59,5 +81,61 @@ public class RoomTest {
 		
 		
 		assertEquals(game.getListPlayer().size(),1);
+	}
+	
+	/**
+	 * The method to test same room from origin and event source
+	 * */
+	@Test
+	public void testJoinRoom1() {
+		Player master = new Player("master");
+		Player player2 = new Player("Player 2");
+		Room room = new Room(master,BlindLevel.BLIND_10_20);
+		
+		// for sure candidate is null
+		candidateRoom =null;
+		
+		room.addRoomListener(new RoomListener() {
+			
+			@Override
+			public void actionPerformed(AbstractRoomEvent event) {
+				VisitRoomEvent vrEvent = (VisitRoomEvent)event;
+				candidateRoom = vrEvent.getSrc();
+				
+			}
+		});
+		
+		room.addPlayer(player2);
+		
+		Assert.assertSame(room, candidateRoom);
+
+	}
+	
+	/**
+	 * The method to test same room from origin and event source
+	 * */
+	@Test
+	public void testJoinRoom2() {
+		Player master = new Player("master");
+		Player player2 = new Player("Player 2");
+		Room room = new Room(master,BlindLevel.BLIND_10_20);
+		
+		// for sure candidate is null
+		candidatePlayer =null;
+		
+		room.addRoomListener(new RoomListener() {
+			
+			@Override
+			public void actionPerformed(AbstractRoomEvent event) {
+				VisitRoomEvent vrEvent = (VisitRoomEvent)event;
+				candidatePlayer = vrEvent.getP();
+				
+			}
+		});
+		
+		room.addPlayer(player2);
+		
+		Assert.assertSame(player2, candidatePlayer);
+
 	}
 }
