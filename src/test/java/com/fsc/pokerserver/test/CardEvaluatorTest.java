@@ -102,6 +102,7 @@ public class CardEvaluatorTest extends TestCase {
         Hand h2 = new Hand(Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS);
         Board b = new Board(Card.TWO_OF_DIAMONDS, Card.EIGHT_OF_SPADES, Card.FOUR_OF_CLUBS,
                 Card.TEN_OF_HEARTS, Card.SIX_OF_SPADES);
+        System.out.println(h1);
         int comp = compare(h1, h2, b);
         assertTrue(comp > 0);
     }
