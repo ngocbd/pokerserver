@@ -34,7 +34,6 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -129,7 +128,7 @@ public class GameServerClientTest implements MqttCallback {
      * Get status code from the url
      */
     public int getStatusCodeFromUrl(String url) throws ClientProtocolException, IOException {
-        return  Jsoup.connect(url).method(Connection.Method.GET).execute().statusCode();
+        return Jsoup.connect(url).method(Connection.Method.GET).execute().statusCode();
 
     }
 
@@ -577,13 +576,13 @@ public class GameServerClientTest implements MqttCallback {
         this.getContentFromUrl(dealerToanBet1);
 
         //turn
-        String turn = host + "api/game?token=" + token[1] + "&method=turn";
-        System.out.println(turn);
-        this.getContentFromUrl(turn);
+        String turn = host + "api/game?token=" + token[0] + "&method=turn";
+//        this.getContentFromUrl(turn);
+//        System.out.println(this.getContentFromUrl(turn));
+//        System.out.println(this.getStatusCodeFromUrl(turn));
         assertEquals(200, this.getStatusCodeFromUrl(turn));
 
     }
-
 
     /**
      * Game River
@@ -652,8 +651,6 @@ public class GameServerClientTest implements MqttCallback {
         this.getContentFromUrl(bbLinhBet3);
         String utgChauBet3 = host + "api/game?token=" + token[3] + "&method=bet&value=20";
         this.getContentFromUrl(utgChauBet3);
-        String ngheBet3 = host + "api/game?token=" + token[4] + "&method=fold";
-        this.getContentFromUrl(ngheBet3);
         String dealerToanBet3 = host + "api/game?token=" + token[0] + "&method=bet&value=20";
         this.getContentFromUrl(dealerToanBet3);
 
