@@ -578,9 +578,13 @@ public class GameServerClientTest implements MqttCallback {
 
         //turn
         String turn = host + "api/game?token=" + token[1] + "&method=turn";
-        System.out.println(turn);
         this.getContentFromUrl(turn);
         assertEquals(200, this.getStatusCodeFromUrl(turn));
+
+    }
+
+    @Test
+    public void testTurn() throws IOException{
 
     }
 

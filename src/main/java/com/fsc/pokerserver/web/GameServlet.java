@@ -128,7 +128,7 @@ public class GameServlet extends HttpServlet {
 		{
 			
 			Player p = (Player) request.getAttribute("player");
-			
+
 			p.getCurrentGame().flop();
 
 			String strFlop = "The Flop of the game \n\tNumber of cards: "+ p.getCurrentGame().getBoard().getCardNumber() + "\n\tThe Cards in the flop: "+ p.getCurrentGame().getBoard().getFlopCards().toString();
