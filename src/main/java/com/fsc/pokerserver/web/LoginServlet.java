@@ -38,68 +38,66 @@ import com.googlecode.objectify.ObjectifyService;
 import static com.google.common.base.Preconditions.checkArgument;
 
 
-
-
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * The class to Player login
+ *
  * @category com > fcs > pokerserver > web
- * */
+ */
 @WebServlet(
-    name = "LoginServlet",
-    urlPatterns = {"/api/login"}
+        name = "LoginServlet",
+        urlPatterns = {"/api/login"}
 )
 public class LoginServlet extends HttpServlet {
-	private String secret = "thisstringisverysecret";
-	private Algorithm algorithm = Algorithm.HMAC256(secret);
-	
-	@Override 
-	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException 
-	{ 
-		// TODO Auto-generated method stub 
-		resp.setHeader("Access-Control-Allow-Origin", "*"); 
-		resp.setHeader("Access-Control-Allow-Methods", "GET, POST"); 
-		resp.setHeader("Access-Control-Allow-Headers", "Content-Type, authorization"); 
-		resp.setHeader("Access-Control-Max-Age", "86400"); 
-		resp.setHeader("Cache-Control", "public, max-age=90000"); 
-		// Tell the browser what requests we allow. 
-		resp.setHeader("Allow", "GET, HEAD, POST, PUT, TRACE, OPTIONS"); 
-	}
-	
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) 
-      throws IOException {
-      
-	  
-    response.setContentType("text/plain");
-    response.setCharacterEncoding("UTF-8");
-    
-    String username = request.getParameter("username");
-   
-    checkArgument(username!=null, "username can't not be null");
-    
-    String password = request.getParameter("password");
-    
-    checkArgument(password!=null, "password can't not be null"); 
-    
-    MqttServletGameServer server = MqttServletGameServer.getInstance();
-    
-    Player exist = server.getListPlayer().stream().filter(p -> p.getName().equals(username)).findAny().orElse(null);
-    
-    checkArgument(exist==null,"User logged-in ready !!!!");
-    
-    User user = ofy().load().type(User.class).id(username).safe();
-    checkArgument( password.equals(user.getPassword()) , "Incorrect Password");
-    
-    Player p = new Player(username);
-    server.addPlayer(p);
-    String token = JWT.create()
-	        .withIssuer("pokerserver")
-	        .withJWTId(username)
-	        .sign(algorithm);
-	    
-    p.setToken(token);
-    response.getWriter().println(token);
-  }
+    private String secret = "thisstringisverysecret";
+    private Algorithm algorithm = Algorithm.HMAC256(secret);
+
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type, authorization");
+        resp.setHeader("Access-Control-Max-Age", "86400");
+        resp.setHeader("Cache-Control", "public, max-age=90000");
+        // Tell the browser what requests we allow.
+        resp.setHeader("Allow", "GET, HEAD, POST, PUT, TRACE, OPTIONS");
+    }
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        doOptions(request, response);
+
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+
+        String username = request.getParameter("username");
+
+        checkArgument(username != null, "username can't not be null");
+
+        String password = request.getParameter("password");
+
+        checkArgument(password != null, "password can't not be null");
+
+        MqttServletGameServer server = MqttServletGameServer.getInstance();
+
+        Player exist = server.getListPlayer().stream().filter(p -> p.getName().equals(username)).findAny().orElse(null);
+
+        checkArgument(exist == null, "User logged-in ready !!!!");
+
+        User user = ofy().load().type(User.class).id(username).safe();
+        checkArgument(password.equals(user.getPassword()), "Incorrect Password");
+
+        Player p = new Player(username);
+        server.addPlayer(p);
+        String token = JWT.create()
+                .withIssuer("pokerserver")
+                .withJWTId(username)
+                .sign(algorithm);
+
+        p.setToken(token);
+        response.getWriter().println(token);
+    }
 }

@@ -62,8 +62,9 @@ public class GameServlet extends HttpServlet {
 	}
 	
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException,ServletException
 	{
+		doOptions(request,response);
 		String method = request.getParameter("method");
 		if("put".equalsIgnoreCase(method))
 		{
