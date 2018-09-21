@@ -10,6 +10,7 @@ public class EndGameEvent extends AbstractGameEvent {
 
     public EndGameEvent(Game src) {
         super(src);
+        super.setType(GameAction.ENDED);
     }
 
     public String getPlayerwinId() {
