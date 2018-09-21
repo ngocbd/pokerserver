@@ -21,6 +21,6 @@ public class PlayerCheckEvent extends AbstractPlayerEvent {
     @Override
     public String toString()
     {
-        return src.getId() + "CHECK";
+        return super.toString() + " CHECK";
     }
 }

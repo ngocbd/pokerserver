@@ -25,6 +25,6 @@ package com.fcs.pokerserver.events;
  * @category com > fcs > pokerserver > events
  * */
 public interface RoomListener {
-	public void actionPerformed(RoomEvent event);
+	public void actionPerformed(AbstractRoomEvent event);
 	
 }

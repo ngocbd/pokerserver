@@ -24,6 +24,7 @@ package com.fcs.pokerserver.gameserver;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
+import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -33,11 +34,17 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.management.remote.JMXConnectorServer;
+import javax.management.remote.JMXConnectorServerFactory;
+import javax.management.remote.JMXServiceURL;
 import javax.servlet.DispatcherType;
 
 
 import com.fcs.pokerserver.events.*;
 
+import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -68,7 +75,7 @@ import com.fsc.pokerserver.web.RoomServlet;
  *
  * @category com > fcs > pokerserver > gameserver
  */
-public class MqttServletGameServer implements MqttCallback, RoomListener {
+public class MqttServletGameServer implements MqttCallback, RoomListener,MqttServletGameServerMBean {
     private static MqttServletGameServer instance = null;
     private List<Player> listPlayer = new ArrayList<Player>();
     private List<Room> listRoom = new ArrayList<Room>();
@@ -90,13 +97,26 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         }
     }
 
-    private MqttServletGameServer() {
+    private MqttServletGameServer() throws Exception {
         ServletHolder loginServlet = new ServletHolder(LoginServlet.class);
         ServletHolder registerServlet = new ServletHolder(RegisterServlet.class);
         ServletHolder roomServlet = new ServletHolder(RoomServlet.class);
         ServletHolder gameServlet = new ServletHolder(GameServlet.class);
 
         Server server = new Server(8080);
+        MBeanContainer mbContainer=new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
+        LocateRegistry.createRegistry(1234);
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        mbs.registerMBean( this,new ObjectName("com.fcs.pokerserver.gameserver:MqttServletGameServer=MqttServletGameServer"));
+        JMXServiceURL url = new JMXServiceURL("service:jmx:rmi://localhost/jndi/rmi://0.0.0.0:1234/jmxrmi");
+        JMXConnectorServer svr = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs);
+
+        svr.start();
+        server.addEventListener(mbContainer);
+        server.addBean(mbContainer);
+        // Add loggers MBean to server (will be picked up by MBeanContainer above)
+        server.addBean(logger);
+
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         server.setHandler(context);
 
@@ -147,7 +167,12 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
      */
     public static MqttServletGameServer getInstance() {
         if (instance == null) {
-            instance = new MqttServletGameServer();
+            try {
+                instance = new MqttServletGameServer();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
 
         return instance;
@@ -337,14 +362,16 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
      * @param RoomEvent event
      */
     @Override
-    public void actionPerformed(RoomEvent event) {
+    public void actionPerformed(AbstractRoomEvent event) {
         logger.log(Level.SEVERE, event.toString());
-        String content = "cmd=" + event.getAction() + "&roomid=" + event.getSource().getRoomID();
-        if (event.getAction() == RoomAction.GAMEACTION) {
-            AbstractGameEvent ge = (AbstractGameEvent) event.agruments.get("gameevent");
+        String content = "";
+        if (event instanceof GameActRoomEvent) {
+            content+="cmd=" + RoomAction.GAMEACTION + "&roomid=" + event.getSrc().getRoomID();
+            GameActRoomEvent gare = (GameActRoomEvent)event;
+            AbstractGameEvent ge = gare.getE();
             content += "&gameEvent=" + ge.getType() + "&gameid=" + ge.getSrc().getId();
-            if (ge instanceof PActionGameEvent) {
-                PActionGameEvent pge = (PActionGameEvent) ge;
+            if (ge instanceof PlayerActionGameEvent) {
+                PlayerActionGameEvent pge = (PlayerActionGameEvent) ge;
                 AbstractPlayerEvent e = pge.getPE();
 
                 if (e instanceof PlayerBetEvent) {
@@ -384,15 +411,19 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
                 content += "&playerwin=" + ege.getPlayerwinId() + "&rank=" + ege.getRank() + "&besthand=" + ege.getBestHand();
             }
 
-        } else if (event.getAction() == RoomAction.PLAYERJOINEDROOM) {
-            Player p = (Player) event.agruments.get("player");
-            content += "&pid=" + p.getId();
-
+        } else if (event instanceof VisitRoomEvent) {
+            VisitRoomEvent vre = (VisitRoomEvent) event;
+            if (vre.getType() == RoomAction.PLAYERJOINEDROOM) {
+                content+="cmd=" + RoomAction.PLAYERJOINEDROOM + "&roomid=" + event.getSrc().getRoomID();
+                Player p = vre.getP();
+                content += "&pid=" + p.getId();
+            }
         }
 
-        this.sender.add(MqttServletGameServer.SERVER_TOPIC + "/room/" + event.getSource().getRoomID(), content);
+        this.sender.add(MqttServletGameServer.SERVER_TOPIC + "/room/" + event.getSrc().getRoomID(), content);
 
     }
+
 
 
 }

@@ -2,14 +2,14 @@ package com.fcs.pokerserver.events;
 
 import com.fcs.pokerserver.Game;
 
-public class PActionGameEvent extends AbstractGameEvent {
+public class PlayerActionGameEvent extends AbstractGameEvent {
     AbstractPlayerEvent pe;
-    public PActionGameEvent(Game src) {
+    public PlayerActionGameEvent(Game src) {
         super(src);
         super.setType(GameAction.PLAYEREVENT);
     }
 
-    public PActionGameEvent(Game src, AbstractPlayerEvent e) {
+    public PlayerActionGameEvent(Game src, AbstractPlayerEvent e) {
         super(src);
         this.pe = e;
     }
@@ -24,5 +24,9 @@ public class PActionGameEvent extends AbstractGameEvent {
 
     public GameAction getType() {
         return super.getType();
+    }
+    @Override
+    public String toString() {
+        return super.getSrc().getId() + " " + GameAction.PLAYEREVENT.toString()+" playerEvent: "+pe.toString();
     }
 }

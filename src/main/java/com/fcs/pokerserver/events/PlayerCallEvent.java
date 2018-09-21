@@ -19,6 +19,6 @@ public class PlayerCallEvent extends AbstractPlayerEvent {
     @Override
     public String toString()
     {
-        return src.getId() + "CALL: "+amount;
+        return super.toString() + " CALL: "+amount;
     }
 }

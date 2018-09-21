@@ -3,7 +3,7 @@ package com.fcs.pokerserver.events;
 import com.fcs.pokerserver.Game;
 
 public class RoundGameEvent extends AbstractGameEvent {
-    public RoundGameEvent(Game g, GameAction type){
+    public RoundGameEvent(Game g, GameAction type) {
         super(g);
         super.setType(type);
     }
@@ -19,4 +19,10 @@ public class RoundGameEvent extends AbstractGameEvent {
     public void setType(GameAction type) {
         super.setType(type);
     }
+
+    @Override
+    public String toString() {
+        return super.getSrc().getId() + " " + super.getType().toString();
+    }
+
 }

@@ -25,12 +25,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.fcs.pokerserver.events.*;
+import org.eclipse.jetty.util.annotation.ManagedOperation;
+
+import javax.management.MBeanOperationInfo;
+import javax.management.MXBean;
 
 /**
  * An instance of the Room class is created Room when user want to play Poker Game.
  *
  * @category com > fcs > pokerserver
  */
+
 public class Room implements GameListener {
     private Game currentGame = null;
     private long RoomID;
@@ -53,7 +58,7 @@ public class Room implements GameListener {
     /**
      * The method fire RoomEvent to all listener.
      */
-    private void fireEvent(RoomEvent re) {
+    private void fireEvent(AbstractRoomEvent re) {
         for (Iterator iterator = this.listeners.iterator(); iterator.hasNext(); ) {
             RoomListener listener = (RoomListener) iterator.next();
             listener.actionPerformed(re);
@@ -74,8 +79,9 @@ public class Room implements GameListener {
             this.currentGame.addPlayer(p);
         }
 
-        RoomEvent re = new RoomEvent(this, RoomAction.PLAYERJOINEDROOM);
-        re.agruments.put("player", p);
+        VisitRoomEvent re = new VisitRoomEvent(this);
+        re.setType(RoomAction.PLAYERJOINEDROOM);
+        re.setP(p);
 
         this.fireEvent(re);
     }
@@ -171,7 +177,6 @@ public class Room implements GameListener {
 //    }
 
 
-
     /**
      * The constructor with 2 params are Player and BlindLevel
      *
@@ -201,12 +206,14 @@ public class Room implements GameListener {
         this.currentGame.addPlayer(this.master);
 
         //TODO not good because game event should fire from game
-        RoomEvent re = new RoomEvent(this, RoomAction.GAMEACTION);
-//        re.agruments.put("gameevent", new GameEvent(this.currentGame, GameAction.CREATED));
-        re.agruments.put("gameevent", new RoundGameEvent(this.currentGame,GameAction.CREATED));
+        GameActRoomEvent re = new GameActRoomEvent(this);
+        re.setE(new RoundGameEvent(this.currentGame, GameAction.CREATED));
         this.fireEvent(re);
-
         return this.currentGame;
+    }
+
+    public List<Player> getListPlayers(){
+        return listPlayer;
     }
 
     /**
@@ -225,8 +232,8 @@ public class Room implements GameListener {
      **/
     @Override
     public void actionPerformed(AbstractGameEvent event) {
-        RoomEvent re = new RoomEvent(this, RoomAction.GAMEACTION);
-        re.agruments.put("gameevent", event);
+        GameActRoomEvent re = new GameActRoomEvent(this);
+        re.setE(event);
         this.fireEvent(re);
     }
 

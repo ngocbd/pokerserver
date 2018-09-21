@@ -15,4 +15,9 @@ public abstract class AbstractPlayerEvent {
     public void setSrc(Player src) {
         this.src = src;
     }
+
+    @Override
+    public String toString() {
+        return src.getId();
+    }
 }
