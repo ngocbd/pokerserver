@@ -121,7 +121,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
         server.setHandler(context);
 
         NCSARequestLog requestLog = new NCSARequestLog();
-        String logFileName = System.getProperty("java.io.tmpdir") + "pokerserver-logs-yyyy_mm_dd.request.log";
+        String logFileName = System.getProperty("user.home") + "/pokerserver-logs-yyyy_mm_dd.request.log";
         logger.fine("Request log:" + logFileName);
 
         requestLog.setFilename(logFileName);
@@ -131,7 +131,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
         requestLog.setExtended(true);
         requestLog.setLogCookies(false);
         requestLog.setLogTimeZone("GMT");
-
+        server.setRequestLog(requestLog);
         context.addFilter(ObjectifyWebFilter.class, "/*",
                 EnumSet.of(DispatcherType.REQUEST));
 

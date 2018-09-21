@@ -20,15 +20,11 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver;
 
+import com.fcs.pokerserver.events.*;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.fcs.pokerserver.events.*;
-import org.eclipse.jetty.util.annotation.ManagedOperation;
-
-import javax.management.MBeanOperationInfo;
-import javax.management.MXBean;
 
 /**
  * An instance of the Room class is created Room when user want to play Poker Game.
@@ -71,6 +67,7 @@ public class Room implements GameListener {
      * @param Player p
      */
     public void addPlayer(Player p) {
+        assert !listPlayer.contains(p);
         this.listPlayer.add(p);
         p.setCurrentRoom(this);
 
@@ -212,7 +209,7 @@ public class Room implements GameListener {
         return this.currentGame;
     }
 
-    public List<Player> getListPlayers(){
+    public List<Player> getListPlayers() {
         return listPlayer;
     }
 
