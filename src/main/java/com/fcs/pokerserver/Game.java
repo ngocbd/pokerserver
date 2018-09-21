@@ -683,7 +683,7 @@ public class Game implements AbstractPlayerListener {
                         this.setCurrentPlayer(next);
                     }
                 }
-                PActionGameEvent ge = new PActionGameEvent(this);
+                PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
                 ge.setE(pbe);
                 this.fireEvent(ge);
             }
@@ -691,15 +691,15 @@ public class Game implements AbstractPlayerListener {
                 PlayerFoldEvent pfe = (PlayerFoldEvent) e;
                 p.setSittingOut(true);
                 this.setCurrentPlayer(this.getNextPlayer(p));
-                PActionGameEvent ge = new PActionGameEvent(this);
+                PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
                 ge.setE(pfe);
                 this.fireEvent(ge);
             }
             if (e instanceof PlayerCheckEvent) {
                 PlayerCheckEvent pce = (PlayerCheckEvent) e;
                 this.setCurrentPlayer(this.getNextPlayer(p));
-                PActionGameEvent ge = new PActionGameEvent(this);
-                ge.setE(pce);
+                PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
+                ge.setE();
                 this.fireEvent(ge);
             }
 

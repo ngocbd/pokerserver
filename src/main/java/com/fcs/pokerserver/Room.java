@@ -25,12 +25,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.fcs.pokerserver.events.*;
+import org.eclipse.jetty.util.annotation.ManagedOperation;
+
+import javax.management.MBeanOperationInfo;
+import javax.management.MXBean;
 
 /**
  * An instance of the Room class is created Room when user want to play Poker Game.
  *
  * @category com > fcs > pokerserver
  */
+@MXBean
 public class Room implements GameListener {
     private Game currentGame = null;
     private long RoomID;
@@ -205,6 +210,10 @@ public class Room implements GameListener {
         re.setE(new RoundGameEvent(this.currentGame, GameAction.CREATED));
         this.fireEvent(re);
         return this.currentGame;
+    }
+    @ManagedOperation
+    public List<Player> getListPlayers(){
+        return listPlayer;
     }
 
     /**
