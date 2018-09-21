@@ -337,11 +337,13 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
      * @param RoomEvent event
      */
     @Override
-    public void actionPerformed(RoomEvent event) {
+    public void actionPerformed(AbstractRoomEvent event) {
         logger.log(Level.SEVERE, event.toString());
-        String content = "cmd=" + event.getAction() + "&roomid=" + event.getSource().getRoomID();
-        if (event.getAction() == RoomAction.GAMEACTION) {
-            AbstractGameEvent ge = (AbstractGameEvent) event.agruments.get("gameevent");
+        String content = "";
+        if (event instanceof GameActRoomEvent) {
+            content+="cmd=" + RoomAction.GAMEACTION + "&roomid=" + event.getSrc().getRoomID();
+            GameActRoomEvent gare = (GameActRoomEvent)event;
+            AbstractGameEvent ge = gare.getE();
             content += "&gameEvent=" + ge.getType() + "&gameid=" + ge.getSrc().getId();
             if (ge instanceof PActionGameEvent) {
                 PActionGameEvent pge = (PActionGameEvent) ge;
@@ -384,13 +386,16 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
                 content += "&playerwin=" + ege.getPlayerwinId() + "&rank=" + ege.getRank() + "&besthand=" + ege.getBestHand();
             }
 
-        } else if (event.getAction() == RoomAction.PLAYERJOINEDROOM) {
-            Player p = (Player) event.agruments.get("player");
-            content += "&pid=" + p.getId();
-
+        } else if (event instanceof VisitRoomEvent) {
+            VisitRoomEvent vre = (VisitRoomEvent) event;
+            if (vre.getType() == RoomAction.PLAYERJOINEDROOM) {
+                content+="cmd=" + RoomAction.PLAYERJOINEDROOM + "&roomid=" + event.getSrc().getRoomID();
+                Player p = vre.getP();
+                content += "&pid=" + p.getId();
+            }
         }
 
-        this.sender.add(MqttServletGameServer.SERVER_TOPIC + "/room/" + event.getSource().getRoomID(), content);
+        this.sender.add(MqttServletGameServer.SERVER_TOPIC + "/room/" + event.getSrc().getRoomID(), content);
 
     }
 
