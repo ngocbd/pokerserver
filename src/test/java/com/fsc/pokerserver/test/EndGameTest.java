@@ -45,7 +45,6 @@ public class EndGameTest {
 		room = new Room(master, BlindLevel.BLIND_10_20);
 		
 	}
-
 	/*--------------------- End Game -----------------------*/
 	
 	/**  

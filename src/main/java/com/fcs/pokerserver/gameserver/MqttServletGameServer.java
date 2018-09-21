@@ -35,6 +35,9 @@ import java.util.logging.Logger;
 
 import javax.servlet.DispatcherType;
 
+
+import com.fcs.pokerserver.events.*;
+
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -50,19 +53,14 @@ import org.joda.time.DateTime;
 
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
-import com.fcs.pokerserver.events.GameAction;
-import com.fcs.pokerserver.events.GameEvent;
-import com.fcs.pokerserver.events.PlayerAction;
-import com.fcs.pokerserver.events.PlayerEvent;
-import com.fcs.pokerserver.events.RoomAction;
-import com.fcs.pokerserver.events.RoomEvent;
-import com.fcs.pokerserver.events.RoomListener;
-import com.fsc.pokerserver.web.RoomServlet;
+
+
 import com.fsc.pokerserver.web.GameServlet;
 import com.fsc.pokerserver.web.LoginServlet;
 import com.fsc.pokerserver.web.ObjectifyWebFilter;
 import com.fsc.pokerserver.web.PokerTokenFilter;
 import com.fsc.pokerserver.web.RegisterServlet;
+import com.fsc.pokerserver.web.RoomServlet;
 
 
 /**
@@ -81,7 +79,9 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
     private static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
 
     static {
+
         final InputStream inputStream = MqttServletGameServer.class.getResourceAsStream("logging.properties");
+
         try {
             LogManager.getLogManager().readConfiguration(inputStream);
         } catch (final Exception e) {
@@ -155,9 +155,9 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 
     /**
      * The Main method
-     * */
-	public static void main(String[] args) {
-		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
+     */
+    public static void main(String[] args) {
+        MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
 
     }
 
@@ -339,44 +339,51 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
     @Override
     public void actionPerformed(RoomEvent event) {
         logger.log(Level.SEVERE, event.toString());
-
         String content = "cmd=" + event.getAction() + "&roomid=" + event.getSource().getRoomID();
         if (event.getAction() == RoomAction.GAMEACTION) {
-            GameEvent ge = (GameEvent) event.agruments.get("gameevent");
-            content += "&gameEvent=" + ge.getAction() + "&gameid=" + ge.getSource().getId();
-            if (ge.getAction() == GameAction.PLAYEREVENT) {
-                PlayerEvent pe = (PlayerEvent) ge.agruments.get("playerEvent");
+            AbstractGameEvent ge = (AbstractGameEvent) event.agruments.get("gameevent");
+            content += "&gameEvent=" + ge.getType() + "&gameid=" + ge.getSrc().getId();
+            if (ge instanceof PActionGameEvent) {
+                PActionGameEvent pge = (PActionGameEvent) ge;
+                AbstractPlayerEvent e = pge.getPE();
 
-                if (pe.getAction() == PlayerAction.BET) {
-                    long amount = (long) pe.agruments.get("amount");
-                    Player p = pe.getSource();
+                if (e instanceof PlayerBetEvent) {
+                    PlayerBetEvent pe = (PlayerBetEvent) e;
+                    long amount = pe.getAmount();
+                    Player p = pe.getSrc();
                     content += "&pid=" + p.getId() + "&playeraction=bet&amount=" + amount;
                 }
-                if (pe.getAction() == PlayerAction.FOLD) {
-                    Player p = pe.getSource();
+                if (e instanceof PlayerFoldEvent) {
+                    PlayerFoldEvent pe = (PlayerFoldEvent) e;
+                    Player p = pe.getSrc();
                     content += "&pid=" + p.getId() + "&playeraction=fold";
                 }
-                if (pe.getAction() == PlayerAction.CHECK) {
-                    Player p = pe.getSource();
+                if (e instanceof PlayerCheckEvent) {
+                    Player p = e.getSrc();
                     content += "&pid=" + p.getId() + "&playeraction=check";
                 }
-                if (pe.getAction() == PlayerAction.CALL) {
-                    Player p = pe.getSource();
+                if (e instanceof PlayerCallEvent) {
+                    Player p = e.getSrc();
                     content += "&pid=" + p.getId() + "&playeraction=call";
                 }
             }
-            if (ge.getAction() == GameAction.FLOP) {
-                content += "&flopcard=" + ge.getSource().getBoard().getFlopCards().toString();
+            if (ge instanceof RoundGameEvent) {
+                RoundGameEvent rge = (RoundGameEvent) ge;
+                if (rge.getType() == GameAction.FLOP) {
+                    content += "&flopcard=" + rge.getSrc().getBoard().getFlopCards().toString();
+                }
+                if (rge.getType() == GameAction.TURN) {
+                    content += "&turncard=" + rge.getSrc().getBoard().getTurnCard().toString();
+                }
+                if (rge.getType() == GameAction.RIVER) {
+                    content += "&rivercard=" + rge.getSrc().getBoard().getRiverCard().toString();
+                }
             }
-            if (ge.getAction() == GameAction.TURN) {
-                content += "&turncard=" + ge.getSource().getBoard().getTurnCard().toString();
+            if (ge instanceof EndGameEvent) {
+                EndGameEvent ege = (EndGameEvent) ge;
+                content += "&playerwin=" + ege.getPlayerwinId() + "&rank=" + ege.getRank() + "&besthand=" + ege.getBestHand();
             }
-            if (ge.getAction() == GameAction.RIVER) {
-                content += "&rivercard=" + ge.getSource().getBoard().getRiverCard().toString();
-            }
-            if (ge.getAction() == GameAction.ENDED) {
-                content += "&playerwin=" + ge.agruments.get("playerwin") + "&rank=" + ge.agruments.get("rank") + "&besthand=" + ge.agruments.get("besthand");
-            }
+
         } else if (event.getAction() == RoomAction.PLAYERJOINEDROOM) {
             Player p = (Player) event.agruments.get("player");
             content += "&pid=" + p.getId();
@@ -386,5 +393,6 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
         this.sender.add(MqttServletGameServer.SERVER_TOPIC + "/room/" + event.getSource().getRoomID(), content);
 
     }
+
 
 }

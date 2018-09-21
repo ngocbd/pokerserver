@@ -22,20 +22,18 @@ package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
 
+import com.fcs.pokerserver.events.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fcs.pokerserver.Player;
-import com.fcs.pokerserver.events.PlayerAction;
-import com.fcs.pokerserver.events.PlayerEvent;
-import com.fcs.pokerserver.events.PlayerListener;
 
 /**
  * The class to test the Server and the Client in the game.
  * @category com > fcs > pokerserver > test
  * */
 
-public class PlayerTest implements PlayerListener  {
+public class PlayerTest implements AbstractPlayerListener {
 
 //	@Before
 //	public void setUp() throws Exception {
@@ -51,7 +49,7 @@ public class PlayerTest implements PlayerListener  {
 		p.setName("Kuki");
 		p.setBalance(50000);
 		
-		p.addPlayerListener(this);
+		p.attachListener(this);
 		p.bet(100);
 		assertEquals(p.getBalance(), 50000-100);
 
@@ -59,10 +57,10 @@ public class PlayerTest implements PlayerListener  {
 
 	
 	@Override
-	public void actionPerformed(PlayerEvent event) {
-		if(event.getAction()==PlayerAction.BET)
+	public void actionPerformed(AbstractPlayerEvent event) {
+		if(event instanceof PlayerBetEvent)
 		{
-			System.out.println(event.getSource().getName()+" bet "+event.getSource().getRoundBet());
+			System.out.println(event.getSrc().getName()+" bet "+event.getSrc().getRoundBet());
 		}
 
 	}

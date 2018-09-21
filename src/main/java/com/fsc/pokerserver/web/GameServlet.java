@@ -226,7 +226,7 @@ public class GameServlet extends HttpServlet {
 		
 		Room room = p.getCurrentRoom();
 		
-		checkNotNull(room,"Room  not found");
+		checkNotNull(room,"Room not found");
 		
 		room.createNewGame();
 		
