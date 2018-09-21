@@ -24,12 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fcs.pokerserver.events.GameAction;
-import com.fcs.pokerserver.events.GameEvent;
-import com.fcs.pokerserver.events.GameListener;
-import com.fcs.pokerserver.events.RoomAction;
-import com.fcs.pokerserver.events.RoomEvent;
-import com.fcs.pokerserver.events.RoomListener;
+import com.fcs.pokerserver.events.*;
 
 /**
  * An instance of the Room class is created Room when user want to play Poker Game.
@@ -207,7 +202,8 @@ public class Room implements GameListener {
 
         //TODO not good because game event should fire from game
         RoomEvent re = new RoomEvent(this, RoomAction.GAMEACTION);
-        re.agruments.put("gameevent", new GameEvent(this.currentGame, GameAction.CREATED));
+//        re.agruments.put("gameevent", new GameEvent(this.currentGame, GameAction.CREATED));
+        re.agruments.put("gameevent", new RoundGameEvent(this.currentGame,GameAction.CREATED));
         this.fireEvent(re);
 
         return this.currentGame;
@@ -228,7 +224,7 @@ public class Room implements GameListener {
      * Send all event to the room topic
      **/
     @Override
-    public void actionPerformed(GameEvent event) {
+    public void actionPerformed(AbstractGameEvent event) {
         RoomEvent re = new RoomEvent(this, RoomAction.GAMEACTION);
         re.agruments.put("gameevent", event);
         this.fireEvent(re);

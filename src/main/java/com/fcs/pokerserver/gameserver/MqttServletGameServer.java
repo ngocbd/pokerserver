@@ -37,7 +37,6 @@ import javax.servlet.DispatcherType;
 
 
 import com.fcs.pokerserver.events.*;
-import org.eclipse.jetty.jmx.MBeanContainer;
 
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
@@ -156,9 +155,9 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
 
     /**
      * The Main method
-     * */
-	public static void main(String[] args) {
-		MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
+     */
+    public static void main(String[] args) {
+        MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
 
     }
 
@@ -340,16 +339,16 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
     @Override
     public void actionPerformed(RoomEvent event) {
         logger.log(Level.SEVERE, event.toString());
-
         String content = "cmd=" + event.getAction() + "&roomid=" + event.getSource().getRoomID();
         if (event.getAction() == RoomAction.GAMEACTION) {
-            GameEvent ge = (GameEvent) event.agruments.get("gameevent");
-            content += "&gameEvent=" + ge.getAction() + "&gameid=" + ge.getSource().getId();
-            if (ge.getAction() == GameAction.PLAYEREVENT) {
-                AbstractPlayerEvent e = (AbstractPlayerEvent) ge.agruments.get("playerEvent");
+            AbstractGameEvent ge = (AbstractGameEvent) event.agruments.get("gameevent");
+            content += "&gameEvent=" + ge.getType() + "&gameid=" + ge.getSrc().getId();
+            if (ge instanceof PActionGameEvent) {
+                PActionGameEvent pge = (PActionGameEvent) ge;
+                AbstractPlayerEvent e = pge.getPE();
 
                 if (e instanceof PlayerBetEvent) {
-                    PlayerBetEvent pe = (PlayerBetEvent)e;
+                    PlayerBetEvent pe = (PlayerBetEvent) e;
                     long amount = pe.getAmount();
                     Player p = pe.getSrc();
                     content += "&pid=" + p.getId() + "&playeraction=bet&amount=" + amount;
@@ -368,18 +367,23 @@ public class MqttServletGameServer implements MqttCallback, RoomListener {
                     content += "&pid=" + p.getId() + "&playeraction=call";
                 }
             }
-            if (ge.getAction() == GameAction.FLOP) {
-                content += "&flopcard=" + ge.getSource().getBoard().getFlopCards().toString();
+            if (ge instanceof RoundGameEvent) {
+                RoundGameEvent rge = (RoundGameEvent) ge;
+                if (rge.getType() == GameAction.FLOP) {
+                    content += "&flopcard=" + rge.getSrc().getBoard().getFlopCards().toString();
+                }
+                if (rge.getType() == GameAction.TURN) {
+                    content += "&turncard=" + rge.getSrc().getBoard().getTurnCard().toString();
+                }
+                if (rge.getType() == GameAction.RIVER) {
+                    content += "&rivercard=" + rge.getSrc().getBoard().getRiverCard().toString();
+                }
             }
-            if (ge.getAction() == GameAction.TURN) {
-                content += "&turncard=" + ge.getSource().getBoard().getTurnCard().toString();
+            if (ge instanceof EndGameEvent) {
+                EndGameEvent ege = (EndGameEvent) ge;
+                content += "&playerwin=" + ege.getPlayerwinId() + "&rank=" + ege.getRank() + "&besthand=" + ege.getBestHand();
             }
-            if (ge.getAction() == GameAction.RIVER) {
-                content += "&rivercard=" + ge.getSource().getBoard().getRiverCard().toString();
-            }
-            if (ge.getAction() == GameAction.ENDED) {
-                content += "&playerwin=" + ge.agruments.get("playerwin") + "&rank=" + ge.agruments.get("rank") + "&besthand=" + ge.agruments.get("besthand");
-            }
+
         } else if (event.getAction() == RoomAction.PLAYERJOINEDROOM) {
             Player p = (Player) event.agruments.get("player");
             content += "&pid=" + p.getId();
