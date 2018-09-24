@@ -36,6 +36,7 @@ import com.fcs.pokerserver.holder.Board;
 import com.fcs.pokerserver.holder.Hand;
 import com.fcs.pokerserver.holder.HandRank;
 import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
+import org.junit.Assert;
 
 
 /**
@@ -320,11 +321,10 @@ public class Game implements AbstractPlayerListener {
      * @param Player p
      */
     public void addPlayer(Player p) {
-
+        if (listPlayer.contains(p)) return;
         // check if timeout join after 15 second then Reject
         if (this.startTime == null || Duration.between(this.startTime, LocalDateTime.now()).getSeconds() <= 15) {
             this.listPlayer.add(p);
-//			p.addPlayerListener(this);
             p.attachListener(this);
             p.setCurrentGame(this);
 
