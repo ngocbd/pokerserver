@@ -21,6 +21,7 @@ THE SOFTWARE.
 package com.fcs.pokerserver;
 
 import com.fcs.pokerserver.events.*;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -67,7 +68,7 @@ public class Room implements GameListener {
      * @param Player p
      */
     public void addPlayer(Player p) {
-        assert !listPlayer.contains(p);
+        if (listPlayer.contains(p)) return;
         this.listPlayer.add(p);
         p.setCurrentRoom(this);
 
@@ -179,13 +180,16 @@ public class Room implements GameListener {
      *
      * @param Player master, BlindLevel blindLevel
      */
+    /**
+     * Add master into new Room, then create new game and add master into new game too.
+     * **/
     public Room(Player master, BlindLevel blindLevel) {
         this.master = master;
         this.blindLevel = blindLevel;
 
         this.RoomID = System.currentTimeMillis();
-
         this.createNewGame();
+        this.addPlayer(master);
     }
 
 
@@ -196,8 +200,10 @@ public class Room implements GameListener {
      */
     public Game createNewGame() {
         if (this.currentGame != null && this.currentGame.getStatus() != GameStatus.END_HAND) {
+
             return this.currentGame;
         }
+
         this.currentGame = new Game(this);
         this.currentGame.addGameListener(this);
         this.currentGame.addPlayer(this.master);
