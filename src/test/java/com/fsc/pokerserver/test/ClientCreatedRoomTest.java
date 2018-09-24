@@ -6,18 +6,16 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
-public class ClientCreatedAndLoginTest implements MqttCallback {
-
+public class ClientCreatedRoomTest implements MqttCallback {
     private String host = "http://localhost:8080/";
-    private ArrayList token[];
     private String arr[] = {"toan2", "danh2", "linh2", "chau2", "nghe2"};
     MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
 
@@ -31,23 +29,26 @@ public class ClientCreatedAndLoginTest implements MqttCallback {
 
     }
 
-    @Test
-    public void testCreatePlayer() throws IOException {
+    public String[] getTokenPlayer() throws IOException {
         for (int i = 0; i < arr.length; i++) {
             String url = host + "api/register?username=" + arr[i] + "&password=123456";
-            assertEquals(200, this.getStatusCodeFromUrl(url));
+            this.getStatusCodeFromUrl(url);
         }
-
+        String token[]={"","","","",""};
+        for (int i = 0; i < arr.length; i++) {
+            Document tokenDoc = Jsoup.connect(host + "api/login?username=" + arr[i] + "&password=123456").get();
+            token[i] = tokenDoc.body().text();
+        }
+        return token;
     }
 
     @Test
-    public void TestLogin() throws IOException {
-        for (int i = 0; i < arr.length; i++) {
-            String url = host + "api/login?username=" + arr[i] + "&password=123456";
-//            Document tokenDoc = Jsoup.connect(url).get();
-//            token[i] = tokenDoc.body().text();
-            assertEquals(200, this.getStatusCodeFromUrl(url));
-        }
+    public void createdRoom() throws IOException {
+        // Players login and return Array Token of Players
+        String[] token = this.getTokenPlayer();
+        //create room
+        String url = host + "api/room?token=" + token[0] + "&method=put";
+        assertEquals(200, this.getStatusCodeFromUrl(url));
     }
 
     @Test
