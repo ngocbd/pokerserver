@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"com.fcs.pokerserver"},{"l":"com.fcs.pokerserver.events"},{"l":"com.fcs.pokerserver.gameserver"},{"l":"com.fcs.pokerserver.holder"},{"l":"com.fsc.pokerserver.test"},{"l":"com.fsc.pokerserver.web"}]
