@@ -115,7 +115,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
         server.setHandler(context);
 
         NCSARequestLog requestLog = new NCSARequestLog();
-        String logFileName = System.getProperty("java.io.tmpdir") + "pokerserver-logs-yyyy_mm_dd.request.log";
+        String logFileName = System.getProperty("user.home") + "/pokerserver-logs-yyyy_mm_dd.request.log";
         logger.fine("Request log:" + logFileName);
 
         requestLog.setFilename(logFileName);
@@ -125,7 +125,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
         requestLog.setExtended(true);
         requestLog.setLogCookies(false);
         requestLog.setLogTimeZone("GMT");
-
+        server.setRequestLog(requestLog);
         context.addFilter(ObjectifyWebFilter.class, "/*",
                 EnumSet.of(DispatcherType.REQUEST));
 
@@ -191,6 +191,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
      * @param Player p
      */
     public void addPlayer(Player p) {
+        if (this.getListPlayer().contains(p)) return;
         this.getListPlayer().add(p);
     }
 
@@ -200,6 +201,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
      * @param Room r
      */
     public void addRoom(Room r) {
+        if (getListRoom().contains(r)) return;
         this.getListRoom().add(r);
         r.addRoomListener(this);
     }
@@ -400,7 +402,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
                     }
                     playerHands.setLength(playerHands.length() - 1);
                     playerHands.append("]");
-                    content+="&preflopHands="+playerHands.toString();
+                    content += "&preflopHands=" + playerHands.toString();
                 }
                 if (rge.getType() == GameAction.FLOP) {
                     content += "&flopcard=" + rge.getSrc().getBoard().getFlopCards().toString();

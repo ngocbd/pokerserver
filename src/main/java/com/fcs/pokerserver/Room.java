@@ -20,15 +20,12 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver;
 
+import com.fcs.pokerserver.events.*;
+import org.junit.Assert;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.fcs.pokerserver.events.*;
-import org.eclipse.jetty.util.annotation.ManagedOperation;
-
-import javax.management.MBeanOperationInfo;
-import javax.management.MXBean;
 
 /**
  * An instance of the Room class is created Room when user want to play Poker Game.
@@ -71,6 +68,7 @@ public class Room implements GameListener {
      * @param Player p
      */
     public void addPlayer(Player p) {
+        if (listPlayer.contains(p)) return;
         this.listPlayer.add(p);
         p.setCurrentRoom(this);
 
@@ -182,13 +180,16 @@ public class Room implements GameListener {
      *
      * @param Player master, BlindLevel blindLevel
      */
+    /**
+     * Add master into new Room, then create new game and add master into new game too.
+     * **/
     public Room(Player master, BlindLevel blindLevel) {
         this.master = master;
         this.blindLevel = blindLevel;
 
         this.RoomID = System.currentTimeMillis();
-
         this.createNewGame();
+        this.addPlayer(master);
     }
 
 
@@ -199,8 +200,10 @@ public class Room implements GameListener {
      */
     public Game createNewGame() {
         if (this.currentGame != null && this.currentGame.getStatus() != GameStatus.END_HAND) {
+
             return this.currentGame;
         }
+
         this.currentGame = new Game(this);
         this.currentGame.addGameListener(this);
         this.currentGame.addPlayer(this.master);
@@ -212,7 +215,7 @@ public class Room implements GameListener {
         return this.currentGame;
     }
 
-    public List<Player> getListPlayers(){
+    public List<Player> getListPlayers() {
         return listPlayer;
     }
 

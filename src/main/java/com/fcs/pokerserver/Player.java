@@ -59,7 +59,7 @@ public class Player {
      * Constructor set Id for the Player is current time millis
      */
     public Player() {
-        this.setId(String.valueOf(System.currentTimeMillis()));
+        this.setId(String.valueOf(System.nanoTime()));
     }
 
     /**
@@ -363,7 +363,7 @@ public class Player {
      * @return String jsonString
      */
     public String toString() {
-        return "{" +"\"Id\": \""+this.getId()+"\"Hand\": \""+this.getPlayerHand()+ "\"Name\": \"" + this.getName() + "\", \"Balance\": " + this.balance + ", \"RoundBet\": " + this.roundBet + "}";
+        return "{" +"\"Id\": \""+this.getId()+"\",\"Hand\": "+this.getPlayerHand()+ ",\"Name\": \"" + this.getName() + "\", \"Balance\": " + this.balance + ", \"RoundBet\": " + this.roundBet + "}";
     }
 
     /**

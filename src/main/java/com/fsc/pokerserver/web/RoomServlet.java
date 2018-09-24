@@ -103,7 +103,9 @@ public class RoomServlet extends HttpServlet {
 //		}
 //		System.out.println("Player in room: "+room.getListPlayer().size());
     }
-
+/**
+ * Room is created adhere.
+ * **/
     @Override
     public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -115,8 +117,6 @@ public class RoomServlet extends HttpServlet {
 
 
         server.addRoom(room);
-
-
         response.getWriter().println(room.getRoomID());
 
     }

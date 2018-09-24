@@ -20,8 +20,6 @@ THE SOFTWARE.
 
 package com.fsc.pokerserver.test;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,6 +27,8 @@ import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
+
+import static org.junit.Assert.*;
 
 /**
  * The class to test the Preflop and Bet in the game.
@@ -113,7 +113,26 @@ public class PreflopAndBetGameTest {
 
 //		assertEquals(game.getCurrentPlayer(), player3);
 	}
-	
+
+	@Test
+	public void test2PPreflop(){
+		Player player1 = new Player();
+		player1.setBalance(1000);
+		Player player2 = new Player();
+		player2.setBalance(1000);
+		Player player3 = new Player();
+		player3.setBalance(1000);
+		Room room = new Room(player2, BlindLevel.BLIND_10_20);
+		Game game = room.createNewGame();
+
+
+		room.addPlayer(player1);
+		room.addPlayer(player2);
+		room.addPlayer(player2);
+		game.setDealer(player2);
+		System.out.println("SB: "+game.getSmallBlind().getId());
+		System.out.println("BB: "+game.getBigBlind().getId());
+	}
 	/** 
 	 * Get current player in Flop.
 	 * */

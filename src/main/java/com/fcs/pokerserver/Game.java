@@ -36,6 +36,7 @@ import com.fcs.pokerserver.holder.Board;
 import com.fcs.pokerserver.holder.Hand;
 import com.fcs.pokerserver.holder.HandRank;
 import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
+import org.junit.Assert;
 
 
 /**
@@ -320,11 +321,10 @@ public class Game implements AbstractPlayerListener {
      * @param Player p
      */
     public void addPlayer(Player p) {
-
+        if (listPlayer.contains(p)) return;
         // check if timeout join after 15 second then Reject
         if (this.startTime == null || Duration.between(this.startTime, LocalDateTime.now()).getSeconds() <= 15) {
             this.listPlayer.add(p);
-//			p.addPlayerListener(this);
             p.attachListener(this);
             p.setCurrentGame(this);
 
@@ -419,9 +419,7 @@ public class Game implements AbstractPlayerListener {
         if (temp.isSittingOut()) {
             return getNextPlayer(temp);
         } else
-
             return temp;
-
     }
 
     /**
@@ -439,43 +437,7 @@ public class Game implements AbstractPlayerListener {
         this.bigBlind = this.getNextPlayer(this.smallBlind);
 
 		
-/*
-//      Check the condition if add the player not in playerlist, show error.
-		if (listPlayer.contains(dealer)) {
 
-			this.dealer = dealer;
-			
-
-
-			int sizeofPlayerList = this.getListPlayer().size();
-			int indexOfDealer = getIndexPlayerList(dealer);
-			int indexOfBigBlind = -1;
-			int indexOfSmallBlind = -1;
-			if (sizeofPlayerList >= 3) {
-				if (indexOfDealer == (sizeofPlayerList - 1)) {
-
-					indexOfSmallBlind = (indexOfDealer + 1) - sizeofPlayerList;
-					indexOfBigBlind = indexOfSmallBlind + 1;
-				} else if (indexOfDealer == (sizeofPlayerList - 2)) {
-
-					indexOfSmallBlind = indexOfDealer + 1;
-					indexOfBigBlind = (indexOfSmallBlind + 1) - sizeofPlayerList;
-				} else {
-
-					indexOfSmallBlind = indexOfDealer + 1;
-					indexOfBigBlind = indexOfSmallBlind + 1;
-				}
-				
-				//TODO change to use setter method 
-				this.bigBlind = listPlayer.get(indexOfBigBlind);
-				this.smallBlind = listPlayer.get(indexOfSmallBlind);
-
-			}
-
-		} else {
-			throw new AssertionFailedError("Player not in Game");
-		}
-*/
     }
 
     /**
