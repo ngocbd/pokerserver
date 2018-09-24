@@ -69,7 +69,7 @@ public class Player {
      */
     public Player(String name) {
         this.name = name;
-        this.setId(String.valueOf(System.currentTimeMillis()));
+        this.setId(name);
     }
 
     public void attachListener(AbstractPlayerListener listener) {

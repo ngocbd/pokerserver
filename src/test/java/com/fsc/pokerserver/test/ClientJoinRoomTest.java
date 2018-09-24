@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
-public class ClientJoinRoomTest implements MqttCallback {
+public class ClientJoinRoomTest {
 
     private String host = "http://localhost:8080/";
     private String arr[] = {"toan2", "danh2", "linh2", "chau2", "nghe2"};
@@ -24,6 +24,7 @@ public class ClientJoinRoomTest implements MqttCallback {
     @Before
     public void setUp() throws Exception {
         Thread.sleep(2000);
+        this.deleteUser();
     }
 
     public int getStatusCodeFromUrl(String url) throws IOException {
@@ -68,19 +69,4 @@ public class ClientJoinRoomTest implements MqttCallback {
         }
     }
 
-
-    @Override
-    public void connectionLost(Throwable throwable) {
-
-    }
-
-    @Override
-    public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-
-    }
-
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
-    }
 }
