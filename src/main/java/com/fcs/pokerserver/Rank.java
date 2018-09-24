@@ -34,11 +34,12 @@ public enum Rank {
 	SEVEN("7"),
 	EIGHT("8"),
 	NINE("9"),
-	TEN("T"),
-	JACK("J"),
-	QUEEN("Q"),
-	KING("K"),
-	ACE("A");
+//	TEN("T"),
+	TEN("10"),
+	JACK("jack"),
+	QUEEN("queen"),
+	KING("king"),
+	ACE("ace");
 
 	/**
 	 * Short string representation of the rank.

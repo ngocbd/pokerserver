@@ -125,7 +125,6 @@ public class Game implements AbstractPlayerListener {
             for (Player player : listPlayer) {
                 Card card = this.deck.dealCard();
                 player.getPlayerHand().addCard(card);
-
             }
 
         }
@@ -170,7 +169,7 @@ public class Game implements AbstractPlayerListener {
     }
 
     /**
-     * In flop games, this is the fourth card deal. It is the third round of betting
+     * In turn games, this is the fourth card deal. It is the third round of betting
      *
      * @throws AssertionError Next Round of Player is ready
      */
