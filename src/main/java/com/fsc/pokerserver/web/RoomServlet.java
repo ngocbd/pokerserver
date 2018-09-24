@@ -73,7 +73,6 @@ public class RoomServlet extends HttpServlet {
 //			List All room
             String data = Joiner.on(",").join(this.server.getListRoom());
             response.getWriter().println(data);
-
         }
     }
 
