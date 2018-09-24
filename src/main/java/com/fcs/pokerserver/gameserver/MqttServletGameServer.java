@@ -44,6 +44,7 @@ import javax.servlet.DispatcherType;
 
 import com.fcs.pokerserver.events.*;
 
+import com.fsc.pokerserver.web.*;
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
@@ -60,14 +61,6 @@ import org.joda.time.DateTime;
 
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
-
-
-import com.fsc.pokerserver.web.GameServlet;
-import com.fsc.pokerserver.web.LoginServlet;
-import com.fsc.pokerserver.web.ObjectifyWebFilter;
-import com.fsc.pokerserver.web.PokerTokenFilter;
-import com.fsc.pokerserver.web.RegisterServlet;
-import com.fsc.pokerserver.web.RoomServlet;
 
 
 /**
@@ -102,6 +95,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
         ServletHolder registerServlet = new ServletHolder(RegisterServlet.class);
         ServletHolder roomServlet = new ServletHolder(RoomServlet.class);
         ServletHolder gameServlet = new ServletHolder(GameServlet.class);
+        ServletHolder deleteUserServlet = new ServletHolder(DeleteUserServlet.class);
 
         Server server = new Server(8080);
         MBeanContainer mbContainer = new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
@@ -142,6 +136,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
         context.addServlet(registerServlet, "/api/register");
         context.addServlet(roomServlet, "/api/room");
         context.addServlet(gameServlet, "/api/game");
+        context.addServlet(deleteUserServlet, "/api/deluser");
 
         logger.warning("MqttServletGameServer starting..." + ManagementFactory.getRuntimeMXBean().getName());
         try {
