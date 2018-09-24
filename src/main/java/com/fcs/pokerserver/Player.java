@@ -29,19 +29,25 @@ import java.util.List;
 
 import com.fcs.pokerserver.events.*;
 import com.fcs.pokerserver.holder.Hand;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 /**
  * An instance of the Player class is created Player when user want to play Poker Game.
  *
  * @category com > fcs > pokerserver
  */
+@Entity
 public class Player {
     private long balance;
     private long roundBet = 0;
     private long gameBet = 0;
     private short round = 0;
     private long globalBalance;
+    @Index
     private String name;
+    @Id
     private String id;
     private boolean sittingOut = false;
     private Room currentRoom = null;
