@@ -6,6 +6,6 @@ before_install:
 script:
   - ./gradlew check
 before_install:
-  - wget https://storage.googleapis.com/apppokerserver.appspot.com/$GOOGLE_APPLICATION_CREDENTIALS_FILE
+  - wget $GOOGLE_APPLICATION_CREDENTIALS_FILE
 after_success:
   - bash <(curl -s https://codecov.io/bash)
