@@ -97,6 +97,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
         ServletHolder roomServlet = new ServletHolder(RoomServlet.class);
         ServletHolder gameServlet = new ServletHolder(GameServlet.class);
         ServletHolder deleteUserServlet = new ServletHolder(DeleteUserServlet.class);
+        ServletHolder getProfile = new ServletHolder(GetProfilePlayerServlet.class);
 
         Server server = new Server(8080);
         MBeanContainer mbContainer = new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
@@ -127,17 +128,18 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
         requestLog.setLogCookies(false);
         requestLog.setLogTimeZone("GMT");
         server.setRequestLog(requestLog);
-        context.addFilter(ObjectifyWebFilter.class, "/*",
-                EnumSet.of(DispatcherType.REQUEST));
+        context.addFilter(ObjectifyWebFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 
         context.addFilter(PokerTokenFilter.class, "/api/room", EnumSet.of(DispatcherType.REQUEST));
         context.addFilter(PokerTokenFilter.class, "/api/game", EnumSet.of(DispatcherType.REQUEST));
+//        context.addFilter(PokerTokenFilter.class, "/api/getprofile", EnumSet.of(DispatcherType.REQUEST));
 
         context.addServlet(loginServlet, "/api/login");
         context.addServlet(registerServlet, "/api/register");
         context.addServlet(roomServlet, "/api/room");
         context.addServlet(gameServlet, "/api/game");
         context.addServlet(deleteUserServlet, "/api/deluser");
+        context.addServlet(getProfile, "/api/getprofile");
 
         logger.warning("MqttServletGameServer starting..." + ManagementFactory.getRuntimeMXBean().getName());
         try {
