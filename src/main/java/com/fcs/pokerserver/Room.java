@@ -20,12 +20,19 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver;
 
-import com.fcs.pokerserver.events.*;
-import org.junit.Assert;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.fcs.pokerserver.events.AbstractGameEvent;
+import com.fcs.pokerserver.events.AbstractRoomEvent;
+import com.fcs.pokerserver.events.GameActRoomEvent;
+import com.fcs.pokerserver.events.GameAction;
+import com.fcs.pokerserver.events.GameListener;
+import com.fcs.pokerserver.events.RoomAction;
+import com.fcs.pokerserver.events.RoomListener;
+import com.fcs.pokerserver.events.RoundGameEvent;
+import com.fcs.pokerserver.events.VisitRoomEvent;
 
 /**
  * An instance of the Room class is created Room when user want to play Poker Game.
@@ -44,7 +51,7 @@ public class Room implements GameListener {
     private List<RoomListener> listeners = new ArrayList<RoomListener>();
 
     /**
-     * The method to add more listener to this Room.
+     * The method to add one more listener to this Room.
      *
      * @param RoomListener rl
      */
@@ -53,10 +60,10 @@ public class Room implements GameListener {
     }
 
     /**
-     * The method fire RoomEvent to all listener.
+     * The method fire a RoomEvent to all listener.
      */
     private void fireEvent(AbstractRoomEvent re) {
-        for (Iterator iterator = this.listeners.iterator(); iterator.hasNext(); ) {
+        for (Iterator<RoomListener> iterator = this.listeners.iterator(); iterator.hasNext(); ) {
             RoomListener listener = (RoomListener) iterator.next();
             listener.actionPerformed(re);
         }
@@ -64,7 +71,7 @@ public class Room implements GameListener {
 
     /**
      * The method to add the Player to the room.
-     *
+     * The player is also added to game if  current GameStatus is NOT_STARTED and game's player size less than 8 players
      * @param Player p
      */
     public void addPlayer(Player p) {

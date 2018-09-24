@@ -40,7 +40,7 @@ import org.junit.Assert;
 
 
 /**
- * An instance of the Game class is created Game to Player play Poker Game. This is the most important file in system.
+ * An instance of the Game class is created Game to Player play Poker Game. This is the most important class in project.
  *
  * @category com > fcs > pokerserver
  */
