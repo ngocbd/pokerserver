@@ -132,6 +132,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
 
         context.addFilter(PokerTokenFilter.class, "/api/room", EnumSet.of(DispatcherType.REQUEST));
         context.addFilter(PokerTokenFilter.class, "/api/game", EnumSet.of(DispatcherType.REQUEST));
+        context.addFilter(PokerTokenFilter.class, "/api/profile", EnumSet.of(DispatcherType.REQUEST));
 
         context.addServlet(loginServlet, "/api/login");
         context.addServlet(registerServlet, "/api/register");

@@ -29,6 +29,7 @@ import java.util.List;
 
 import com.fcs.pokerserver.events.*;
 import com.fcs.pokerserver.holder.Hand;
+import com.google.gson.annotations.Expose;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -40,6 +41,7 @@ import com.googlecode.objectify.annotation.Index;
  */
 @Entity
 public class Player {
+    @Expose
     private long balance;
     private long roundBet = 0;
     private long gameBet = 0;
@@ -60,6 +62,16 @@ public class Player {
 
     private Game currentGame = null;
 
+    public String toJson(){
+        return "{\"id\":\""+this.getId()+"\",\"name\":\""+this.getName()+"\",\"balance\":"+this.getBalance()+",\"globalBalance\":"+this.getGlobalBalance()+"}";
+
+    }
+
+    public static void main(String[] args) {
+        Player p = new Player();
+        p.setName("tuan");
+        System.out.println(p.toJson());
+    }
 
     /**
      * Constructor set Id for the Player is current time millis
@@ -369,7 +381,7 @@ public class Player {
      * @return String jsonString
      */
     public String toString() {
-        return "{" +"\"Id\": \""+this.getId()+"\",\"Hand\": "+this.getPlayerHand()+ ",\"Name\": \"" + this.getName() + "\", \"Balance\": " + this.balance + ", \"RoundBet\": " + this.roundBet + "}";
+        return "{" + "\"Id\": \"" + this.getId() + "\",\"Hand\": " + this.getPlayerHand() + ",\"Name\": \"" + this.getName() + "\", \"Balance\": " + this.balance + ", \"RoundBet\": " + this.roundBet + "}";
     }
 
     /**
