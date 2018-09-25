@@ -29,13 +29,13 @@ public enum Suit {
 //	DIAMONDS("\u2666"),
 //	HEARTS("\u2665"),
 //	SPADES("\u2660");
-	CLUBS("_of_clubs"),
-	DIAMONDS("_of_diamonds"),
-	HEARTS("_of_hearts"),
-	SPADES("_of_spades");
+	CLUBS("clubs"),
+	DIAMONDS("diamonds"),
+	HEARTS("hearts"),
+	SPADES("spades");
 
 	/**
-	 * Short string representation of the suit (one letter symbol).
+	 * Short string representation of the suit .
 	 */
 	private final String name;
 
@@ -50,7 +50,7 @@ public enum Suit {
 	 */
 	@Override
 	public String toString() {
-		return name;
+		return "_of_"+name;
 	}
 
 }

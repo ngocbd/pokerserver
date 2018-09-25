@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-public class ClientCreatedRoomTest implements MqttCallback {
+public class ClientCreatedRoomTest {
     private String host = "http://localhost:8080/";
     private String arr[] = {"toan2", "danh2", "linh2", "chau2", "nghe2"};
     MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
@@ -22,6 +22,7 @@ public class ClientCreatedRoomTest implements MqttCallback {
     @Before
     public void setUp() throws Exception {
         Thread.sleep(2000);
+        this.deleteUser();
     }
 
     public int getStatusCodeFromUrl(String url) throws IOException {
@@ -51,7 +52,7 @@ public class ClientCreatedRoomTest implements MqttCallback {
         assertEquals(200, this.getStatusCodeFromUrl(url));
     }
 
-    @Test
+
     public void deleteUser() throws IOException {
         for (int i = 0; i < arr.length; i++) {
             String url = host + "api/deluser?user=" + arr[i];
@@ -59,19 +60,4 @@ public class ClientCreatedRoomTest implements MqttCallback {
         }
     }
 
-
-    @Override
-    public void connectionLost(Throwable throwable) {
-
-    }
-
-    @Override
-    public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-
-    }
-
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
-    }
 }

@@ -20,7 +20,6 @@ THE SOFTWARE.
 
 package com.fsc.pokerserver.web;
 
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -33,7 +32,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
-import com.googlecode.objectify.ObjectifyService;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -66,8 +64,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         doOptions(request, response);
 
         response.setContentType("text/plain");
