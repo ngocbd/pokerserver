@@ -70,6 +70,7 @@ public class RoomServlet extends HttpServlet {
             return;
         } else if ("nextgame".equalsIgnoreCase(method)) {
             nextGame(request, response);
+            return;
         } else {
             //TODO return more data ex Blind level , number of player , game status ...
 //			List All room
@@ -78,12 +79,15 @@ public class RoomServlet extends HttpServlet {
         }
     }
 
-    public void nextGame(HttpServletRequest request, HttpServletResponse response) {
+    public void nextGame(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String id = request.getParameter("id");
         Room room = server.getRoomByID(Long.parseLong(id));
         checkNotNull(room, "Room " + id + " not found");
         room.nextGame();
         room.getCurrentGame().startGame();
+        //TODO return more data ex Blind level ,  player balance  , game status ...
+        String data = Joiner.on(",").join(room.getListPlayer());
+        response.getWriter().println(data);
     }
 
     @Override
@@ -105,7 +109,6 @@ public class RoomServlet extends HttpServlet {
 
         //TODO return more data ex Blind level ,  player balance  , game status ...
         String data = Joiner.on(",").join(room.getListPlayer());
-
         response.getWriter().println(data);
 //		for (int i = 0; i < room.getListPlayer().size(); i++) {
 //			System.out.println("Player Name in Room: "+room.getListPlayer().get(i).getName());

@@ -514,7 +514,7 @@ public class EndGameTest {
         player2.check();
         player3.check();
         player4.check();
-        player5.check();
+        player5.fold();
 
         game.endGame();
         room.getListPlayer().remove(4);
