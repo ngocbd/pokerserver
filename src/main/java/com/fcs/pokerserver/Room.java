@@ -33,6 +33,9 @@ import com.fcs.pokerserver.events.RoomAction;
 import com.fcs.pokerserver.events.RoomListener;
 import com.fcs.pokerserver.events.RoundGameEvent;
 import com.fcs.pokerserver.events.VisitRoomEvent;
+import com.google.common.base.Joiner;
+
+import javax.sql.rowset.Joinable;
 
 /**
  * An instance of the Room class is created Room when user want to play Poker Game.
@@ -49,6 +52,10 @@ public class Room implements GameListener {
     private List<Player> listPlayer = new ArrayList<Player>();
 
     private List<RoomListener> listeners = new ArrayList<RoomListener>();
+
+    public Player getMaster() {
+        return master;
+    }
 
     /**
      * The method to add one more listener to this Room.
@@ -201,7 +208,6 @@ public class Room implements GameListener {
         this.createNewGame();
         this.addPlayer(master);
     }
-
 
     /**
      * The method to create the new Game in the Room

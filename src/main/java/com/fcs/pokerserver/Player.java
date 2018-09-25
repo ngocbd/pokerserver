@@ -62,16 +62,11 @@ public class Player {
 
     private Game currentGame = null;
 
-    public String toJson(){
-        return "{\"id\":\""+this.getId()+"\",\"name\":\""+this.getName()+"\",\"balance\":"+this.getBalance()+",\"globalBalance\":"+this.getGlobalBalance()+"}";
+    public String toJson() {
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + "}";
 
     }
 
-    public static void main(String[] args) {
-        Player p = new Player();
-        p.setName("tuan");
-        System.out.println(p.toJson());
-    }
 
     /**
      * Constructor set Id for the Player is current time millis

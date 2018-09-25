@@ -5,6 +5,7 @@ import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +14,11 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
+
+@WebServlet(
+        name = "GetProfilePlayerServlet",
+        urlPatterns = {"/api/register"}
+)
 
 public class GetProfilePlayerServlet extends HttpServlet {
 
@@ -37,9 +43,7 @@ public class GetProfilePlayerServlet extends HttpServlet {
         doOptions(req, resp);
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
-        Gson gson = new Gson();
         String name = req.getParameter("name");
-//        checkArgument(userName != null, "username can't not be null");
         Player player = server.getPlayerByName(name);
         if (player == null) {
             logger.warning("Player does not exist or has not login!");
