@@ -68,12 +68,22 @@ public class RoomServlet extends HttpServlet {
         } else if ("join".equalsIgnoreCase(method)) {
             doPost(request, response);
             return;
+        } else if ("nextgame".equalsIgnoreCase(method)) {
+            nextGame(request, response);
         } else {
             //TODO return more data ex Blind level , number of player , game status ...
 //			List All room
             String data = Joiner.on(",").join(this.server.getListRoom());
             response.getWriter().println(data);
         }
+    }
+
+    public void nextGame(HttpServletRequest request, HttpServletResponse response) {
+        String id = request.getParameter("id");
+        Room room = server.getRoomByID(Long.parseLong(id));
+        checkNotNull(room, "Room " + id + " not found");
+        room.nextGame();
+        room.getCurrentGame().startGame();
     }
 
     @Override
@@ -102,9 +112,10 @@ public class RoomServlet extends HttpServlet {
 //		}
 //		System.out.println("Player in room: "+room.getListPlayer().size());
     }
-/**
- * Room is created adhere.
- * **/
+
+    /**
+     * Room is created adhere.
+     **/
     @Override
     public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 

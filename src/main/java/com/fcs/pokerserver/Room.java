@@ -72,6 +72,7 @@ public class Room implements GameListener {
     /**
      * The method to add the Player to the room.
      * The player is also added to game if  current GameStatus is NOT_STARTED and game's player size less than 8 players
+     *
      * @param Player p
      */
     public void addPlayer(Player p) {
@@ -229,9 +230,10 @@ public class Room implements GameListener {
      * @return Game currentGame
      */
     public Game nextGame() {
+        assert this.currentGame.getStatus() == GameStatus.END_HAND;
         Game previous_Game = this.currentGame;
         Player previous_dealer = previous_Game.getDealer();
-        int previous_dealer_index = previous_Game.getListPlayer().indexOf(previous_dealer);
+        int previous_dealer_index = previous_Game.getDealer_index();
         if (this.currentGame != null && this.currentGame.getStatus() != GameStatus.END_HAND) {
             return this.currentGame;
         }
@@ -259,12 +261,32 @@ public class Room implements GameListener {
         this.currentGame.setListPlayer(newListPlayer);
         /**
          * Set new dealer for new Game
+         * In case dealer has not quit yet.
          * */
-        // In case dealer hasnt quit yet.
-        if (currentGame.getListPlayer().contains(previous_dealer)) currentGame.setDealer(currentGame.getNextPlayer(previous_dealer));
-        //In case previous dealer did quit.
-        if (previous_dealer_index<8) currentGame.setDealer(currentGame.getListPlayer().get(previous_dealer_index+1));
-        if (previous_dealer_index==8) currentGame.setDealer(currentGame.getListPlayer().get(0));
+
+        if (currentGame.getListPlayer().contains(previous_dealer)) {
+            Player newDealer = currentGame.getNextPlayer(previous_dealer);
+            System.out.println(newDealer);
+            currentGame.setDealer(newDealer);
+
+        }
+        /**
+         * In case previous dealer did quit. New Dealer will lie on next index of prev_dealer.
+         * In case next game got less players than prev-game. Dealer will be set by the index 0.
+         * **/
+        else if (previous_dealer_index < 8) {
+            try {
+                currentGame.setDealer(currentGame.getListPlayer().get(previous_dealer_index + 1));
+            } catch (IndexOutOfBoundsException e) {
+                currentGame.setDealer(currentGame.getListPlayer().get(0));
+            }
+        } else if (previous_dealer_index == 8) currentGame.setDealer(currentGame.getListPlayer().get(0));
+
+
+        /**
+         * In case prev-dealer did stay on the last position. The new dealer will be set by index 0
+         * */
+
 
         //TODO not good because game event should fire from game
         GameActRoomEvent re = new GameActRoomEvent(this);
