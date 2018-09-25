@@ -577,61 +577,6 @@ public class Game implements AbstractPlayerListener {
 //	}
 
     /**
-     * Override the actionPerformed method to sure the Player has action need in the game.
-     * @param PlayerEvent pe.
-     * @throws AssertionError if the Player is not the current player or the player is not in game. The Round of Bet is not less than the current round bet.
-     * @return void.
-     * */
-//	@Override
-//	public void actionPerformed(PlayerEvent event) {
-//		Player p = event.getSource();
-//
-//		assert p==this.getCurrentPlayer();
-////		System.out.println(event.getAction());
-//		if(listPlayer.contains(p))
-//		{
-//			if(event.getAction()==PlayerAction.BET)
-//			{
-//				assert p.getRoundBet()>=this.currentRoundBet;
-//
-//				this.potBalance+= (long)event.agruments.get("amount");
-//				this.currentRoundBet=p.getRoundBet(); // set current bet equal to this bet amount
-//
-//				//TODO Temporary set check next round for game
-//				// if next round ready then next Player will be left person of dealer
-//				if(isNextRoundReady())
-//				{
-//					this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
-//				}
-//				else
-//				{
-//					Player next = this.getNextPlayer(p);
-//					if(next!=null)
-//					{
-//						this.setCurrentPlayer(next);
-//					}
-//				}
-//			}
-//
-//			if(event.getAction()==PlayerAction.FOLD)
-//			{
-//				p.setSittingOut(true);
-//				this.setCurrentPlayer(this.getNextPlayer(p));
-//			}
-//
-//			if(event.getAction()==PlayerAction.CHECK)
-//			{
-//				this.setCurrentPlayer(this.getNextPlayer(p));
-//			}
-//
-//			GameEvent ge = new GameEvent(this, GameAction.PLAYEREVENT);
-//			ge.agruments.put("playerEvent", event);
-//			this.fireEvent(ge);
-//		}
-//
-//	}
-
-    /**
      * Override the actionPerformed method according to Type of EVENT to make sure the Player has action need in the game.
      *
      * @param AbstractPlayerEvent e.
