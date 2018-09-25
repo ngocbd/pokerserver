@@ -57,6 +57,7 @@ public class Game implements AbstractPlayerListener {
     private Room room;
     private GameStatus status;
     private Player dealer;
+    private int dealer_index;
     private Player bigBlind;
     private Player smallBlind;
     private Player currentPlayer = null;
@@ -323,9 +324,13 @@ public class Game implements AbstractPlayerListener {
         if (listPlayer.contains(p)) return;
         // check if timeout join after 15 second then Reject
         if (this.startTime == null || Duration.between(this.startTime, LocalDateTime.now()).getSeconds() <= 15) {
-            this.listPlayer.add(p);
-            p.attachListener(this);
-            p.setCurrentGame(this);
+            if (listPlayer.size()<8){
+                this.listPlayer.add(p);
+                p.attachListener(this);
+                p.setCurrentGame(this);
+            }else{
+                p.setSittingOut(true);
+            }
 
         } else {
             throw new RejectedExecutionException("Reject player join because 15 seconds is timeout");
@@ -386,6 +391,9 @@ public class Game implements AbstractPlayerListener {
         return dealer;
     }
 
+    public void setListPlayer(List<Player> listPlayer) {
+        this.listPlayer = listPlayer;
+    }
 //	private int getIndexPlayerList(Player player) {
 //		int index = 0;
 //		for (; index < this.getListPlayer().size(); index++) {
@@ -432,11 +440,19 @@ public class Game implements AbstractPlayerListener {
         assert this.listPlayer.contains(dealer);
         this.dealer = dealer;
         this.smallBlind = this.getNextPlayer(this.dealer);
-
         this.bigBlind = this.getNextPlayer(this.smallBlind);
+        this.dealer_index = this.listPlayer.indexOf(dealer);
 
-		
 
+
+    }
+
+    public int getDealer_index() {
+        return dealer_index;
+    }
+
+    public void setDealer_index(int dealer_index) {
+        this.dealer_index = dealer_index;
     }
 
     /**

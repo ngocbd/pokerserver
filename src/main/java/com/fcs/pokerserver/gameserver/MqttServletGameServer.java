@@ -396,8 +396,8 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
             if (ge instanceof RoundGameEvent) {
                 RoundGameEvent rge = (RoundGameEvent) ge;
                 Game src = ge.getSrc();
-                if (rge.getType()==GameAction.WAITTING){
-                    content+="&sb="+src.getSmallBlind().getId()+"&bb="+src.getSmallBlind().getId();
+                if (rge.getType() == GameAction.WAITTING) {
+                    content += "&sb=" + src.getSmallBlind().getId() + "&bb=" + src.getSmallBlind().getId() + "&dealer=" + src.getDealer().getId();
                 }
                 if (rge.getType() == GameAction.PREFLOP) {
                     List<Player> players = rge.getSrc().getListPlayer();

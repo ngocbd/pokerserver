@@ -21,6 +21,7 @@ THE SOFTWARE.
 package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -32,248 +33,560 @@ import com.fcs.pokerserver.Room;
 
 /**
  * The class to test the end game.
+ *
  * @category com > fcs > pokerserver > test
- * */
+ */
 
 public class EndGameTest {
-	private Player master;
-	private Room room;
+    private Player master;
+    private Room room;
 
-	@Before
-	public void setUp() throws Exception {
-		master = new Player("Room master");
-		room = new Room(master, BlindLevel.BLIND_10_20);
-		
-	}
-	/*--------------------- End Game -----------------------*/
-	
-	/**  
-	 * Error order number from player Check, bet, fold before end game.
-	 * */
-	@Test(expected = AssertionError.class)
-	public void testCheckBetFoldBeforeEndGame() {
-		Game game = room.createNewGame();
+    @Before
+    public void setUp() throws Exception {
+        master = new Player("Room master");
+        room = new Room(master, BlindLevel.BLIND_10_20);
 
-		Player player2 = new Player("Player 2");
-		game.addPlayer(player2);
-		Player player3 = new Player("Player 3");
-		game.addPlayer(player3);
-		Player player4 = new Player("Player 4");
-		game.addPlayer(player4);
-		Player player5 = new Player("Player 5");
-		game.addPlayer(player5);
+    }
+    /*--------------------- End Game -----------------------*/
 
-		game.setDealer(player5);
+    /**
+     * Error order number from player Check, bet, fold before end game.
+     */
+    @Test(expected = AssertionError.class)
+    public void testCheckBetFoldBeforeEndGame() {
+        Game game = room.createNewGame();
 
-		master.setBalance(1000);
-		player2.setBalance(1000);
-		player3.setBalance(1000);
-		player4.setBalance(1000);
-		player5.setBalance(1000);
+        Player player2 = new Player("Player 2");
+        game.addPlayer(player2);
+        Player player3 = new Player("Player 3");
+        game.addPlayer(player3);
+        Player player4 = new Player("Player 4");
+        game.addPlayer(player4);
+        Player player5 = new Player("Player 5");
+        game.addPlayer(player5);
 
-		game.startGame();
-		
-		game.preflop();
-		player3.fold();
-		player4.bet(20);
-		player5.bet(30);
-		master.bet(20);
-		player2.bet(10);
-		player4.bet(10);
-		
-		game.flop();
-		master.check();
-		player2.check();
-		player4.fold();
-		player5.bet(10);
-		master.bet(10);
-		player2.bet(10); 	 
+        game.setDealer(player5);
 
-		game.turn();
-		master.check();
-		player2.bet(20);
-		player5.bet(20);
-		master.fold();
-		
-		game.river();
-		player2.bet(20);
+        master.setBalance(1000);
+        player2.setBalance(1000);
+        player3.setBalance(1000);
+        player4.setBalance(1000);
+        player5.setBalance(1000);
+
+        game.startGame();
+
+        game.preflop();
+        player3.fold();
+        player4.bet(20);
+        player5.bet(30);
+        master.bet(20);
+        player2.bet(10);
+        player4.bet(10);
+
+        game.flop();
+        master.check();
+        player2.check();
+        player4.fold();
+        player5.bet(10);
+        master.bet(10);
+        player2.bet(10);
+
+        game.turn();
+        master.check();
+        player2.bet(20);
+        player5.bet(20);
+        master.fold();
+
+        game.river();
+        player2.bet(20);
 //		player5 need bet before player2
-		player2.fold();
-		player5.bet(30);
-		
-	}
-	
-	
-	/** 
-	 * call end game although current round bet not equal
-	 * */
-	@Test(expected = AssertionError.class)
-	public void testCallEndGameAlthoughCurrentRoundBetNotEqual() {
-		Game game = room.createNewGame();
+        player2.fold();
+        player5.bet(30);
 
-		Player player2 = new Player("Player 2");
-		game.addPlayer(player2);
-		Player player3 = new Player("Player 3");
-		game.addPlayer(player3);
-		Player player4 = new Player("Player 4");
-		game.addPlayer(player4);
-		Player player5 = new Player("Player 5");
-		game.addPlayer(player5);
+    }
 
-		game.setDealer(player5);
 
-		master.setBalance(1000);
-		player2.setBalance(1000);
-		player3.setBalance(1000);
-		player4.setBalance(1000);
-		player5.setBalance(1000);
+    /**
+     * call end game although current round bet not equal
+     */
+    @Test(expected = AssertionError.class)
+    public void testCallEndGameAlthoughCurrentRoundBetNotEqual() {
 
-		game.startGame();
-		
-		game.preflop();
-		player3.fold();
-		player4.bet(20);
-		player5.bet(30);
-		master.bet(20);
-		player2.bet(10);
-		player4.bet(10);
-		
-		game.flop();
-		master.check();
-		player2.check();
-		player4.fold();
-		player5.bet(10);
-		master.bet(10);
-		player2.bet(10); 	 
+        Game game = room.createNewGame();
 
-		game.turn();
-		master.check();
-		player2.bet(20);
-		player5.bet(20);
-		master.fold();
-		
-		game.river();
-		player2.bet(20);
-		player5.bet(30);
-		player2.bet(20);
-		
-		game.endGame();
-		assertEquals(game.getPotBalance(), 270);
-	}
-	
-	/**  
-	 * Get pot from game after end game.
-	 * */
-	@Test
-	public void testGetPotAfterEndGame() {
-		Game game = room.createNewGame();
+        Player player2 = new Player("Player 2");
+        game.addPlayer(player2);
+        Player player3 = new Player("Player 3");
+        game.addPlayer(player3);
+        Player player4 = new Player("Player 4");
+        game.addPlayer(player4);
+        Player player5 = new Player("Player 5");
+        game.addPlayer(player5);
 
-		Player player2 = new Player("Player 2");
-		game.addPlayer(player2);
-		Player player3 = new Player("Player 3");
-		game.addPlayer(player3);
-		Player player4 = new Player("Player 4");
-		game.addPlayer(player4);
-		Player player5 = new Player("Player 5");
-		game.addPlayer(player5);
+        game.setDealer(player5);
 
-		game.setDealer(player5);
+        master.setBalance(1000);
+        player2.setBalance(1000);
+        player3.setBalance(1000);
+        player4.setBalance(1000);
+        player5.setBalance(1000);
 
-		master.setBalance(1000);
-		player2.setBalance(1000);
-		player3.setBalance(1000);
-		player4.setBalance(1000);
-		player5.setBalance(1000);
+        game.startGame();
 
-		game.startGame();
-		
-		game.preflop();
-		player3.fold();
-		player4.bet(20);
-		player5.bet(30);
-		master.bet(20);
-		player2.bet(10);
-		player4.bet(10);
-		
-		game.flop();
-		master.check();
-		player2.check();
-		player4.fold();
-		player5.bet(10);
-		master.bet(10);
-		player2.bet(10); 	 
+        game.preflop();
+        player3.fold();
+        player4.bet(20);
+        player5.bet(30);
+        master.bet(20);
+        player2.bet(10);
+        player4.bet(10);
 
-		game.turn();
-		master.check();
-		player2.bet(20);
-		player5.bet(20);
-		master.fold();
-		
-		game.river();
-		player2.bet(20);
-		player5.bet(30);
-		player2.fold();
-		
-		game.endGame();
-		
-		assertEquals(game.getPotBalance(), 240);
-	}
-	
-	/**  
-	 * Get cards from game after end game.
-	 * */
-	@Test
-	public void testGetCardsAfterEndGame() {
-		Game game = room.createNewGame();
+        game.flop();
+        master.check();
+        player2.check();
+        player4.fold();
+        player5.bet(10);
+        master.bet(10);
+        player2.bet(10);
 
-		Player player2 = new Player("Player 2");
-		game.addPlayer(player2);
-		Player player3 = new Player("Player 3");
-		game.addPlayer(player3);
-		Player player4 = new Player("Player 4");
-		game.addPlayer(player4);
-		Player player5 = new Player("Player 5");
-		game.addPlayer(player5);
+        game.turn();
+        master.check();
+        player2.bet(20);
+        player5.bet(20);
+        master.fold();
 
-		game.setDealer(player5);
+        game.river();
+        player2.bet(20);
+        player5.bet(30);
+        player2.bet(20);
 
-		master.setBalance(1000);
-		player2.setBalance(1000);
-		player3.setBalance(1000);
-		player4.setBalance(1000);
-		player5.setBalance(1000);
+        game.endGame();
+        assertEquals(game.getPotBalance(), 270);
+    }
 
-		game.startGame();
-		
-		game.preflop();
-		player3.fold();
-		player4.bet(20);
-		player5.bet(30);
-		master.bet(20);
-		player2.bet(10);
-		player4.bet(10);
-		
-		game.flop();
-		master.check();
-		player2.check();
-		player4.fold();
-		player5.bet(10);
-		master.bet(10);
-		player2.bet(10); 	 
+    /**
+     * Get pot from game after end game.
+     */
+    @Test
+    public void testGetPotAfterEndGame() {
+        Game game = room.createNewGame();
 
-		game.turn();
-		master.check();
-		player2.bet(20);
-		player5.bet(20);
-		master.fold();
-		
-		game.river();
-		player2.bet(20);
-		player5.bet(30);
-		player2.fold();
-		
-		game.endGame();
-		
-		assertEquals(game.getBoard().getCardNumber(),5);
-	}
+        Player player2 = new Player("Player 2");
+        game.addPlayer(player2);
+        Player player3 = new Player("Player 3");
+        game.addPlayer(player3);
+        Player player4 = new Player("Player 4");
+        game.addPlayer(player4);
+        Player player5 = new Player("Player 5");
+        game.addPlayer(player5);
+
+        game.setDealer(player5);
+
+        master.setBalance(1000);
+        player2.setBalance(1000);
+        player3.setBalance(1000);
+        player4.setBalance(1000);
+        player5.setBalance(1000);
+
+        game.startGame();
+
+        game.preflop();
+        player3.fold();
+        player4.bet(20);
+        player5.bet(30);
+        master.bet(20);
+        player2.bet(10);
+        player4.bet(10);
+
+        game.flop();
+        master.check();
+        player2.check();
+        player4.fold();
+        player5.bet(10);
+        master.bet(10);
+        player2.bet(10);
+
+        game.turn();
+        master.check();
+        player2.bet(20);
+        player5.bet(20);
+        master.fold();
+
+        game.river();
+        player2.bet(20);
+        player5.bet(30);
+        player2.fold();
+
+        game.endGame();
+
+        assertEquals(game.getPotBalance(), 240);
+    }
+
+    /**
+     * Get cards from game after end game.
+     */
+    @Test
+    public void testGetCardsAfterEndGame() {
+        Game game = room.createNewGame();
+
+        Player player2 = new Player("Player 2");
+        game.addPlayer(player2);
+        Player player3 = new Player("Player 3");
+        game.addPlayer(player3);
+        Player player4 = new Player("Player 4");
+        game.addPlayer(player4);
+        Player player5 = new Player("Player 5");
+        game.addPlayer(player5);
+
+        game.setDealer(player5);
+
+        master.setBalance(1000);
+        player2.setBalance(1000);
+        player3.setBalance(1000);
+        player4.setBalance(1000);
+        player5.setBalance(1000);
+
+        game.startGame();
+
+        game.preflop();
+        player3.fold();
+        player4.bet(20);
+        player5.bet(30);
+        master.bet(20);
+        player2.bet(10);
+        player4.bet(10);
+
+        game.flop();
+        master.check();
+        player2.check();
+        player4.fold();
+        player5.bet(10);
+        master.bet(10);
+        player2.bet(10);
+
+        game.turn();
+        master.check();
+        player2.bet(20);
+        player5.bet(20);
+        master.fold();
+
+        game.river();
+        player2.bet(20);
+        player5.bet(30);
+        player2.fold();
+
+        game.endGame();
+
+        assertEquals(game.getBoard().getCardNumber(), 5);
+    }
+
+    @Test
+    public void testNextGame_noOneLeft() {
+        Player master = new Player("master");
+        Room room = new Room(master, BlindLevel.BLIND_10_20);
+        Game game = room.createNewGame();
+
+        Player player2 = new Player("Player 2");
+        game.addPlayer(player2);
+        Player player3 = new Player("Player 3");
+        game.addPlayer(player3);
+        Player player4 = new Player("Player 4");
+        game.addPlayer(player4);
+        Player player5 = new Player("Player 5");
+        game.addPlayer(player5);
+
+        game.setDealer(player5);
+
+        master.setBalance(1000);
+        player2.setBalance(1000);
+        player3.setBalance(1000);
+        player4.setBalance(1000);
+        player5.setBalance(1000);
+
+        game.startGame();
+        game.preflop();
+        player3.bet(20);
+        player4.bet(20);
+        player5.bet(20);
+        master.bet(10);
+
+        game.flop();
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+
+
+        game.turn();
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+
+        game.river();
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+
+        game.endGame();
+        game = room.nextGame();
+        /**
+         * Dealer will be set on player1 (master)*/
+        assertSame(game.getDealer(), master);
+    }
+
+    @Test
+    public void testNextGame_newPlayerJoin() {
+        Player master = new Player("master");
+        Room room = new Room(master, BlindLevel.BLIND_10_20);
+        Game game = room.createNewGame();
+
+        Player player2 = new Player("Player 2");
+        game.addPlayer(player2);
+        Player player3 = new Player("Player 3");
+        game.addPlayer(player3);
+        Player player4 = new Player("Player 4");
+        game.addPlayer(player4);
+        Player player5 = new Player("Player 5");
+        game.addPlayer(player5);
+
+        game.setDealer(player5);
+
+        master.setBalance(1000);
+        player2.setBalance(1000);
+        player3.setBalance(1000);
+        player4.setBalance(1000);
+        player5.setBalance(1000);
+
+        game.startGame();
+        game.preflop();
+        player3.bet(20);
+        player4.bet(20);
+        player5.bet(20);
+        master.bet(10);
+
+        game.flop();
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+
+
+        game.turn();
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+
+        game.river();
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+
+        game.endGame();
+        Player player6 = new Player("Player6");
+        room.addPlayer(player6);
+        game = room.nextGame();
+        /**
+         * Dealer will be set on player6*/
+        assertSame(game.getDealer(), player6);
+    }
+
+    @Test
+    public void testNextGame_PlayersFold() {
+        Player master = new Player("master");
+        Room room = new Room(master, BlindLevel.BLIND_10_20);
+        Game game = room.createNewGame();
+
+        Player player2 = new Player("Player 2");
+        room.addPlayer(player2);
+        Player player3 = new Player("Player 3");
+        room.addPlayer(player3);
+        Player player4 = new Player("Player 4");
+        room.addPlayer(player4);
+        Player player5 = new Player("Player 5");
+        room.addPlayer(player5);
+
+        game.setDealer(player5);
+
+        master.setBalance(1000);
+        player2.setBalance(1000);
+        player3.setBalance(1000);
+        player4.setBalance(1000);
+        player5.setBalance(1000);
+
+        game.startGame();
+        game.preflop();
+        player3.bet(20);
+        player4.bet(20);
+        player5.bet(20);
+        master.bet(10);
+
+        game.flop();
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+
+
+        game.turn();
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+
+        game.river();
+        master.check();
+        player2.fold();
+        player3.fold();
+        player4.check();
+        player5.check();
+
+        game.endGame();
+//        for (Player p : game.getListPlayer()){
+//            System.out.println(p.getName());
+//        }
+
+        game = room.nextGame();
+
+
+        /**
+         * Dealer will be set on player 2*/
+        assertSame(game.getDealer(), player2);
+    }
+    @Test
+    public void testNextGame_DealerQuit() {
+        Player master = new Player("master");
+        Room room = new Room(master, BlindLevel.BLIND_10_20);
+        Game game = room.createNewGame();
+
+        Player player2 = new Player("Player 2");
+        room.addPlayer(player2);
+        Player player3 = new Player("Player 3");
+        room.addPlayer(player3);
+        Player player4 = new Player("Player 4");
+        room.addPlayer(player4);
+        Player player5 = new Player("Player 5");
+        room.addPlayer(player5);
+
+        game.setDealer(player5);
+
+        master.setBalance(1000);
+        player2.setBalance(1000);
+        player3.setBalance(1000);
+        player4.setBalance(1000);
+        player5.setBalance(1000);
+
+        game.startGame();
+        game.preflop();
+        player3.bet(20);
+        player4.bet(20);
+        player5.bet(20);
+        master.bet(10);
+
+        game.flop();
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+
+
+        game.turn();
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+
+        game.river();
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+
+        game.endGame();
+        room.getListPlayer().remove(4);
+        game = room.nextGame();
+
+
+        /**
+         * Dealer will be set on P1(master)*/
+        assertSame(game.getDealer(), master);
+    }
+    @Test
+    public void testNextGame_DealerQuit2() {
+        /**
+         * Player 3 was set as dealer*/
+        Player master = new Player("master");
+        Room room = new Room(master, BlindLevel.BLIND_10_20);
+        Game game = room.createNewGame();
+
+        Player player2 = new Player("Player 2");
+        room.addPlayer(player2);
+        Player player3 = new Player("Player 3");
+        room.addPlayer(player3);
+        Player player4 = new Player("Player 4");
+        room.addPlayer(player4);
+        Player player5 = new Player("Player 5");
+        room.addPlayer(player5);
+
+        game.setDealer(player3);
+
+        master.setBalance(1000);
+        player2.setBalance(1000);
+        player3.setBalance(1000);
+        player4.setBalance(1000);
+        player5.setBalance(1000);
+
+        game.startGame();
+        game.preflop();
+        master.bet(20);
+        player2.bet(20);
+        player3.bet(20);
+        player4.bet(10);
+
+        game.flop();
+        player4.check();
+        player5.check();
+        master.check();
+        player2.check();
+        player3.check();
+
+
+        game.turn();
+        player4.check();
+        player5.check();
+        master.check();
+        player2.check();
+        player3.check();
+
+        game.river();
+        player4.check();
+        player5.check();
+        master.check();
+        player2.check();
+        player3.check();
+
+        game.endGame();
+        room.getListPlayer().remove(2);
+        game.getListPlayer().remove(2);
+        game = room.nextGame();
+
+
+        /**
+         * Dealer will be set on P5*/
+        assertSame(game.getDealer(), player5);
+    }
 }
