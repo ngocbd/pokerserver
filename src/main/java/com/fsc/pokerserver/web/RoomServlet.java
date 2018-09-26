@@ -46,7 +46,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @WebServlet(name = "RoomServlet", urlPatterns = {"/api/room"})
 public class RoomServlet extends HttpServlet {
     private MqttServletGameServer server = MqttServletGameServer.getInstance();
-    Logger logger = Logger.getLogger(RoomServlet.class.getSimpleName());
 
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

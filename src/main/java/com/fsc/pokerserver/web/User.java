@@ -106,21 +106,5 @@ public class User {
 		this.balance = balance;
 	}
 
-	public static void main(String[] args) {
-		Room room = new Room(new Player("master"), BlindLevel.BLIND_10_20);
-		StringBuilder data = new StringBuilder("{\"id\":" + room.getRoomID() + ",\"master\":\"" + room.getMaster().getId() + "\",\"blindLevel\":\""
-				+ room.getBlindLevel().toString() + "\",\"players\":");
-		StringBuilder builder = new StringBuilder();
-		builder.append("[");
-		for (Player p : room.getListPlayer()) {
-			builder.append(p.toJson());
-			builder.append(",");
-		}
-		builder.setLength(builder.length() - 1);
-		builder.append("]");
-		data.append(builder.toString());
-		data.append("}");
-		System.out.println(data.toString());
-	}
 	
 }
