@@ -50,13 +50,13 @@ public class Game implements AbstractPlayerListener {
     private List<Player> listPlayer = new ArrayList<Player>();
     private Board board = new Board();
     private Deck deck = null;
-    private long id;
-    private long potBalance = 0;
-    private long currentRoundBet = 0;
-    private short round = 0;
-    private Room room;
-    private GameStatus status;
-    private Player dealer;
+    private long id; //ok
+    private long potBalance = 0;//ok
+    private long currentRoundBet = 0;//ok
+    private short round = 0;//ok
+    private Room room;//ok
+    private GameStatus status;//ok
+    private Player dealer;//ok
     private int dealer_index;
     private Player bigBlind;
     private Player smallBlind;
@@ -69,6 +69,36 @@ public class Game implements AbstractPlayerListener {
     private LocalDateTime startTime = null; // meaning not started
 
     private List<GameListener> listeners = new ArrayList<GameListener>();
+
+    @Override
+    public String toString() {
+        String flopcard = null;
+        String turncard = null;
+        String rivercard = null;
+        try {
+            flopcard = board.getFlopCards().toString();
+        } catch (IndexOutOfBoundsException e) {
+        }
+        try {
+            turncard = board.getTurnCard().toString();
+        } catch (IndexOutOfBoundsException e) {
+        }
+        try {
+            rivercard = board.getRiverCard().toString();
+        } catch (IndexOutOfBoundsException e) {
+        }
+        StringBuilder data = new StringBuilder("{\"id\":" + this.getId() + ",\"potBalance\":" + this.getPotBalance() + ",\"currentRoundBet\":" + this.getCurrentRoundBet());
+        data.append(",\"gameStatus\":\"" + this.getStatus().toString());
+        data.append("\",\"dealer\":\"" + (this.getDealer() != null ? this.getDealer().getId() : null));
+        data.append("\",\"bigBlind\":\"" + (this.getBigBlind() != null ? this.getBigBlind().getId() : null));
+        data.append("\",\"smallBlind\":\"" + (this.getSmallBlind() != null ? this.getSmallBlind().getId() : null));
+        data.append("\",\"currentPlayer\":\"" + (this.getCurrentPlayer() != null ? this.getCurrentPlayer().getId() : null));
+        data.append("\",\"flopCard\":" + flopcard);
+        data.append(",\"turncard\":" + turncard);
+        data.append(",\"rivercard\":" + rivercard);
+        data.append(",\"players\":" + listPlayer + "}");
+        return data.toString();
+    }
 
     /**
      * Create new Game in Room
@@ -324,11 +354,11 @@ public class Game implements AbstractPlayerListener {
         if (listPlayer.contains(p)) return;
         // check if timeout join after 15 second then Reject
         if (this.startTime == null || Duration.between(this.startTime, LocalDateTime.now()).getSeconds() <= 15) {
-            if (listPlayer.size()<8){
+            if (listPlayer.size() < 8) {
                 this.listPlayer.add(p);
                 p.attachListener(this);
                 p.setCurrentGame(this);
-            }else{
+            } else {
                 p.setSittingOut(true);
             }
 
@@ -442,7 +472,6 @@ public class Game implements AbstractPlayerListener {
         this.smallBlind = this.getNextPlayer(this.dealer);
         this.bigBlind = this.getNextPlayer(this.smallBlind);
         this.dealer_index = this.listPlayer.indexOf(dealer);
-
 
 
     }

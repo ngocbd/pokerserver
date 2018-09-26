@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
@@ -143,11 +144,24 @@ public class GameServlet extends HttpServlet {
             case "roundcheck":
                 response.getWriter().println(p.getCurrentGame().isNextRoundReady());
                 break;
+            case "gamestatus":
+                getGameStatus(request, response);
+                break;
             default:
                 String data = Joiner.on(",").join(this.server.getListRoom());
                 logger.log(Level.INFO, data);
                 return;
         }
+    }
+
+    private void getGameStatus(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String id = request.getParameter("id");
+        Room room = server.getRoomByID(Long.parseLong(id));
+        checkNotNull(room, "Room " + id + " not found");
+        Game game = room.getCurrentGame();
+        checkNotNull(game, "Game has not created yet.");
+        response.getWriter().println(game.toString());
+
     }
 
     @Override
