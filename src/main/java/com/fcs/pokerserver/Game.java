@@ -285,7 +285,10 @@ public class Game implements AbstractPlayerListener {
         gameEvent.setRank(rank);
         gameEvent.setPlayerwinId(winner.getId());
 
-
+/**
+ * Temporary add winning money to winner balance (Need enhancement later)
+ * */
+        winner.setBalance(winner.getBalance() + this.potBalance);
         this.fireEvent(gameEvent);
 
 

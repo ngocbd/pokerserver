@@ -394,11 +394,13 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
                     content += "&pid=" + p.getId() + "&playeraction=call";
                 }
             }
+
             if (ge instanceof RoundGameEvent) {
                 RoundGameEvent rge = (RoundGameEvent) ge;
                 Game src = ge.getSrc();
                 if (rge.getType() == GameAction.WAITTING) {
-                    content += "&sb=" + src.getSmallBlind().getId() + "&bb=" + src.getBigBlind().getId() + "&dealer=" + src.getDealer().getId();
+                    content += "&sb=" + src.getSmallBlind().getId() + "&bb=" + src.getBigBlind().getId() + "&dealer=" + src.getDealer().getId()
+                            + "&listPlayers=" + src.getListPlayer();
                 }
                 if (rge.getType() == GameAction.PREFLOP) {
                     List<Player> players = rge.getSrc().getListPlayer();
@@ -431,7 +433,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
             if (vre.getType() == RoomAction.PLAYERJOINEDROOM) {
                 content += "cmd=" + RoomAction.PLAYERJOINEDROOM + "&roomid=" + event.getSrc().getRoomID();
                 Player p = vre.getP();
-                content += "&pid=" + p.getId();
+                content += "&pid=" + p.getId() + "&balance=" + p.getBalance();
             }
         }
 
