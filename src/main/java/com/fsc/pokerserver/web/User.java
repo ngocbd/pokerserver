@@ -20,6 +20,9 @@ THE SOFTWARE.
 
 package com.fsc.pokerserver.web;
 
+import com.fcs.pokerserver.BlindLevel;
+import com.fcs.pokerserver.Player;
+import com.fcs.pokerserver.Room;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -102,7 +105,6 @@ public class User {
 	public void setBalance(long balance) {
 		this.balance = balance;
 	}
-	
-	
+
 	
 }
