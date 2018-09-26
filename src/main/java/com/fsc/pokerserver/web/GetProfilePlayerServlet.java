@@ -1,6 +1,7 @@
 package com.fsc.pokerserver.web;
 
 import com.fcs.pokerserver.Player;
+import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
@@ -12,13 +13,9 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.googlecode.objectify.ObjectifyService.ofy;
 
 public class GetProfilePlayerServlet extends HttpServlet {
 
-//    static {
-//        ObjectifyService.register(Player.class);
-//    }
 
     static private Logger logger = Logger.getLogger(GetProfilePlayerServlet.class.getSimpleName());
 
@@ -43,7 +40,8 @@ public class GetProfilePlayerServlet extends HttpServlet {
         Gson gson = new Gson();
         String userName = req.getParameter("username");
         checkArgument(userName != null, "username can't not be null");
-        Player player = ofy().load().type(Player.class).id(userName).now();
+        MqttServletGameServer server = MqttServletGameServer.getInstance();
+        Player player = server.getPlayerByName(userName);
         if (player == null) {
             logger.warning("player does not exist");
             resp.getWriter().println(gson.toJson("player does not exist"));
