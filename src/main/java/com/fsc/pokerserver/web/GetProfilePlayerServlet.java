@@ -17,7 +17,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 @WebServlet(
         name = "GetProfilePlayerServlet",
-        urlPatterns = {"/api/register"}
+        urlPatterns = {"/api/profile"}
 )
 
 public class GetProfilePlayerServlet extends HttpServlet {
