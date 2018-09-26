@@ -20,6 +20,9 @@ THE SOFTWARE.
 
 package com.fsc.pokerserver.web;
 
+import com.fcs.pokerserver.BlindLevel;
+import com.fcs.pokerserver.Player;
+import com.fcs.pokerserver.Room;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -102,7 +105,22 @@ public class User {
 	public void setBalance(long balance) {
 		this.balance = balance;
 	}
-	
-	
+
+	public static void main(String[] args) {
+		Room room = new Room(new Player("master"), BlindLevel.BLIND_10_20);
+		StringBuilder data = new StringBuilder("{\"id\":" + room.getRoomID() + ",\"master\":\"" + room.getMaster().getId() + "\",\"blindLevel\":\""
+				+ room.getBlindLevel().toString() + "\",\"players\":");
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+		for (Player p : room.getListPlayer()) {
+			builder.append(p.toJson());
+			builder.append(",");
+		}
+		builder.setLength(builder.length() - 1);
+		builder.append("]");
+		data.append(builder.toString());
+		data.append("}");
+		System.out.println(data.toString());
+	}
 	
 }

@@ -21,6 +21,7 @@ THE SOFTWARE.
 package com.fsc.pokerserver.web;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -45,6 +46,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @WebServlet(name = "RoomServlet", urlPatterns = {"/api/room"})
 public class RoomServlet extends HttpServlet {
     private MqttServletGameServer server = MqttServletGameServer.getInstance();
+    Logger logger = Logger.getLogger(RoomServlet.class.getSimpleName());
 
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -72,8 +74,9 @@ public class RoomServlet extends HttpServlet {
             case "nextgame":
                 nextGame(request, response);
                 break;
-            case "roomStatus":
+            case "roomstatus":
                 getRoomStatus(request, response);
+                break;
             default:
 //			List All room
                 String data = Joiner.on(",").join(this.server.getListRoom());
@@ -86,8 +89,8 @@ public class RoomServlet extends HttpServlet {
         String id = request.getParameter("id");
         Room room = server.getRoomByID(Long.parseLong(id));
         checkNotNull(room, "Room " + id + " not found");
-        String data = "{\"id\":" + room.getRoomID() + ",\"master\":\"" + room.getMaster().getId() + "\",\"blindLevel\":\""
-                + room.getBlindLevel().toString() + "\",\"players\":";
+        StringBuilder data = new StringBuilder("{\"id\":" + room.getRoomID() + ",\"master\":\"" + room.getMaster().getId() + "\",\"blindLevel\":\""
+                + room.getBlindLevel().toString() + "\",\"players\":");
         StringBuilder builder = new StringBuilder();
         builder.append("[");
         for (Player p : room.getListPlayer()) {
@@ -96,8 +99,9 @@ public class RoomServlet extends HttpServlet {
         }
         builder.setLength(builder.length() - 1);
         builder.append("]");
-        data += builder.toString();
-        response.getWriter().println(data);
+        data.append(builder.toString());
+        data.append("}");
+        response.getWriter().println(data.toString());
     }
 
     public void nextGame(HttpServletRequest request, HttpServletResponse response) throws IOException {
