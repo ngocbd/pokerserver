@@ -3,7 +3,6 @@ package com.fsc.pokerserver.test;
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +10,8 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-public class ClientCreatedRoomTest {
+public class ClientLoginTest {
+
     private String host = "http://localhost:8080/";
     private String arr[] = {"toan2", "danh2", "linh2", "chau2", "nghe2"};
     MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
@@ -27,28 +27,25 @@ public class ClientCreatedRoomTest {
 
     }
 
-    public String[] getTokenPlayer() throws IOException {
+    @Test
+    public void testLogin(){
         for (int i = 0; i < arr.length; i++) {
             String url = host + "api/register?username=" + arr[i] + "&password=123456";
-            this.getStatusCodeFromUrl(url);
+            try {
+                this.getStatusCodeFromUrl(url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            for (int j = 0; j < arr.length; j++) {
+                String url_1 = host + "api/login?username=" + arr[i] + "&password=123456";
+                try {
+                    assertEquals(200, this.getStatusCodeFromUrl(url_1));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        String token[]={"","","","",""};
-        for (int i = 0; i < arr.length; i++) {
-            Document tokenDoc = Jsoup.connect(host + "api/login?username=" + arr[i] + "&password=123456").get();
-            token[i] = tokenDoc.body().text();
-        }
-        return token;
     }
-
-    @Test
-    public void createdRoom() throws IOException {
-        // Players login and return Array Token of Players
-        String[] token = this.getTokenPlayer();
-        //create room
-        String url = host + "api/room?token=" + token[0] + "&method=put";
-        assertEquals(200, this.getStatusCodeFromUrl(url));
-    }
-
 
     public void deleteUser() throws IOException {
         for (int i = 0; i < arr.length; i++) {

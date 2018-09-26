@@ -2,7 +2,6 @@ package com.fsc.pokerserver.web;
 
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
-import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import static com.googlecode.objectify.ObjectifyService.ofy;
-
 @WebServlet(
         name = "GetProfilePlayerServlet",
         urlPatterns = {"/api/profile"}
@@ -22,8 +19,10 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 public class GetProfilePlayerServlet extends HttpServlet {
 
+
     private Logger logger = Logger.getLogger(GetProfilePlayerServlet.class.getSimpleName());
     MqttServletGameServer server = MqttServletGameServer.getInstance();
+
 
 
     @Override
@@ -43,13 +42,17 @@ public class GetProfilePlayerServlet extends HttpServlet {
         doOptions(req, resp);
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
+
+        MqttServletGameServer server = MqttServletGameServer.getInstance();
         String name = req.getParameter("name");
         Player player = server.getPlayerByName(name);
+
         if (player == null) {
             logger.warning("Player does not exist or has not login!");
             resp.getWriter().println("Player does not exist or has not login!");
             return;
         }
         resp.getWriter().println(player.toJson());
+
     }
 }
