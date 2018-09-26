@@ -88,6 +88,7 @@ public class LoginServlet extends HttpServlet {
         checkArgument(password.equals(user.getPassword()), "Incorrect Password");
 
         Player p = new Player(username);
+        p.setAvatar_url(user.getAvatar_url());
         server.addPlayer(p);
         String token = JWT.create()
                 .withIssuer("pokerserver")

@@ -41,7 +41,6 @@ import com.googlecode.objectify.annotation.Index;
  */
 @Entity
 public class Player {
-    @Expose
     private long balance;
     private long roundBet = 0;
     private long gameBet = 0;
@@ -58,16 +57,13 @@ public class Player {
 
     private Hand playerHand = new Hand();
     private List<AbstractPlayerListener> listeners = new ArrayList<>();
-
-
     private Game currentGame = null;
+    private String avatar_url;
 
     @Override
     public String toString() {
         return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + "}";
-
     }
-
 
     /**
      * Constructor set Id for the Player is current time millis
@@ -434,4 +430,11 @@ public class Player {
         this.commandThisTurn = commandThisTurn;
     }
 
+    public String getAvatar_url() {
+        return avatar_url;
+    }
+
+    public void setAvatar_url(String avatar_url) {
+        this.avatar_url = avatar_url;
+    }
 }
