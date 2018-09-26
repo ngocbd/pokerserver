@@ -151,7 +151,7 @@ public enum Card {
 	 */
 	@Override
 	public String toString() {
-		return rank.toString() + suit.toString();
+		return "\""+rank.toString() + suit.toString()+"\"";
 	}
 
 }

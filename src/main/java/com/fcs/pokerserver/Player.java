@@ -62,7 +62,8 @@ public class Player {
 
     private Game currentGame = null;
 
-    public String toJson() {
+    @Override
+    public String toString() {
         return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + "}";
 
     }
@@ -375,7 +376,7 @@ public class Player {
      *
      * @return String jsonString
      */
-    public String toString() {
+    public String toJson() {
         return "{" + "\"Id\": \"" + this.getId() + "\",\"Hand\": " + this.getPlayerHand() + ",\"Name\": \"" + this.getName() + "\", \"Balance\": " + this.balance + ", \"RoundBet\": " + this.roundBet + "}";
     }
 

@@ -51,8 +51,8 @@ public class Hand extends CardHolder {
 	public String toString()
 	{
 		if (cards.isEmpty()) return "[]";
-		if (cards.size()==1) return "[\""+cards.get(0)+"\"]";
-		return "[\""+cards.get(0)+"\",\""+cards.get(1)+"\"]";
+		if (cards.size()==1) return "["+cards.get(0)+"]";
+		return "["+cards.get(0)+","+cards.get(1)+"]";
 		
 	}
 	public Hand() {

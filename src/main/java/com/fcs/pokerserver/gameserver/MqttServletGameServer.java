@@ -405,7 +405,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
                     StringBuffer playerHands = new StringBuffer();
                     playerHands.append("[");
                     for (Player player : players) {
-                        if (!player.isSittingOut()) playerHands.append(player.toString() + ",");
+                        if (!player.isSittingOut()) playerHands.append(player.toJson() + ",");
                     }
                     playerHands.setLength(playerHands.length() - 1);
                     playerHands.append("]");
