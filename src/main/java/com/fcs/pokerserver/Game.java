@@ -50,13 +50,13 @@ public class Game implements AbstractPlayerListener {
     private List<Player> listPlayer = new ArrayList<Player>();
     private Board board = new Board();
     private Deck deck = null;
-    private long id; //ok
-    private long potBalance = 0;//ok
-    private long currentRoundBet = 0;//ok
-    private short round = 0;//ok
-    private Room room;//ok
-    private GameStatus status;//ok
-    private Player dealer;//ok
+    private long id;
+    private long potBalance = 0;
+    private long currentRoundBet = 0;
+    private short round = 0;
+    private Room room;
+    private GameStatus status;
+    private Player dealer;
     private int dealer_index;
     private Player bigBlind;
     private Player smallBlind;
