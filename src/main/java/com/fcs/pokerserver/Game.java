@@ -40,7 +40,7 @@ import org.junit.Assert;
 
 
 /**
- * An instance of the Game class is created Game to Player play Poker Game. This is the most important file in system.
+ * An instance of the Game class is created Game to Player play Poker Game. This is the most important class in project.
  *
  * @category com > fcs > pokerserver
  */
@@ -57,6 +57,7 @@ public class Game implements AbstractPlayerListener {
     private Room room;
     private GameStatus status;
     private Player dealer;
+    private int dealer_index;
     private Player bigBlind;
     private Player smallBlind;
     private Player currentPlayer = null;
@@ -68,6 +69,36 @@ public class Game implements AbstractPlayerListener {
     private LocalDateTime startTime = null; // meaning not started
 
     private List<GameListener> listeners = new ArrayList<GameListener>();
+
+    @Override
+    public String toString() {
+        String flopcard = null;
+        String turncard = null;
+        String rivercard = null;
+        try {
+            flopcard = board.getFlopCards().toString();
+        } catch (IndexOutOfBoundsException e) {
+        }
+        try {
+            turncard = board.getTurnCard().toString();
+        } catch (IndexOutOfBoundsException e) {
+        }
+        try {
+            rivercard = board.getRiverCard().toString();
+        } catch (IndexOutOfBoundsException e) {
+        }
+        StringBuilder data = new StringBuilder("{\"id\":" + this.getId() + ",\"potBalance\":" + this.getPotBalance() + ",\"currentRoundBet\":" + this.getCurrentRoundBet());
+        data.append(",\"gameStatus\":\"" + this.getStatus().toString());
+        data.append("\",\"dealer\":\"" + (this.getDealer() != null ? this.getDealer().getId() : null));
+        data.append("\",\"bigBlind\":\"" + (this.getBigBlind() != null ? this.getBigBlind().getId() : null));
+        data.append("\",\"smallBlind\":\"" + (this.getSmallBlind() != null ? this.getSmallBlind().getId() : null));
+        data.append("\",\"currentPlayer\":\"" + (this.getCurrentPlayer() != null ? this.getCurrentPlayer().getId() : null));
+        data.append("\",\"flopCard\":" + flopcard);
+        data.append(",\"turncard\":" + turncard);
+        data.append(",\"rivercard\":" + rivercard);
+        data.append(",\"players\":" + listPlayer + "}");
+        return data.toString();
+    }
 
     /**
      * Create new Game in Room
@@ -125,7 +156,6 @@ public class Game implements AbstractPlayerListener {
             for (Player player : listPlayer) {
                 Card card = this.deck.dealCard();
                 player.getPlayerHand().addCard(card);
-
             }
 
         }
@@ -170,7 +200,7 @@ public class Game implements AbstractPlayerListener {
     }
 
     /**
-     * In flop games, this is the fourth card deal. It is the third round of betting
+     * In turn games, this is the fourth card deal. It is the third round of betting
      *
      * @throws AssertionError Next Round of Player is ready
      */
@@ -324,9 +354,13 @@ public class Game implements AbstractPlayerListener {
         if (listPlayer.contains(p)) return;
         // check if timeout join after 15 second then Reject
         if (this.startTime == null || Duration.between(this.startTime, LocalDateTime.now()).getSeconds() <= 15) {
-            this.listPlayer.add(p);
-            p.attachListener(this);
-            p.setCurrentGame(this);
+            if (listPlayer.size() < 8) {
+                this.listPlayer.add(p);
+                p.attachListener(this);
+                p.setCurrentGame(this);
+            } else {
+                p.setSittingOut(true);
+            }
 
         } else {
             throw new RejectedExecutionException("Reject player join because 15 seconds is timeout");
@@ -387,6 +421,9 @@ public class Game implements AbstractPlayerListener {
         return dealer;
     }
 
+    public void setListPlayer(List<Player> listPlayer) {
+        this.listPlayer = listPlayer;
+    }
 //	private int getIndexPlayerList(Player player) {
 //		int index = 0;
 //		for (; index < this.getListPlayer().size(); index++) {
@@ -433,11 +470,18 @@ public class Game implements AbstractPlayerListener {
         assert this.listPlayer.contains(dealer);
         this.dealer = dealer;
         this.smallBlind = this.getNextPlayer(this.dealer);
-
         this.bigBlind = this.getNextPlayer(this.smallBlind);
+        this.dealer_index = this.listPlayer.indexOf(dealer);
 
-		
 
+    }
+
+    public int getDealer_index() {
+        return dealer_index;
+    }
+
+    public void setDealer_index(int dealer_index) {
+        this.dealer_index = dealer_index;
     }
 
     /**
@@ -559,61 +603,6 @@ public class Game implements AbstractPlayerListener {
 //			e.printStackTrace();
 //		}
 //		return jsonInString;
-//	}
-
-    /**
-     * Override the actionPerformed method to sure the Player has action need in the game.
-     * @param PlayerEvent pe.
-     * @throws AssertionError if the Player is not the current player or the player is not in game. The Round of Bet is not less than the current round bet.
-     * @return void.
-     * */
-//	@Override
-//	public void actionPerformed(PlayerEvent event) {
-//		Player p = event.getSource();
-//
-//		assert p==this.getCurrentPlayer();
-////		System.out.println(event.getAction());
-//		if(listPlayer.contains(p))
-//		{
-//			if(event.getAction()==PlayerAction.BET)
-//			{
-//				assert p.getRoundBet()>=this.currentRoundBet;
-//
-//				this.potBalance+= (long)event.agruments.get("amount");
-//				this.currentRoundBet=p.getRoundBet(); // set current bet equal to this bet amount
-//
-//				//TODO Temporary set check next round for game
-//				// if next round ready then next Player will be left person of dealer
-//				if(isNextRoundReady())
-//				{
-//					this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
-//				}
-//				else
-//				{
-//					Player next = this.getNextPlayer(p);
-//					if(next!=null)
-//					{
-//						this.setCurrentPlayer(next);
-//					}
-//				}
-//			}
-//
-//			if(event.getAction()==PlayerAction.FOLD)
-//			{
-//				p.setSittingOut(true);
-//				this.setCurrentPlayer(this.getNextPlayer(p));
-//			}
-//
-//			if(event.getAction()==PlayerAction.CHECK)
-//			{
-//				this.setCurrentPlayer(this.getNextPlayer(p));
-//			}
-//
-//			GameEvent ge = new GameEvent(this, GameAction.PLAYEREVENT);
-//			ge.agruments.put("playerEvent", event);
-//			this.fireEvent(ge);
-//		}
-//
 //	}
 
     /**

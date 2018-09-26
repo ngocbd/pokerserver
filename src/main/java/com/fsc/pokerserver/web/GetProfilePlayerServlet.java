@@ -2,9 +2,9 @@ package com.fsc.pokerserver.web;
 
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
-import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,12 +12,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import static com.google.common.base.Preconditions.checkArgument;
+@WebServlet(
+        name = "GetProfilePlayerServlet",
+        urlPatterns = {"/api/register"}
+)
 
 public class GetProfilePlayerServlet extends HttpServlet {
 
 
-    static private Logger logger = Logger.getLogger(GetProfilePlayerServlet.class.getSimpleName());
+    private Logger logger = Logger.getLogger(GetProfilePlayerServlet.class.getSimpleName());
+    MqttServletGameServer server = MqttServletGameServer.getInstance();
+
+
 
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,21 +39,20 @@ public class GetProfilePlayerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-       doOptions(req, resp);
-
+        doOptions(req, resp);
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
-        Gson gson = new Gson();
-        String userName = req.getParameter("username");
-        checkArgument(userName != null, "username can't not be null");
+
         MqttServletGameServer server = MqttServletGameServer.getInstance();
-        Player player = server.getPlayerByName(userName);
+        String name = req.getParameter("name");
+        Player player = server.getPlayerByName(name);
+
         if (player == null) {
-            logger.warning("player does not exist");
-            resp.getWriter().println(gson.toJson("player does not exist"));
+            logger.warning("Player does not exist or has not login!");
+            resp.getWriter().println("Player does not exist or has not login!");
             return;
         }
+        resp.getWriter().println(player.toJson());
 
-        resp.getWriter().println(gson.toJson(player));
     }
 }

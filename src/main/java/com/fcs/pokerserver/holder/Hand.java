@@ -50,7 +50,9 @@ public class Hand extends CardHolder {
 	@Override
 	public String toString()
 	{
-		return this.cards.toString();
+		if (cards.isEmpty()) return "[]";
+		if (cards.size()==1) return "["+cards.get(0)+"]";
+		return "["+cards.get(0)+","+cards.get(1)+"]";
 		
 	}
 	public Hand() {

@@ -20,12 +20,22 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver;
 
-import com.fcs.pokerserver.events.*;
-import org.junit.Assert;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.fcs.pokerserver.events.AbstractGameEvent;
+import com.fcs.pokerserver.events.AbstractRoomEvent;
+import com.fcs.pokerserver.events.GameActRoomEvent;
+import com.fcs.pokerserver.events.GameAction;
+import com.fcs.pokerserver.events.GameListener;
+import com.fcs.pokerserver.events.RoomAction;
+import com.fcs.pokerserver.events.RoomListener;
+import com.fcs.pokerserver.events.RoundGameEvent;
+import com.fcs.pokerserver.events.VisitRoomEvent;
+import com.google.common.base.Joiner;
+
+import javax.sql.rowset.Joinable;
 
 /**
  * An instance of the Room class is created Room when user want to play Poker Game.
@@ -43,8 +53,12 @@ public class Room implements GameListener {
 
     private List<RoomListener> listeners = new ArrayList<RoomListener>();
 
+    public Player getMaster() {
+        return master;
+    }
+
     /**
-     * The method to add more listener to this Room.
+     * The method to add one more listener to this Room.
      *
      * @param RoomListener rl
      */
@@ -53,10 +67,10 @@ public class Room implements GameListener {
     }
 
     /**
-     * The method fire RoomEvent to all listener.
+     * The method fire a RoomEvent to all listener.
      */
     private void fireEvent(AbstractRoomEvent re) {
-        for (Iterator iterator = this.listeners.iterator(); iterator.hasNext(); ) {
+        for (Iterator<RoomListener> iterator = this.listeners.iterator(); iterator.hasNext(); ) {
             RoomListener listener = (RoomListener) iterator.next();
             listener.actionPerformed(re);
         }
@@ -64,6 +78,7 @@ public class Room implements GameListener {
 
     /**
      * The method to add the Player to the room.
+     * The player is also added to game if  current GameStatus is NOT_STARTED and game's player size less than 8 players
      *
      * @param Player p
      */
@@ -75,6 +90,8 @@ public class Room implements GameListener {
         if (this.currentGame.getStatus() == GameStatus.NOT_STARTED && this.currentGame.getListPlayer().size() < 8) {
 
             this.currentGame.addPlayer(p);
+        } else {
+            p.setSittingOut(true);
         }
 
         VisitRoomEvent re = new VisitRoomEvent(this);
@@ -182,7 +199,7 @@ public class Room implements GameListener {
      */
     /**
      * Add master into new Room, then create new game and add master into new game too.
-     * **/
+     **/
     public Room(Player master, BlindLevel blindLevel) {
         this.master = master;
         this.blindLevel = blindLevel;
@@ -192,7 +209,6 @@ public class Room implements GameListener {
         this.addPlayer(master);
     }
 
-
     /**
      * The method to create the new Game in the Room
      *
@@ -200,13 +216,83 @@ public class Room implements GameListener {
      */
     public Game createNewGame() {
         if (this.currentGame != null && this.currentGame.getStatus() != GameStatus.END_HAND) {
-
             return this.currentGame;
         }
 
         this.currentGame = new Game(this);
         this.currentGame.addGameListener(this);
         this.currentGame.addPlayer(this.master);
+
+        //TODO not good because game event should fire from game
+        GameActRoomEvent re = new GameActRoomEvent(this);
+        re.setE(new RoundGameEvent(this.currentGame, GameAction.CREATED));
+        this.fireEvent(re);
+        return this.currentGame;
+    }
+
+    /**
+     * The method to next the Game in the Room
+     *
+     * @return Game currentGame
+     */
+    public Game nextGame() {
+        assert this.currentGame.getStatus() == GameStatus.END_HAND;
+        Game previous_Game = this.currentGame;
+        Player previous_dealer = previous_Game.getDealer();
+        int previous_dealer_index = previous_Game.getDealer_index();
+        if (this.currentGame != null && this.currentGame.getStatus() != GameStatus.END_HAND) {
+            return this.currentGame;
+        }
+        List<Player> newListPlayer = new ArrayList<>();
+        this.currentGame = new Game(this);
+        this.currentGame.addGameListener(this);
+        /**
+         * Prioritize players who are currently playing, will be added first into new game players list.
+         * */
+        for (Player p : previous_Game.getListPlayer()) {
+            if (!p.isSittingOut()) {
+                newListPlayer.add(p);
+            }
+        }
+        /**
+         * Add the remaining Player in room.
+         * */
+        for (Player p : listPlayer) {
+            if (newListPlayer.size() >= 8) break;
+            if (!newListPlayer.contains(p)) {
+                p.setSittingOut(false);
+                newListPlayer.add(p);
+            }
+        }
+        this.currentGame.setListPlayer(newListPlayer);
+        /**
+         * Set new dealer for new Game
+         * In case dealer has not quit yet.
+         * */
+
+        if (currentGame.getListPlayer().contains(previous_dealer)) {
+            Player newDealer = currentGame.getNextPlayer(previous_dealer);
+            System.out.println(newDealer);
+            currentGame.setDealer(newDealer);
+
+        }
+        /**
+         * In case previous dealer did quit. New Dealer will lie on next index of prev_dealer.
+         * In case next game got less players than prev-game. Dealer will be set by the index 0.
+         * **/
+        else if (previous_dealer_index < 8) {
+            try {
+                currentGame.setDealer(currentGame.getListPlayer().get(previous_dealer_index + 1));
+            } catch (IndexOutOfBoundsException e) {
+                currentGame.setDealer(currentGame.getListPlayer().get(0));
+            }
+        } else if (previous_dealer_index == 8) currentGame.setDealer(currentGame.getListPlayer().get(0));
+
+
+        /**
+         * In case prev-dealer did stay on the last position. The new dealer will be set by index 0
+         * */
+
 
         //TODO not good because game event should fire from game
         GameActRoomEvent re = new GameActRoomEvent(this);

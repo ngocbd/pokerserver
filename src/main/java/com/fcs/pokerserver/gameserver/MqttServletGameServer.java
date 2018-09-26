@@ -42,6 +42,7 @@ import javax.management.remote.JMXServiceURL;
 import javax.servlet.DispatcherType;
 
 
+import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.events.*;
 
 import com.fsc.pokerserver.web.*;
@@ -131,6 +132,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
 
         context.addFilter(PokerTokenFilter.class, "/api/room", EnumSet.of(DispatcherType.REQUEST));
         context.addFilter(PokerTokenFilter.class, "/api/game", EnumSet.of(DispatcherType.REQUEST));
+        context.addFilter(PokerTokenFilter.class, "/api/profile", EnumSet.of(DispatcherType.REQUEST));
 
         context.addServlet(loginServlet, "/api/login");
         context.addServlet(registerServlet, "/api/register");
@@ -394,12 +396,16 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
             }
             if (ge instanceof RoundGameEvent) {
                 RoundGameEvent rge = (RoundGameEvent) ge;
+                Game src = ge.getSrc();
+                if (rge.getType() == GameAction.WAITTING) {
+                    content += "&sb=" + src.getSmallBlind().getId() + "&bb=" + src.getBigBlind().getId() + "&dealer=" + src.getDealer().getId();
+                }
                 if (rge.getType() == GameAction.PREFLOP) {
                     List<Player> players = rge.getSrc().getListPlayer();
                     StringBuffer playerHands = new StringBuffer();
                     playerHands.append("[");
                     for (Player player : players) {
-                        if (!player.isSittingOut()) playerHands.append(player.toString() + ",");
+                        if (!player.isSittingOut()) playerHands.append(player.toJson() + ",");
                     }
                     playerHands.setLength(playerHands.length() - 1);
                     playerHands.append("]");

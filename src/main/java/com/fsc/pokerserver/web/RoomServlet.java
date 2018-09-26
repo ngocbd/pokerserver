@@ -21,6 +21,7 @@ THE SOFTWARE.
 package com.fsc.pokerserver.web;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -62,19 +63,55 @@ public class RoomServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         doOptions(request, response);
         String method = request.getParameter("method");
-        if ("put".equalsIgnoreCase(method)) {
-            doPut(request, response);
-            return;
-        } else if ("join".equalsIgnoreCase(method)) {
-            doPost(request, response);
-            return;
-        } else {
-            //TODO return more data ex Blind level , number of player , game status ...
+        switch (method) {
+            case "put":
+                doPut(request, response);
+                break;
+            case "join":
+                doPost(request, response);
+                break;
+            case "nextgame":
+                nextGame(request, response);
+                break;
+            case "roomstatus":
+                getRoomStatus(request, response);
+                break;
+            default:
 //			List All room
-            String data = Joiner.on(",").join(this.server.getListRoom());
-            response.getWriter().println(data);
-
+                String data = Joiner.on(",").join(this.server.getListRoom());
+                response.getWriter().println(data);
+                return;
         }
+    }
+
+    private void getRoomStatus(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String id = request.getParameter("id");
+        Room room = server.getRoomByID(Long.parseLong(id));
+        checkNotNull(room, "Room " + id + " not found");
+        StringBuilder data = new StringBuilder("{\"id\":" + room.getRoomID() + ",\"master\":\"" + room.getMaster().getId() + "\",\"blindLevel\":\""
+                + room.getBlindLevel().toString() + "\",\"players\":");
+        StringBuilder builder = new StringBuilder();
+        builder.append("[");
+        for (Player p : room.getListPlayer()) {
+            builder.append(p.toJson());
+            builder.append(",");
+        }
+        builder.setLength(builder.length() - 1);
+        builder.append("]");
+        data.append(builder.toString());
+        data.append("}");
+        response.getWriter().println(data.toString());
+    }
+
+    public void nextGame(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String id = request.getParameter("id");
+        Room room = server.getRoomByID(Long.parseLong(id));
+        checkNotNull(room, "Room " + id + " not found");
+        room.nextGame();
+        room.getCurrentGame().startGame();
+        //TODO return more data ex Blind level ,  player balance  , game status ...
+        String data = Joiner.on(",").join(room.getListPlayer());
+        response.getWriter().println(data);
     }
 
     @Override
@@ -96,16 +133,16 @@ public class RoomServlet extends HttpServlet {
 
         //TODO return more data ex Blind level ,  player balance  , game status ...
         String data = Joiner.on(",").join(room.getListPlayer());
-
         response.getWriter().println(data);
 //		for (int i = 0; i < room.getListPlayer().size(); i++) {
 //			System.out.println("Player Name in Room: "+room.getListPlayer().get(i).getName());
 //		}
 //		System.out.println("Player in room: "+room.getListPlayer().size());
     }
-/**
- * Room is created adhere.
- * **/
+
+    /**
+     * Room is created adhere.
+     **/
     @Override
     public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 

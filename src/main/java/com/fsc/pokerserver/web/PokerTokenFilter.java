@@ -59,7 +59,6 @@ public class PokerTokenFilter implements Filter {
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
 		String token = request.getParameter("token");
-
 		checkArgument(token != null, "token can't not be null");
 
 		JWTVerifier verifier = JWT.require(algorithm).withIssuer("pokerserver").build(); // Reusable verifier instance

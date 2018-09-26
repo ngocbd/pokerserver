@@ -98,4 +98,5 @@ public enum BlindLevel {
 	public int getBigBlind(){
 		return bigBlind;
 	}
+
 }

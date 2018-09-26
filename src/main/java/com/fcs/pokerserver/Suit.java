@@ -25,13 +25,17 @@ package com.fcs.pokerserver;
  */
 public enum Suit {
 
-	CLUBS("\u2663"),
-	DIAMONDS("\u2666"),
-	HEARTS("\u2665"),
-	SPADES("\u2660");
+//	CLUBS("\u2663"),
+//	DIAMONDS("\u2666"),
+//	HEARTS("\u2665"),
+//	SPADES("\u2660");
+	CLUBS("clubs"),
+	DIAMONDS("diamonds"),
+	HEARTS("hearts"),
+	SPADES("spades");
 
 	/**
-	 * Short string representation of the suit (one letter symbol).
+	 * Short string representation of the suit .
 	 */
 	private final String name;
 
@@ -46,7 +50,7 @@ public enum Suit {
 	 */
 	@Override
 	public String toString() {
-		return name;
+		return "_of_"+name;
 	}
 
 }

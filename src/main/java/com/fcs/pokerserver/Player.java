@@ -29,6 +29,7 @@ import java.util.List;
 
 import com.fcs.pokerserver.events.*;
 import com.fcs.pokerserver.holder.Hand;
+import com.google.gson.annotations.Expose;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -56,10 +57,13 @@ public class Player {
 
     private Hand playerHand = new Hand();
     private List<AbstractPlayerListener> listeners = new ArrayList<>();
-
-
     private Game currentGame = null;
+    private String avatar_url;
 
+    @Override
+    public String toString() {
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + "}";
+    }
 
     /**
      * Constructor set Id for the Player is current time millis
@@ -368,8 +372,8 @@ public class Player {
      *
      * @return String jsonString
      */
-    public String toString() {
-        return "{" +"\"Id\": \""+this.getId()+"\",\"Hand\": "+this.getPlayerHand()+ ",\"Name\": \"" + this.getName() + "\", \"Balance\": " + this.balance + ", \"RoundBet\": " + this.roundBet + "}";
+    public String toJson() {
+        return "{" + "\"Id\": \"" + this.getId() + "\",\"Hand\": " + this.getPlayerHand() + ",\"Name\": \"" + this.getName() + "\", \"Balance\": " + this.balance + ", \"RoundBet\": " + this.roundBet + "}";
     }
 
     /**
@@ -426,4 +430,11 @@ public class Player {
         this.commandThisTurn = commandThisTurn;
     }
 
+    public String getAvatar_url() {
+        return avatar_url;
+    }
+
+    public void setAvatar_url(String avatar_url) {
+        this.avatar_url = avatar_url;
+    }
 }
