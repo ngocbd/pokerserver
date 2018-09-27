@@ -142,6 +142,7 @@ public class GameServlet extends HttpServlet {
                 logger.log(Level.INFO, strEnd);
                 break;
             case "roundcheck":
+                p = (Player) request.getAttribute("player");
                 response.getWriter().println(p.getCurrentGame().isNextRoundReady());
                 break;
             case "gamestatus":
