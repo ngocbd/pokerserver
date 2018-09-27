@@ -23,16 +23,20 @@ THE SOFTWARE.
 */
 package com.fcs.pokerserver;
 
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import com.fcs.pokerserver.events.*;
 import com.fcs.pokerserver.holder.Hand;
+import com.google.api.gax.rpc.AlreadyExistsException;
 import com.google.gson.annotations.Expose;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+
+import javax.management.*;
 
 /**
  * An instance of the Player class is created Player when user want to play Poker Game.
@@ -40,7 +44,7 @@ import com.googlecode.objectify.annotation.Index;
  * @category com > fcs > pokerserver
  */
 @Entity
-public class Player {
+public class Player implements PlayerMBean {
     private long balance;
     private long roundBet = 0;
     private long gameBet = 0;
@@ -65,11 +69,57 @@ public class Player {
         return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + "}";
     }
 
+    @Override
+    public long jmx_getBalance() {
+        return this.balance;
+    }
+
+    @Override
+    public void jmx_setBalance(long bal) {
+        this.balance = bal;
+    }
+
+    @Override
+    public long jmx_getGlobalBalance() {
+        return this.globalBalance;
+    }
+
+    @Override
+    public void jmx_setGlobalBalance(long bal) {
+        this.globalBalance = bal;
+    }
+
+    @Override
+    public void jmx_setSittingOut(boolean bool) {
+        this.sittingOut = bool;
+    }
+
+    @Override
+    public void jmx_setRoundBet(long amount) {
+        this.roundBet = amount;
+    }
+
+    @Override
+    public void jmx_setGameBet(long amount) {
+        this.gameBet = amount;
+    }
+
+    public void registerMbean() {
+        try {
+            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+            ObjectName name = new ObjectName("com.fcs.pokerserver" + ":type=Player,id=" + this.getId());
+            mbs.registerMBean(this, name);
+        } catch (MalformedObjectNameException | AlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException | InstanceAlreadyExistsException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Constructor set Id for the Player is current time millis
      */
     public Player() {
         this.setId(String.valueOf(System.nanoTime()));
+        registerMbean();
     }
 
     /**
@@ -80,6 +130,7 @@ public class Player {
     public Player(String name) {
         this.name = name;
         this.setId(name);
+        registerMbean();
     }
 
     public void attachListener(AbstractPlayerListener listener) {

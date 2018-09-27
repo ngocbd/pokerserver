@@ -1,5 +1,10 @@
 package com.fcs.pokerserver.gameserver;
 
-public interface MqttServletGameServerMBean {
+import com.fcs.pokerserver.Player;
+import com.fcs.pokerserver.Room;
 
+import java.util.List;
+
+public interface MqttServletGameServerMBean {
+    public String getRoomsList();
 }

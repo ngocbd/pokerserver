@@ -20,6 +20,7 @@ THE SOFTWARE.
 
 package com.fcs.pokerserver;
 
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,6 +36,8 @@ import com.fcs.pokerserver.events.RoundGameEvent;
 import com.fcs.pokerserver.events.VisitRoomEvent;
 import com.google.common.base.Joiner;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.sql.rowset.Joinable;
 
 /**
@@ -43,7 +46,7 @@ import javax.sql.rowset.Joinable;
  * @category com > fcs > pokerserver
  */
 
-public class Room implements GameListener {
+public class Room implements GameListener, RoomMBean {
     private Game currentGame = null;
     private long RoomID;
     private Player master;
@@ -207,6 +210,7 @@ public class Room implements GameListener {
         this.RoomID = System.currentTimeMillis();
         this.createNewGame();
         this.addPlayer(master);
+        registerMBean();
     }
 
     /**
@@ -326,4 +330,36 @@ public class Room implements GameListener {
         this.fireEvent(re);
     }
 
+    public void registerMBean() {
+        try {
+            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+            ObjectName name = new ObjectName("com.fcs.pokerserver:type=Room,id=" + this.RoomID);
+            mbs.registerMBean(this, name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public String jmx_getRoomPlayerID() {
+        return this.listPlayer.toString();
+    }
+
+    @Override
+    public void jmx_kickPlayer(String id) {
+        Player pl = this.listPlayer.stream().filter(p -> id.equals(p.getId())).findFirst().orElse(null);
+        if (pl != null) this.listPlayer.remove(pl);
+    }
+
+    @Override
+    public String jmx_getMasterID() {
+        return this.master.toJson();
+    }
+
+    @Override
+    public void jmx_setMaster(String id) {
+        Player pl = this.listPlayer.stream().filter(p -> id.equals(p.getId())).findFirst().orElse(null);
+        if (pl != null) this.master = pl;
+    }
 }
