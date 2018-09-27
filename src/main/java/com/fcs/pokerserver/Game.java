@@ -23,6 +23,7 @@ THE SOFTWARE.
 */
 package com.fcs.pokerserver;
 
+import java.lang.management.ManagementFactory;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ import com.fcs.pokerserver.holder.HandRank;
 import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
 import org.junit.Assert;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+
 
 /**
  * An instance of the Game class is created Game to Player play Poker Game. This is the most important class in project.
@@ -45,7 +49,7 @@ import org.junit.Assert;
  * @category com > fcs > pokerserver
  */
 
-public class Game implements AbstractPlayerListener {
+public class Game implements AbstractPlayerListener, GameMBean {
 
     private List<Player> listPlayer = new ArrayList<Player>();
     private Board board = new Board();
@@ -112,6 +116,7 @@ public class Game implements AbstractPlayerListener {
         this.deck.initDeck();
         this.deck.shuffleDeck();
         this.setStatus(GameStatus.NOT_STARTED);
+        registerMBean();
 
     }
 
@@ -736,8 +741,75 @@ public class Game implements AbstractPlayerListener {
         return bestHand;
     }
 
-//	public void setBestHand(Hand bestHand) {
+    //	public void setBestHand(Hand bestHand) {
 //		this.bestHand = bestHand;
 //	}
+    public void registerMBean() {
+        try {
+            MBeanServer sv = ManagementFactory.getPlatformMBeanServer();
+            ObjectName name = new ObjectName("com.fcs.pokerserver:type=Game,id=" + this.getId());
+            sv.registerMBean(this, name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+    }
+
+    @Override
+    public long jmx_getPotBalance() {
+        return this.potBalance;
+    }
+
+    @Override
+    public void jmx_setPotBalance(long bal) {
+        this.potBalance = bal;
+    }
+
+    @Override
+    public long jmx_getCurrentRoundBet() {
+        return this.currentRoundBet;
+    }
+
+    @Override
+    public void jmx_setCurrentRoundBet(long bal) {
+        this.currentRoundBet = bal;
+    }
+
+    @Override
+    public String jmx_getListPlayer() {
+        return this.listPlayer.toString();
+    }
+
+    @Override
+    public void jmx_kickPlayer(String id) {
+        Player pl = this.listPlayer.stream().filter(p -> id.equals(p.getId())).findFirst().orElse(null);
+        if (pl != null) listPlayer.remove(pl);
+    }
+
+    @Override
+    public String jmx_getBoard() {
+        return this.board.toString();
+    }
+
+    @Override
+    public String jmx_getDealer() {
+        return this.dealer.toJson();
+    }
+
+    @Override
+    public String jmx_getSmallBlind() {
+        return this.smallBlind.toJson();
+    }
+
+    @Override
+    public String jmx_getBigBlind() {
+        return this.bigBlind.toJson();
+    }
+
+    @Override
+    public String jmx_setDealer(String id) {
+        Player pl = this.listPlayer.stream().filter(p -> id.equals(p.getId())).findFirst().orElse(null);
+        this.dealer = pl;
+        return pl.toJson();
+    }
 }
