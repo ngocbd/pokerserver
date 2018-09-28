@@ -22,14 +22,14 @@ package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
+import com.fcs.pokerserver.*;
+import com.fcs.pokerserver.holder.Board;
+import com.fcs.pokerserver.holder.Hand;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import com.fcs.pokerserver.BlindLevel;
-import com.fcs.pokerserver.Game;
-import com.fcs.pokerserver.Player;
-import com.fcs.pokerserver.Room;
 
 /**
  * The class to test the end game.
@@ -464,6 +464,7 @@ public class EndGameTest {
          * Dealer will be set on player 2*/
         assertSame(game.getDealer(), player2);
     }
+
     @Test
     public void testNextGame_DealerQuit() {
         Player master = new Player("master");
@@ -525,6 +526,7 @@ public class EndGameTest {
          * Dealer will be set on P1(master)*/
         assertSame(game.getDealer(), master);
     }
+
     @Test
     public void testNextGame_DealerQuit2() {
         /**
@@ -588,5 +590,137 @@ public class EndGameTest {
         /**
          * Dealer will be set on P5*/
         assertSame(game.getDealer(), player5);
+    }
+
+    /**
+     * Test End Game if Playing The Board situation occured(All players are winners)
+     */
+    @Test
+    public void testGetPotIfPlayingTheBoard() {
+        Game game = room.createNewGame();
+
+        Player player2 = new Player("Player 2");
+        game.addPlayer(player2);
+        Player player3 = new Player("Player 3");
+        game.addPlayer(player3);
+        Player player4 = new Player("Player 4");
+        game.addPlayer(player4);
+        Player player5 = new Player("Player 5");
+        game.addPlayer(player5);
+        game.setDealer(player5);
+
+        master.setBalance(1000);
+        player2.setBalance(1000);
+        player3.setBalance(1000);
+        player4.setBalance(1000);
+        player5.setBalance(1000);
+
+        game.startGame();
+        //P1 and P2 is SB and BB.
+
+        game.preflop();
+        //Each P bet 30. P3 folded.
+        player3.fold();
+        player4.bet(20);
+        player5.bet(30);
+        master.bet(20);
+        player2.bet(10);
+        player4.bet(10);
+        game.flop();
+        //p4 folded. p1, p2, p5 bet 10 more (40 in total).
+        master.check();
+        player2.check();
+        player4.fold();
+        player5.bet(10);
+        master.bet(10);
+        player2.bet(10);
+
+        game.turn();
+        //p1,p3,p4 fold. p2,p5 bet 20 more(60 in total)
+        master.check();
+        player2.bet(20);
+        player5.bet(20);
+        master.fold();
+
+        game.river();
+        //p2,p5 bet 30 more (90 in total)
+        player2.bet(30);
+        player5.bet(30);
+        //total Pot is 250
+        /**
+         * Setup Playing the Board situation*/
+        Board royalFlush = new Board(Card.TEN_OF_HEARTS, Card.JACK_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.KING_OF_HEARTS, Card.ACE_OF_HEARTS);
+        game.setBoard(royalFlush);
+        player2.setPlayerHand(new Hand(Card.THREE_OF_HEARTS, Card.SIX_OF_DIAMONDS));
+        player5.setPlayerHand(new Hand(Card.THREE_OF_SPADES, Card.SIX_OF_CLUBS));
+        game.endGame();
+        System.out.println("winners: " + game.getWinners());
+        assertTrue(player5.getBalance() == player2.getBalance());
+        assertEquals(1035, player5.getBalance());
+    }
+
+    @Test
+    public void testGetPotIfPlayingTheBoard2() {
+        Game game = room.createNewGame();
+
+        Player player2 = new Player("Player 2");
+        game.addPlayer(player2);
+        Player player3 = new Player("Player 3");
+        game.addPlayer(player3);
+        Player player4 = new Player("Player 4");
+        game.addPlayer(player4);
+        Player player5 = new Player("Player 5");
+        game.addPlayer(player5);
+        game.setDealer(player5);
+
+        master.setBalance(1000);
+        player2.setBalance(1000);
+        player3.setBalance(1000);
+        player4.setBalance(1000);
+        player5.setBalance(1000);
+
+        game.startGame();
+        //P1 and P2 is SB and BB.
+
+        game.preflop();
+        //Each P bet 30. P3 folded.
+        player3.fold();
+        player4.bet(20);
+        player5.bet(30);
+        master.bet(20);
+        player2.bet(10);
+        player4.bet(10);
+        game.flop();
+        //p4 folded. p1, p2, p5 bet 10 more (40 in total).
+        master.check();
+        player2.check();
+        player4.fold();
+        player5.bet(10);
+        master.bet(10);
+        player2.bet(10);
+
+        game.turn();
+        // p1, p2,p5 bet 20 more(60 in total)
+        master.bet(20);
+        player2.bet(20);
+        player5.bet(20);
+
+        game.river();
+        //p2,p5 bet 30 more (90 in total)
+        master.bet(30);
+        player2.bet(30);
+        player5.bet(30);
+        System.out.println(player5.getBalance());
+        //total Pot is 250
+        /**
+         * Setup Playing the Board situation*/
+        Board royalFlush = new Board(Card.TEN_OF_HEARTS, Card.JACK_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.KING_OF_HEARTS, Card.ACE_OF_HEARTS);
+        game.setBoard(royalFlush);
+        player2.setPlayerHand(new Hand(Card.THREE_OF_HEARTS, Card.SIX_OF_DIAMONDS));
+        player5.setPlayerHand(new Hand(Card.THREE_OF_SPADES, Card.SIX_OF_CLUBS));
+        master.setPlayerHand(new Hand(Card.FOUR_OF_CLUBS, Card.FIVE_OF_SPADES));
+        game.endGame();
+        System.out.println("winners: " + game.getWinners());
+        assertEquals(1010, master.getBalance());
     }
 }

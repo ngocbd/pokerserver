@@ -143,12 +143,13 @@ public class GameServlet extends HttpServlet {
                     strEnd += "\n\tCards of Player " + (i + 1) + ": " + p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString() + " " + p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString();
                     strEnd += "\n\tBalance of Player " + (i + 1) + ": " + p.getCurrentGame().getListPlayer().get(i).getBalance();
                 }
-                strEnd += "\n\tThe winner: " + p.getCurrentGame().getWinner() + "\n\tThe rank: " + p.getCurrentGame().getRank() + "\n\tThe best hand:" + p.getCurrentGame().getBestHand();
+                strEnd += "\n\tThe winner: " + p.getCurrentGame().getWinners() + "\n\tThe rank: " + p.getCurrentGame().getRank() + "\n\tThe best hand:" + p.getCurrentGame().getBestHands();
                 logger.log(Level.INFO, strEnd);
                 break;
             case "roundcheck":
                 p = (Player) request.getAttribute("player");
-                response.getWriter().println(p.getCurrentGame().isNextRoundReady());
+                response.setContentType("application/json");
+                response.getWriter().println("{\"result\":" + p.getCurrentGame().isNextRoundReady() + "}");
                 break;
             case "gamestatus":
                 getGameStatus(request, response);
