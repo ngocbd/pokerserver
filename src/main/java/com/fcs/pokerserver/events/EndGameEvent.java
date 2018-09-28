@@ -1,24 +1,35 @@
 package com.fcs.pokerserver.events;
 
 import com.fcs.pokerserver.Game;
+import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.holder.Hand;
 
+import java.util.List;
+
 public class EndGameEvent extends AbstractGameEvent {
-    String playerwinId;
+    List<Player> playerwins;
     String rank;
-    Hand bestHand;
+    List<Hand> bestHands;
 
     public EndGameEvent(Game src) {
         super(src);
         super.setType(GameAction.ENDED);
     }
 
-    public String getPlayerwinId() {
-        return playerwinId;
+    public List<Player> getPlayerwins() {
+        return playerwins;
     }
 
-    public void setPlayerwinId(String playerwinId) {
-        this.playerwinId = playerwinId;
+    public void setPlayerwins(List<Player> playerwins) {
+        this.playerwins = playerwins;
+    }
+
+    public List<Hand> getBestHands() {
+        return bestHands;
+    }
+
+    public void setBestHands(List<Hand> bestHands) {
+        this.bestHands = bestHands;
     }
 
     public String getRank() {
@@ -29,16 +40,9 @@ public class EndGameEvent extends AbstractGameEvent {
         this.rank = rank;
     }
 
-    public Hand getBestHand() {
-        return bestHand;
-    }
-
-    public void setBestHand(Hand bestHand) {
-        this.bestHand = bestHand;
-    }
 
     @Override
     public String toString() {
-        return super.getSrc().getId() + " " + GameAction.ENDED.toString() + " winner: " + getPlayerwinId() + " rank: " + getRank() + " bestHand: " + getBestHand();
+        return super.getSrc().getId() + " " + GameAction.ENDED.toString() + " winner: " + playerwins + " rank: " + rank + " bestHand: " + bestHands;
     }
 }

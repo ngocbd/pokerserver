@@ -65,9 +65,14 @@ public class Game implements AbstractPlayerListener, GameMBean {
     private Player bigBlind;
     private Player smallBlind;
     private Player currentPlayer = null;
-    private Player winner = null;
+    //    private Player winner = null;
     private String rank = "";
-    private Hand bestHand = null;
+//    private Hand bestHand = null;
+    /**
+     * CODE PREPARING FOR SPLIT POT IN CASE OF MULTIPLE WINNERS.
+     */
+    private List<Player> winners = new ArrayList<>();
+    private List<Hand> bestHands = new ArrayList<>();
 
 
     private LocalDateTime startTime = null; // meaning not started
@@ -256,8 +261,9 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
         List<Hand> list = new ArrayList<Hand>();
         for (int i = 0; i < this.getListPlayer().size(); i++) {
+            Player p = this.getListPlayer().get(i);
+            if (p.isSittingOut()) continue;
             list.add(this.getListPlayer().get(i).getPlayerHand());
-//			System.out.println("Cards of Player "+(i+1)+": "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString()+" "+p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString());
         }
         Board b = this.getBoard();
 
@@ -269,31 +275,50 @@ public class Game implements AbstractPlayerListener, GameMBean {
         });
 
         TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
-
-        Hand winHand = list.get(list.size() - 1);
-        //find the player is winner follow winHand
-        Player playerWinner = null;
+        Hand highestHand = list.get(list.size() - 1);
+        HandRank highestRank = evaluator.evaluate(b, highestHand);
+        //Add best hand into list.
+        bestHands.add(highestHand);
+        //Add Win Player into list Player.
         for (int i = 0; i < this.getListPlayer().size(); i++) {
-            if (this.getListPlayer().get(i).getPlayerHand() == winHand) {
-                playerWinner = this.getListPlayer().get(i);
+            if (this.getListPlayer().get(i).getPlayerHand() == highestHand) {
+                winners.add(this.getListPlayer().get(i));
                 break;
             }
         }
+        /**
+         * Check whether multiple winners case occured*/
+        for (int i = list.size() - 2; i >= 0; i--) {
+            Hand temp = list.get(i);
+            HandRank tempRank = evaluator.evaluate(b, temp);
+            if (tempRank.getValue() < highestRank.getValue()) break;
+            bestHands.add(temp);
+            for (int y = 0; y < this.getListPlayer().size(); y++) {
+                Player p = this.listPlayer.get(y);
+                if (p.isSittingOut()) continue;
+                if (this.getListPlayer().get(y).getPlayerHand() == temp) {
+                    winners.add(this.getListPlayer().get(y));
+                }
+            }
+        }
         //rank of winner player
-        HandRank rank1 = evaluator.evaluate(b, winHand);
-
-        winner = playerWinner;
-        rank = rank1.toString();
-        bestHand = list.get(list.size() - 1);
-
-        gameEvent.setBestHand(bestHand);
+        rank = highestRank.toString();
+        gameEvent.setBestHands(bestHands);
         gameEvent.setRank(rank);
-        gameEvent.setPlayerwinId(winner.getId());
+        gameEvent.setPlayerwins(winners);
 
 /**
  * Temporary add winning money to winner balance (Need enhancement later)
  * */
-        winner.setBalance(winner.getBalance() + this.potBalance);
+        //Find out the money to be claim for each player.
+        long moneyTobeClaim = this.potBalance / (winners.size());
+        for (Player p : winners) {
+            p.setBalance(p.getBalance() + moneyTobeClaim);
+        }
+        /**
+         * TODO Here need an event for adding winning money.
+         * */
+//        winner.setBalance(winner.getBalance() + this.potBalance);
         this.fireEvent(gameEvent);
 
 
@@ -535,6 +560,9 @@ public class Game implements AbstractPlayerListener, GameMBean {
         return board;
     }
 
+    public void setBoard(Board board) {
+        this.board = board;
+    }
     /**
      * Set cards of Board on the table in game
      * @param Board board
@@ -721,8 +749,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
         this.round = round;
     }
 
-    public Player getWinner() {
-        return winner;
+    public List<Player> getWinners() {
+        return winners;
     }
 
 //	public void setWinner(Player winner) {
@@ -737,8 +765,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
 //		this.rank = rank;
 //	}
 
-    public Hand getBestHand() {
-        return bestHand;
+    public List<Hand> getBestHands() {
+        return bestHands;
     }
 
     //	public void setBestHand(Hand bestHand) {

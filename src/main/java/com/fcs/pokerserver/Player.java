@@ -200,7 +200,6 @@ public class Player implements PlayerMBean {
      * The Player want to fold in the game.
      */
     public void fold() {
-//        PlayerEvent pe = new PlayerEvent(this, PlayerAction.FOLD);
         PlayerFoldEvent pfe = new PlayerFoldEvent(this);
         this.triggerEvent(pfe);
         this.sittingOut = true;
