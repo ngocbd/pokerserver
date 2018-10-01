@@ -104,6 +104,22 @@ public class Room implements GameListener, RoomMBean {
         this.fireEvent(re);
     }
 
+    public void removePlayer(Player p) {
+        if (!listPlayer.contains(p)) return;
+        /**Check whether this player is playing in a game*/
+        //TODO later, need to check whether the player is playing, then we need to fold for him(may remove from game list too).
+
+
+        p.setSittingOut(true);
+        this.listPlayer.remove(p);
+        p.setCurrentRoom(null);
+        VisitRoomEvent re = new VisitRoomEvent(this);
+        re.setType(RoomAction.PLAYERLEFT);
+        re.setP(p);
+        this.fireEvent(re);
+    }
+
+
     /**
      * Return the list of the Players
      *

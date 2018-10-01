@@ -46,6 +46,7 @@ import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.events.*;
 
 import com.fsc.pokerserver.web.*;
+import com.google.common.base.Preconditions;
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
@@ -59,9 +60,13 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.joda.time.DateTime;
-
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.googlecode.objectify.ObjectifyService.begin;
+import static com.googlecode.objectify.ObjectifyService.ofy;
+import static com.google.common.base.Preconditions.checkArgument;
 
 
 /**
@@ -78,6 +83,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
     private static final String SERVER_TOPIC = "/pokerserver/server";
     private Sender sender;
     private static Logger logger = Logger.getLogger(MqttServletGameServer.class.getName());
+
 
     static {
 
@@ -133,8 +139,10 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
         context.addFilter(PokerTokenFilter.class, "/api/room", EnumSet.of(DispatcherType.REQUEST));
         context.addFilter(PokerTokenFilter.class, "/api/game", EnumSet.of(DispatcherType.REQUEST));
         context.addFilter(PokerTokenFilter.class, "/api/profile", EnumSet.of(DispatcherType.REQUEST));
+        context.addFilter(PokerTokenFilter.class, "/api/logout", EnumSet.of(DispatcherType.REQUEST));
 
         context.addServlet(loginServlet, "/api/login");
+        context.addServlet(loginServlet, "/api/logout");
         context.addServlet(registerServlet, "/api/register");
         context.addServlet(roomServlet, "/api/room");
         context.addServlet(gameServlet, "/api/game");
@@ -196,6 +204,16 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
     public void addPlayer(Player p) {
         if (this.getListPlayer().contains(p)) return;
         this.getListPlayer().add(p);
+    }
+
+    /**
+     * Remove player (Player logout)
+     */
+
+    public void removePlayer(Player p) {
+        if (!this.getListPlayer().contains(p)) return;
+        if (p.getCurrentRoom() != null) p.getCurrentRoom().removePlayer(p);
+        this.getListPlayer().remove(p);
     }
 
     /**
@@ -378,6 +396,12 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
                     PlayerBetEvent pe = (PlayerBetEvent) e;
                     long amount = pe.getAmount();
                     Player p = pe.getSrc();
+                    /**
+                     * Minus Balance of USER and update to Datastore*/
+                    User user = ofy().load().type(User.class).id(p.getName()).now();
+                    checkNotNull(user, "User is null when loaded from datastore!");
+                    user.setBalance(user.getBalance() - amount);
+                    checkNotNull(ofy().save().entity(user).now(), "Update to datastore failed!");
                     content += "&pid=" + p.getId() + "&playeraction=bet&amount=" + amount;
                 }
                 if (e instanceof PlayerFoldEvent) {
@@ -434,6 +458,10 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
                 content += "cmd=" + RoomAction.PLAYERJOINEDROOM + "&roomid=" + event.getSrc().getRoomID();
                 Player p = vre.getP();
                 content += "&pid=" + p.getId() + "&balance=" + p.getBalance();
+            }
+            if (vre.getType() == RoomAction.PLAYERLEFT) {
+                Player p = vre.getP();
+                content += "cmd=" + RoomAction.PLAYERLEFT + "&roomid=" + event.getSrc().getRoomID() + "&pid=" + p.getId();
             }
         }
 
