@@ -6,5 +6,6 @@ import com.fcs.pokerserver.Room;
 import java.util.List;
 
 public interface MqttServletGameServerMBean {
-    public String getRoomsList();
+    public String jmx_getRoomsList();
+    public String jmx_getPlayerList();
 }

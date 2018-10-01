@@ -470,7 +470,12 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
     }
 
     @Override
-    public String getRoomsList() {
+    public String jmx_getRoomsList() {
         return this.listRoom.toString();
+    }
+
+    @Override
+    public String jmx_getPlayerList() {
+        return listPlayer.toString();
     }
 }
