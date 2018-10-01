@@ -492,4 +492,16 @@ public class Player implements PlayerMBean {
     public void setAvatar_url(String avatar_url) {
         this.avatar_url = avatar_url;
     }
+
+    public void buyChip(long amount) {
+        assert this.globalBalance >= amount;
+        this.balance += amount;
+        this.globalBalance -= amount;
+    }
+
+    public void sellChip() {
+        if (balance == 0) return;
+        this.globalBalance += balance;
+        balance = 0;
+    }
 }

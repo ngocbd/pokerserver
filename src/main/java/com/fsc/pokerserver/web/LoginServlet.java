@@ -93,7 +93,12 @@ public class LoginServlet extends HttpServlet {
     private void goLogout(HttpServletRequest request, HttpServletResponse response, MqttServletGameServer server) throws IOException {
         Player p = (Player) request.getAttribute("player");
         server.removePlayer(p);
-
+        /**
+         * Update balance into database*/
+        User user = ofy().load().type(User.class).id(p.getId()).now();
+        checkNotNull(user, "User cannot be loaded from datastore!");
+        user.setBalance(p.getGlobalBalance());
+        checkNotNull(ofy().save().entity(user).now(), "Cannot update user into database");
     }
 
     private void goLogin(HttpServletRequest request, HttpServletResponse response, MqttServletGameServer server) throws IOException {
