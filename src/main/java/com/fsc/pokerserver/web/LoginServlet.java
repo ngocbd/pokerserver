@@ -109,14 +109,21 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         checkArgument(password != null, "password can't not be null");
-
-
-        Player exist = server.getListPlayer().stream().filter(p -> p.getName().equals(username)).findAny().orElse(null);
-
-        checkArgument(exist == null, "User logged-in ready !!!!");
-
         User user = ofy().load().type(User.class).id(username).safe();
         checkArgument(password.equals(user.getPassword()), "Incorrect Password");
+
+        Player exist = server.getListPlayer().stream().filter(p -> p.getName().equals(username)).findAny().orElse(null);
+        /**
+         * Player is already stuck in server will be logout automatically*/
+        if (exist != null) {
+            server.removePlayer(exist);
+            user.setBalance(exist.getGlobalBalance());
+            checkNotNull(ofy().save().entity(user).now(), "Cannot update user into database");
+            response.setStatus(404);
+            response.getWriter().println("{\"msg\":\"Account is already login\"");
+            return;
+        }
+
 
         Player p = new Player(username);
         /**
