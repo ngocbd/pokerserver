@@ -25,6 +25,8 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
+import java.util.ArrayList;
+
 /**
  * The class to the User to login.
  *
@@ -40,6 +42,7 @@ public class User {
 
     private long balance;
     private String avatar_url;
+
 
     /**
      * Return the username

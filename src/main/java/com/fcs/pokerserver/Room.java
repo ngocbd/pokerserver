@@ -109,8 +109,15 @@ public class Room implements GameListener, RoomMBean {
 
     public void removePlayer(Player p) {
         if (!listPlayer.contains(p)) return;
-        /**Check whether this player is playing in a game*/
-        //TODO later, need to check whether the player is playing, then we need to fold for him(may remove from game list too).
+        /**Check whether this player is playing in a game
+         * If the player is currently playing, fold him and remove from game list, or else just remove him from game list.
+         * */
+        if (this.currentGame != null && this.currentGame.getListPlayer().contains(p)) {
+            if (this.currentGame.getStatus() != GameStatus.END_HAND && this.currentGame.getStatus() != GameStatus.NOT_STARTED && this.currentGame.getCurrentPlayer() == p) {
+                p.fold();
+            }
+            this.currentGame.getListPlayer().remove(p);
+        }
 
         //Sell all Chip when player left
         p.sellChip();
