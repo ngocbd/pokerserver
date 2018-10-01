@@ -88,6 +88,9 @@ public class Room implements GameListener, RoomMBean {
     public void addPlayer(Player p) {
         if (listPlayer.contains(p)) return;
         this.listPlayer.add(p);
+        //Buy 1000 chip for default in any room.
+        p.sellChip();
+        p.buyChip(1000);
         p.setCurrentRoom(this);
 
         if (this.currentGame.getStatus() == GameStatus.NOT_STARTED && this.currentGame.getListPlayer().size() < 8) {
@@ -109,7 +112,8 @@ public class Room implements GameListener, RoomMBean {
         /**Check whether this player is playing in a game*/
         //TODO later, need to check whether the player is playing, then we need to fold for him(may remove from game list too).
 
-
+        //Sell all Chip when player left
+        p.sellChip();
         p.setSittingOut(true);
         this.listPlayer.remove(p);
         p.setCurrentRoom(null);
