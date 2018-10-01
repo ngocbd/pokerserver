@@ -70,6 +70,9 @@ public class RoomServlet extends HttpServlet {
             case "join":
                 doPost(request, response);
                 break;
+            case "quit":
+                doQuit(request, response);
+                break;
             case "nextgame":
                 nextGame(request, response);
                 break;
@@ -82,6 +85,14 @@ public class RoomServlet extends HttpServlet {
                 response.getWriter().println(data);
                 return;
         }
+    }
+
+    private void doQuit(HttpServletRequest request, HttpServletResponse response) {
+        Player p = (Player) request.getAttribute("player");
+        String id = request.getParameter("id");
+        Room room = server.getRoomByID(Long.parseLong(id));
+        checkNotNull(room, "Room " + id + " not found");
+        room.removePlayer(p);
     }
 
     private void getRoomStatus(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -116,28 +127,15 @@ public class RoomServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         Player p = (Player) request.getAttribute("player");
-
         String id = request.getParameter("id");
-
         Room room = server.getRoomByID(Long.parseLong(id));
-
         checkNotNull(room, "Room " + id + " not found");
-
-//		System.out.println("player name: "+p.getName());
-//		System.out.println("Room Id: "+room.getRoomID());
-
-
         room.addPlayer(p);
 
         //TODO return more data ex Blind level ,  player balance  , game status ...
         String data = Joiner.on(",").join(room.getListPlayer());
         response.getWriter().println(data);
-//		for (int i = 0; i < room.getListPlayer().size(); i++) {
-//			System.out.println("Player Name in Room: "+room.getListPlayer().get(i).getName());
-//		}
-//		System.out.println("Player in room: "+room.getListPlayer().size());
     }
 
     /**

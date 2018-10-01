@@ -662,7 +662,6 @@ public class EndGameTest {
     @Test
     public void testGetPotIfPlayingTheBoard2() {
         Game game = room.createNewGame();
-
         Player player2 = new Player("Player 2");
         game.addPlayer(player2);
         Player player3 = new Player("Player 3");
@@ -713,7 +712,7 @@ public class EndGameTest {
         System.out.println(player5.getBalance());
         //total Pot is 250
         /**
-         * Setup Playing the Board situation*/
+         * Setup Playing The Board situation*/
         Board royalFlush = new Board(Card.TEN_OF_HEARTS, Card.JACK_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.KING_OF_HEARTS, Card.ACE_OF_HEARTS);
         game.setBoard(royalFlush);
         player2.setPlayerHand(new Hand(Card.THREE_OF_HEARTS, Card.SIX_OF_DIAMONDS));

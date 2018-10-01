@@ -36,6 +36,7 @@ import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 import static com.google.common.base.Preconditions.checkArgument;
 
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
@@ -66,10 +67,36 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         doOptions(request, response);
-
+        MqttServletGameServer server = MqttServletGameServer.getInstance();
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
+        String endpoints[] = request.getRequestURI().split("/");
+        String endpoint = endpoints[endpoints.length - 1];
+        switch (endpoint) {
+            case "login":
+                goLogin(request, response, server);
+                break;
+            case "logout":
+                goLogout(request, response, server);
+                break;
+            default:
+                response.setStatus(400);
+                response.getWriter().println("{\"msg\":\"URL is not well-form\"");
+                return;
+        }
 
+    }
+
+    /**
+     * Logout need token
+     */
+    private void goLogout(HttpServletRequest request, HttpServletResponse response, MqttServletGameServer server) throws IOException {
+        Player p = (Player) request.getAttribute("player");
+
+
+    }
+
+    private void goLogin(HttpServletRequest request, HttpServletResponse response, MqttServletGameServer server) throws IOException {
         String username = request.getParameter("username");
 
         checkArgument(username != null, "username can't not be null");
@@ -78,7 +105,6 @@ public class LoginServlet extends HttpServlet {
 
         checkArgument(password != null, "password can't not be null");
 
-        MqttServletGameServer server = MqttServletGameServer.getInstance();
 
         Player exist = server.getListPlayer().stream().filter(p -> p.getName().equals(username)).findAny().orElse(null);
 
@@ -88,6 +114,10 @@ public class LoginServlet extends HttpServlet {
         checkArgument(password.equals(user.getPassword()), "Incorrect Password");
 
         Player p = new Player(username);
+        /**
+         * Set Balance + set Avatar
+         * */
+        p.setGlobalBalance(user.getBalance());
         p.setAvatar_url(user.getAvatar_url());
         server.addPlayer(p);
         String token = JWT.create()

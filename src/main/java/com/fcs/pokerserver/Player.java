@@ -66,7 +66,12 @@ public class Player implements PlayerMBean {
 
     @Override
     public String toString() {
-        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + "}";
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + "}";
+    }
+
+    @Override
+    public String jmx_info() {
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + "}";
     }
 
     @Override
@@ -157,7 +162,7 @@ public class Player implements PlayerMBean {
         assert amount < this.balance;
 
 
-        assert this.sittingOut == false;
+        assert !this.sittingOut;
         this.setRoundBet(this.getRoundBet() + amount);
         this.gameBet += amount;
         this.balance = this.balance - amount;
