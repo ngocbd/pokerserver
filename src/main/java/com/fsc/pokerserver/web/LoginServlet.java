@@ -120,7 +120,7 @@ public class LoginServlet extends HttpServlet {
             user.setBalance(exist.getGlobalBalance());
             checkNotNull(ofy().save().entity(user).now(), "Cannot update user into database");
             response.setStatus(404);
-            response.getWriter().println("{\"msg\":\"Account is already login\"");
+            response.getWriter().println("{\"msg\":\"Account is already login\"}");
             return;
         }
 

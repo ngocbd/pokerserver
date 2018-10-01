@@ -63,6 +63,7 @@ public class RoomServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         doOptions(request, response);
         String method = request.getParameter("method");
+        if (method == null) method = "";
         switch (method) {
             case "put":
                 doPut(request, response);
