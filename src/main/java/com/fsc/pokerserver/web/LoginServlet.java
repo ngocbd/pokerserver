@@ -92,7 +92,7 @@ public class LoginServlet extends HttpServlet {
      */
     private void goLogout(HttpServletRequest request, HttpServletResponse response, MqttServletGameServer server) throws IOException {
         Player p = (Player) request.getAttribute("player");
-
+        server.removePlayer(p);
 
     }
 
