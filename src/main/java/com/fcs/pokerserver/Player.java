@@ -160,8 +160,6 @@ public class Player implements PlayerMBean {
 
     public void bet(long amount) {
         assert amount < this.balance;
-
-
         assert !this.sittingOut;
         this.setRoundBet(this.getRoundBet() + amount);
         this.gameBet += amount;
@@ -246,7 +244,8 @@ public class Player implements PlayerMBean {
 
 
     public void myTurn() {
-        // where to write code
+        GetTurnPlayerEvent e = new GetTurnPlayerEvent(this);
+        this.triggerEvent(e);
 
     }
 

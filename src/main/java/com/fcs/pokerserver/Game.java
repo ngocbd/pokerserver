@@ -31,6 +31,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
 
 import com.fcs.pokerserver.events.*;
 import com.fcs.pokerserver.holder.Board;
@@ -65,19 +66,17 @@ public class Game implements AbstractPlayerListener, GameMBean {
     private Player bigBlind;
     private Player smallBlind;
     private Player currentPlayer = null;
-    //    private Player winner = null;
     private String rank = "";
-//    private Hand bestHand = null;
     /**
      * CODE PREPARING FOR SPLIT POT IN CASE OF MULTIPLE WINNERS.
      */
     private List<Player> winners = new ArrayList<>();
     private List<Hand> bestHands = new ArrayList<>();
 
-
     private LocalDateTime startTime = null; // meaning not started
 
     private List<GameListener> listeners = new ArrayList<GameListener>();
+    private ScheduledExecutorService commander = null;
 
     @Override
     public String toString() {
@@ -324,6 +323,27 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
     }
 
+    public void autoNextRound() {
+        switch (this.status) {
+            case NOT_STARTED:
+            case SEATING:
+                this.preflop();
+                break;
+            case PREFLOP:
+                this.flop();
+                break;
+            case FLOP:
+                this.turn();
+                break;
+            case TURN:
+                this.river();
+                break;
+            case RIVER:
+                this.endGame();
+                break;
+        }
+    }
+
     /**
      * Get Deck
      *
@@ -485,7 +505,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 break;
             }
         }
-
         if (temp.isSittingOut()) {
             return getNextPlayer(temp);
         } else
@@ -499,14 +518,11 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * @throws AssertionError the list of Players is not contain the Player.
      */
     public void setDealer(Player dealer) {
-
         assert this.listPlayer.contains(dealer);
         this.dealer = dealer;
         this.smallBlind = this.getNextPlayer(this.dealer);
         this.bigBlind = this.getNextPlayer(this.smallBlind);
         this.dealer_index = this.listPlayer.indexOf(dealer);
-
-
     }
 
     public int getDealer_index() {
@@ -530,9 +546,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * Set the player is Big Blind in the game
      * @param Player bigBlind
      * */
-//	public void setBigBlind(Player bigBlind) {
-//		this.bigBlind = bigBlind;
-//	}
 
     /**
      * Return Player is Small Blind
@@ -547,10 +560,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * Set the player is Small Blind in the game
      * @param Player smallBlind
      * */
-//	public void setSmallBlind(Player smallBlind) {
-//		this.smallBlind = smallBlind;
-//	}
-
     /**
      * Return The cards of Board on the table in the game
      *
@@ -689,6 +698,12 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 ge.setE(pce);
                 this.fireEvent(ge);
             }
+            if (e instanceof GetTurnPlayerEvent) {
+                GetTurnPlayerEvent gte = (GetTurnPlayerEvent) e;
+                PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
+                ge.setE(gte);
+                this.fireEvent(ge);
+            }
 
         }
     }
@@ -753,25 +768,14 @@ public class Game implements AbstractPlayerListener, GameMBean {
         return winners;
     }
 
-//	public void setWinner(Player winner) {
-//		this.winner = winner;
-//	}
-
     public String getRank() {
         return rank;
     }
-
-//	public void setRank(String rank) {
-//		this.rank = rank;
-//	}
 
     public List<Hand> getBestHands() {
         return bestHands;
     }
 
-    //	public void setBestHand(Hand bestHand) {
-//		this.bestHand = bestHand;
-//	}
     public void registerMBean() {
         try {
             MBeanServer sv = ManagementFactory.getPlatformMBeanServer();
