@@ -344,7 +344,10 @@ public class Room implements GameListener, RoomMBean {
     @Override
     public String toString() {
         // TODO Auto-generated method stub need to fix
-        return String.valueOf(this.RoomID);
+        return "{\"id\":"+this.RoomID+",\"playerCount\":"
+                +listPlayer.size()+",\"blindLevel\":\""
+                +blindLevel+"\",\"master\":\""
+                +master.getId()+"\"}";
     }
 
     /**

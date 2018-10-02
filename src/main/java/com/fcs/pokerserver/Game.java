@@ -153,7 +153,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
         long betSmallBlind = this.getRoom().getBlindLevel().getSmallBlind();
         this.setCurrentPlayer(this.getSmallBlind());
         this.getSmallBlind().bet(betSmallBlind);
-        this.setCurrentPlayer(this.getBigBlind());
         this.getBigBlind().bet(betBigBlind);
 
 
@@ -172,8 +171,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
         this.fireEvent(gameEvent);
 
         // current player is very hard to assign base on number of player
-
-        this.setCurrentPlayer(getNextPlayer(this.getBigBlind()));
         this.setRound((short) 1);
 
 
@@ -660,6 +657,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
     @Override
     public void actionPerformed(AbstractPlayerEvent e) {
         Player p = e.getSrc();
+        if (p != this.currentPlayer) {
+            System.out.println("This is not current player");
+            return;
+        }
         assert p == this.getCurrentPlayer();
         if (listPlayer.contains(p)) {
             if (e instanceof PlayerBetEvent) {
