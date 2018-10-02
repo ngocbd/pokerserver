@@ -419,7 +419,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
                 }
                 if (e instanceof GetTurnPlayerEvent) {
                     Player p = e.getSrc();
-                    content += "&pid=" + p.getId() + "playeraction=myturn";
+                    content += "&pid=" + p.getId() + "&playeraction=myturn";
                 }
             }
 
