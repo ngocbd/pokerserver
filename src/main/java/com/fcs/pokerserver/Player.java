@@ -27,7 +27,9 @@ import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
 
+import com.fcs.pokerserver.automation.CountDownPlayer;
 import com.fcs.pokerserver.events.*;
 import com.fcs.pokerserver.holder.Hand;
 import com.google.api.gax.rpc.AlreadyExistsException;
@@ -63,6 +65,8 @@ public class Player implements PlayerMBean {
     private List<AbstractPlayerListener> listeners = new ArrayList<>();
     private Game currentGame = null;
     private String avatar_url;
+    private Timer countdown = new Timer();
+    private final long COUNTDOWN_DELAY = 3 * 1000;
 
     @Override
     public String toString() {
@@ -244,6 +248,8 @@ public class Player implements PlayerMBean {
 
 
     public void myTurn() {
+        countdown.schedule(CountDownPlayer.createInstance(this, this.getCurrentGame()), COUNTDOWN_DELAY);
+        System.out.println("My Turn: " + this.getId());
         GetTurnPlayerEvent e = new GetTurnPlayerEvent(this);
         this.triggerEvent(e);
 

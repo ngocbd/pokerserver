@@ -82,7 +82,7 @@ public class RoomServlet extends HttpServlet {
                 break;
             default:
 //			List All room
-                String data = Joiner.on(",").join(this.server.getListRoom());
+                String data = "[" + Joiner.on(",").join(this.server.getListRoom()) + "]";
                 response.getWriter().println(data);
                 return;
         }
