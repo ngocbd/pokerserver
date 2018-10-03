@@ -248,7 +248,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * Finish the game. Show the winner Player.
      */
     public void endGame() {
-		assert this.isNextRoundReady();
+        assert this.isNextRoundReady();
         if (this.getStatus() == GameStatus.END_HAND) return;
         winners = new ArrayList<>();
         bestHands = new ArrayList<>();
@@ -329,7 +329,15 @@ public class Game implements AbstractPlayerListener, GameMBean {
         this.setStatus(GameStatus.END_HAND);
         winners = new ArrayList<>();
         bestHands = new ArrayList<>();
+        bestHands.add(p.getPlayerHand());
+        winners.add(p);
+        rank = "endsoon";
         EndGameEvent gameEvent = new EndGameEvent(this);
+        gameEvent.setPlayerwins(winners);
+        gameEvent.setBestHands(bestHands);
+        gameEvent.setRank(rank);
+        p.setBalance(p.getBalance() + this.potBalance);
+        this.fireEvent(gameEvent);
 
     }
 
@@ -673,10 +681,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
     @Override
     public void actionPerformed(AbstractPlayerEvent e) {
         Player p = e.getSrc();
-//        if (p != this.currentPlayer) {
-//            System.out.println("This is not current player: "+p.getId()+" current is : "+this.currentPlayer.getId());
-//            return;
-//        }
+        if (p != this.currentPlayer) {
+            System.out.println("This is not current player: "+p.getId()+" current is : "+this.currentPlayer.getId());
+            return;
+        }
         assert p == this.getCurrentPlayer();
         if (listPlayer.contains(p)) {
             if (e instanceof PlayerBetEvent) {
@@ -714,7 +722,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
                     }
                 }
                 if (i == 1) {
-                    temp.getCurrentGame().endGame();
+                    temp.getCurrentGame().endGameSoon(temp);
                 } else {
                     this.setCurrentPlayer(this.getNextPlayer(p));
                 }

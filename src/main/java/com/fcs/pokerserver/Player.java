@@ -69,7 +69,7 @@ public class Player implements PlayerMBean {
     private String avatar_url;
     private Timer countdown = new Timer();
     private CountDownPlayer task = null;
-    private final long COUNTDOWN_DELAY = 3 * 1000;
+    private long COUNTDOWN_DELAY = 5 * 1000;
 
     @Override
     public String toString() {
@@ -274,9 +274,9 @@ public class Player implements PlayerMBean {
 
 
     public void myTurn() {
-//        task = CountDownPlayer.createInstance(this, this.getCurrentGame());
-//        countdown.schedule(task, COUNTDOWN_DELAY);
-//        System.out.println("My Turn: " + this.getId() + " ID task: " + task.getId());
+        task = CountDownPlayer.createInstance(this, this.getCurrentGame());
+        countdown.schedule(task, COUNTDOWN_DELAY);
+        System.out.println("My Turn: " + this.getId() + " ID task: " + task.getId());
         GetTurnPlayerEvent e = new GetTurnPlayerEvent(this);
         this.triggerEvent(e);
     }
@@ -534,5 +534,13 @@ public class Player implements PlayerMBean {
         if (balance == 0) return;
         this.globalBalance += balance;
         balance = 0;
+    }
+
+    public long getCOUNTDOWN_DELAY() {
+        return COUNTDOWN_DELAY;
+    }
+
+    public void setCOUNTDOWN_DELAY(long COUNTDOWN_DELAY) {
+        this.COUNTDOWN_DELAY = COUNTDOWN_DELAY;
     }
 }
