@@ -20,6 +20,7 @@ THE SOFTWARE.
 
 package com.fsc.pokerserver.test;
 
+import com.fcs.pokerserver.*;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.fcs.pokerserver.Card;
 import com.fcs.pokerserver.holder.Board;
 import com.fcs.pokerserver.holder.Hand;
 import com.fcs.pokerserver.holder.HandRank;
@@ -98,13 +98,58 @@ public class CardEvaluatorTest extends TestCase {
      */
     @Test
     public void testPair1() {
-        Hand h1 = new Hand(Card.ACE_OF_CLUBS, Card.ACE_OF_DIAMONDS);
-        Hand h2 = new Hand(Card.KING_OF_CLUBS, Card.KING_OF_DIAMONDS);
-        Board b = new Board(Card.TWO_OF_DIAMONDS, Card.EIGHT_OF_SPADES, Card.FOUR_OF_CLUBS,
-                Card.TEN_OF_HEARTS, Card.SIX_OF_SPADES);
-        System.out.println(h1);
-        int comp = compare(h1, h2, b);
-        assertTrue(comp > 0);
+        TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
+        Hand h1 = new Hand(Card.TWO_OF_HEARTS, Card.NINE_OF_DIAMONDS);
+        Hand h2 = new Hand(Card.JACK_OF_CLUBS, Card.EIGHT_OF_DIAMONDS);
+        Board b = new Board();
+        b.addCard(Card.ACE_OF_CLUBS);
+        b.addCard(Card.KING_OF_SPADES);
+        b.addCard(Card.SEVEN_OF_SPADES);
+        b.addCard(Card.EIGHT_OF_SPADES);
+        b.addCard(Card.NINE_OF_HEARTS);
+        Board b1 = new Board(Card.ACE_OF_CLUBS,
+                Card.KING_OF_SPADES,
+                Card.SEVEN_OF_SPADES,
+                Card.EIGHT_OF_SPADES, Card.NINE_OF_HEARTS);
+//        System.out.println(b.getFlopCards());
+        System.out.println("h1: "+evaluator.evaluate(b,h1).getValue());
+        System.out.println("h2: "+evaluator.evaluate(b,h2).getValue());
+//        Player hbg2 = new Player("hbg2");
+//        Player hbg1 = new Player("hbg1");
+//        hbg2.setGlobalBalance(5000);
+//        hbg1.setGlobalBalance(5000);
+//
+//        Room room = new Room(hbg2, BlindLevel.BLIND_10_20);
+//        room.addPlayer(hbg1);
+//        Game game = room.getCurrentGame();
+//        game.setDealer(hbg2);
+//        game.preflop();
+////        game.flop();
+////        game.turn();
+////        game.river();
+//
+//        game.setBoard(b);
+//        hbg2.setPlayerHand(h1);
+//        hbg1.setPlayerHand(h2);
+//
+//        game.endGame();
+//
+//
+//
+//        List<Hand> list = new ArrayList<>();
+//        list.add(h1);
+//        list.add(h2);
+//        list.sort(new Comparator<Hand>() {
+//            public int compare(Hand o1, Hand o2) {
+//                return TwoPlusTwoHandEvaluator.compare(o1, o2, b);
+//
+//            }
+//        });
+//        for(Hand h : list){
+//            System.out.println(evaluator.evaluate(b,h).getValue());
+//        }
+//        System.out.println("hbg2: "+evaluator.evaluate(b,h1).getValue());
+//        System.out.println("hbg1: "+evaluator.evaluate(b,h2).getValue());
     }
 
     /**
@@ -266,7 +311,7 @@ public class CardEvaluatorTest extends TestCase {
      */
     @Test
     public void testFullHouseType() {
-        Hand h1 = new Hand(Card.JACK_OF_DIAMONDS, Card.NINE_OF_CLUBS);
+        Hand h1 = new Hand(Card.KING_OF_SPADES, Card.NINE_OF_CLUBS);
         Board b = new Board(Card.JACK_OF_CLUBS, Card.THREE_OF_HEARTS, Card.NINE_OF_DIAMONDS,
                 Card.JACK_OF_SPADES, Card.EIGHT_OF_DIAMONDS);
         TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();

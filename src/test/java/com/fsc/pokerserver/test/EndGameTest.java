@@ -44,6 +44,7 @@ public class EndGameTest {
     @Before
     public void setUp() throws Exception {
         master = new Player("Room master");
+        master.setGlobalBalance(5000);
         room = new Room(master, BlindLevel.BLIND_10_20);
 
     }
@@ -52,30 +53,28 @@ public class EndGameTest {
     /**
      * Error order number from player Check, bet, fold before end game.
      */
-    @Test(expected = AssertionError.class)
-    public void testCheckBetFoldBeforeEndGame() {
+    @Test
+    public void testCheckBetFoldBeforeEndGame() throws Exception {
         Game game = room.createNewGame();
 
         Player player2 = new Player("Player 2");
-        game.addPlayer(player2);
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
         Player player3 = new Player("Player 3");
-        game.addPlayer(player3);
+        player3.setGlobalBalance(5000);
+        room.addPlayer(player3);
         Player player4 = new Player("Player 4");
-        game.addPlayer(player4);
+        player4.setGlobalBalance(5000);
+        room.addPlayer(player4);
         Player player5 = new Player("Player 5");
-        game.addPlayer(player5);
-
+        player5.setGlobalBalance(5000);
+        room.addPlayer(player5);
         game.setDealer(player5);
-
-        master.setBalance(1000);
-        player2.setBalance(1000);
-        player3.setBalance(1000);
-        player4.setBalance(1000);
-        player5.setBalance(1000);
 
         game.startGame();
 
         game.preflop();
+
         player3.fold();
         player4.bet(20);
         player5.bet(30);
@@ -96,12 +95,13 @@ public class EndGameTest {
         player2.bet(20);
         player5.bet(20);
         master.fold();
-
+//
         game.river();
         player2.bet(20);
 //		player5 need bet before player2
-        player2.fold();
+        assertSame(player5, game.getCurrentPlayer());
         player5.bet(30);
+        player2.fold();
 
     }
 
@@ -115,21 +115,19 @@ public class EndGameTest {
         Game game = room.createNewGame();
 
         Player player2 = new Player("Player 2");
-        game.addPlayer(player2);
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
         Player player3 = new Player("Player 3");
-        game.addPlayer(player3);
+        player3.setGlobalBalance(5000);
+        room.addPlayer(player3);
         Player player4 = new Player("Player 4");
-        game.addPlayer(player4);
+        player4.setGlobalBalance(5000);
+        room.addPlayer(player4);
         Player player5 = new Player("Player 5");
-        game.addPlayer(player5);
+        player5.setGlobalBalance(5000);
+        room.addPlayer(player5);
 
         game.setDealer(player5);
-
-        master.setBalance(1000);
-        player2.setBalance(1000);
-        player3.setBalance(1000);
-        player4.setBalance(1000);
-        player5.setBalance(1000);
 
         game.startGame();
 
@@ -161,7 +159,6 @@ public class EndGameTest {
         player2.bet(20);
 
         game.endGame();
-        assertEquals(game.getPotBalance(), 270);
     }
 
     /**
@@ -172,21 +169,20 @@ public class EndGameTest {
         Game game = room.createNewGame();
 
         Player player2 = new Player("Player 2");
-        game.addPlayer(player2);
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
         Player player3 = new Player("Player 3");
-        game.addPlayer(player3);
+        player3.setGlobalBalance(5000);
+        room.addPlayer(player3);
         Player player4 = new Player("Player 4");
-        game.addPlayer(player4);
+        player4.setGlobalBalance(5000);
+        room.addPlayer(player4);
         Player player5 = new Player("Player 5");
-        game.addPlayer(player5);
+        player5.setGlobalBalance(5000);
+        room.addPlayer(player5);
 
         game.setDealer(player5);
 
-        master.setBalance(1000);
-        player2.setBalance(1000);
-        player3.setBalance(1000);
-        player4.setBalance(1000);
-        player5.setBalance(1000);
 
         game.startGame();
 
@@ -230,21 +226,19 @@ public class EndGameTest {
         Game game = room.createNewGame();
 
         Player player2 = new Player("Player 2");
-        game.addPlayer(player2);
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
         Player player3 = new Player("Player 3");
-        game.addPlayer(player3);
+        player3.setGlobalBalance(5000);
+        room.addPlayer(player3);
         Player player4 = new Player("Player 4");
-        game.addPlayer(player4);
+        player4.setGlobalBalance(5000);
+        room.addPlayer(player4);
         Player player5 = new Player("Player 5");
-        game.addPlayer(player5);
+        player5.setGlobalBalance(5000);
+        room.addPlayer(player5);
 
         game.setDealer(player5);
-
-        master.setBalance(1000);
-        player2.setBalance(1000);
-        player3.setBalance(1000);
-        player4.setBalance(1000);
-        player5.setBalance(1000);
 
         game.startGame();
 
@@ -282,26 +276,22 @@ public class EndGameTest {
 
     @Test
     public void testNextGame_noOneLeft() {
-        Player master = new Player("master");
-        Room room = new Room(master, BlindLevel.BLIND_10_20);
         Game game = room.createNewGame();
 
         Player player2 = new Player("Player 2");
-        game.addPlayer(player2);
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
         Player player3 = new Player("Player 3");
-        game.addPlayer(player3);
+        player3.setGlobalBalance(5000);
+        room.addPlayer(player3);
         Player player4 = new Player("Player 4");
-        game.addPlayer(player4);
+        player4.setGlobalBalance(5000);
+        room.addPlayer(player4);
         Player player5 = new Player("Player 5");
-        game.addPlayer(player5);
+        player5.setGlobalBalance(5000);
+        room.addPlayer(player5);
 
         game.setDealer(player5);
-
-        master.setBalance(1000);
-        player2.setBalance(1000);
-        player3.setBalance(1000);
-        player4.setBalance(1000);
-        player5.setBalance(1000);
 
         game.startGame();
         game.preflop();
@@ -341,18 +331,20 @@ public class EndGameTest {
 
     @Test
     public void testNextGame_newPlayerJoin() {
-        Player master = new Player("master");
-        Room room = new Room(master, BlindLevel.BLIND_10_20);
         Game game = room.createNewGame();
 
         Player player2 = new Player("Player 2");
-        game.addPlayer(player2);
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
         Player player3 = new Player("Player 3");
-        game.addPlayer(player3);
+        player3.setGlobalBalance(5000);
+        room.addPlayer(player3);
         Player player4 = new Player("Player 4");
-        game.addPlayer(player4);
+        player4.setGlobalBalance(5000);
+        room.addPlayer(player4);
         Player player5 = new Player("Player 5");
-        game.addPlayer(player5);
+        player5.setGlobalBalance(5000);
+        room.addPlayer(player5);
 
         game.setDealer(player5);
 
@@ -393,6 +385,7 @@ public class EndGameTest {
 
         game.endGame();
         Player player6 = new Player("Player6");
+        player6.setGlobalBalance(5000);
         room.addPlayer(player6);
         game = room.nextGame();
         /**
@@ -402,26 +395,22 @@ public class EndGameTest {
 
     @Test
     public void testNextGame_PlayersFold() {
-        Player master = new Player("master");
-        Room room = new Room(master, BlindLevel.BLIND_10_20);
         Game game = room.createNewGame();
 
         Player player2 = new Player("Player 2");
+        player2.setGlobalBalance(5000);
         room.addPlayer(player2);
         Player player3 = new Player("Player 3");
+        player3.setGlobalBalance(5000);
         room.addPlayer(player3);
         Player player4 = new Player("Player 4");
+        player4.setGlobalBalance(5000);
         room.addPlayer(player4);
         Player player5 = new Player("Player 5");
+        player5.setGlobalBalance(5000);
         room.addPlayer(player5);
 
         game.setDealer(player5);
-
-        master.setBalance(1000);
-        player2.setBalance(1000);
-        player3.setBalance(1000);
-        player4.setBalance(1000);
-        player5.setBalance(1000);
 
         game.startGame();
         game.preflop();
@@ -467,26 +456,22 @@ public class EndGameTest {
 
     @Test
     public void testNextGame_DealerQuit() {
-        Player master = new Player("master");
-        Room room = new Room(master, BlindLevel.BLIND_10_20);
         Game game = room.createNewGame();
 
         Player player2 = new Player("Player 2");
+        player2.setGlobalBalance(5000);
         room.addPlayer(player2);
         Player player3 = new Player("Player 3");
+        player3.setGlobalBalance(5000);
         room.addPlayer(player3);
         Player player4 = new Player("Player 4");
+        player4.setGlobalBalance(5000);
         room.addPlayer(player4);
         Player player5 = new Player("Player 5");
+        player5.setGlobalBalance(5000);
         room.addPlayer(player5);
 
         game.setDealer(player5);
-
-        master.setBalance(1000);
-        player2.setBalance(1000);
-        player3.setBalance(1000);
-        player4.setBalance(1000);
-        player5.setBalance(1000);
 
         game.startGame();
         game.preflop();
@@ -531,26 +516,22 @@ public class EndGameTest {
     public void testNextGame_DealerQuit2() {
         /**
          * Player 3 was set as dealer*/
-        Player master = new Player("master");
-        Room room = new Room(master, BlindLevel.BLIND_10_20);
         Game game = room.createNewGame();
 
         Player player2 = new Player("Player 2");
+        player2.setGlobalBalance(5000);
         room.addPlayer(player2);
         Player player3 = new Player("Player 3");
+        player3.setGlobalBalance(5000);
         room.addPlayer(player3);
         Player player4 = new Player("Player 4");
+        player4.setGlobalBalance(5000);
         room.addPlayer(player4);
         Player player5 = new Player("Player 5");
+        player5.setGlobalBalance(5000);
         room.addPlayer(player5);
 
         game.setDealer(player3);
-
-        master.setBalance(1000);
-        player2.setBalance(1000);
-        player3.setBalance(1000);
-        player4.setBalance(1000);
-        player5.setBalance(1000);
 
         game.startGame();
         game.preflop();
@@ -600,20 +581,18 @@ public class EndGameTest {
         Game game = room.createNewGame();
 
         Player player2 = new Player("Player 2");
-        game.addPlayer(player2);
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
         Player player3 = new Player("Player 3");
-        game.addPlayer(player3);
+        player3.setGlobalBalance(5000);
+        room.addPlayer(player3);
         Player player4 = new Player("Player 4");
-        game.addPlayer(player4);
+        player4.setGlobalBalance(5000);
+        room.addPlayer(player4);
         Player player5 = new Player("Player 5");
-        game.addPlayer(player5);
+        player5.setGlobalBalance(5000);
+        room.addPlayer(player5);
         game.setDealer(player5);
-
-        master.setBalance(1000);
-        player2.setBalance(1000);
-        player3.setBalance(1000);
-        player4.setBalance(1000);
-        player5.setBalance(1000);
 
         game.startGame();
         //P1 and P2 is SB and BB.
@@ -663,20 +642,19 @@ public class EndGameTest {
     public void testGetPotIfPlayingTheBoard2() {
         Game game = room.createNewGame();
         Player player2 = new Player("Player 2");
-        game.addPlayer(player2);
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
         Player player3 = new Player("Player 3");
-        game.addPlayer(player3);
+        player3.setGlobalBalance(5000);
+        room.addPlayer(player3);
         Player player4 = new Player("Player 4");
-        game.addPlayer(player4);
+        player4.setGlobalBalance(5000);
+        room.addPlayer(player4);
         Player player5 = new Player("Player 5");
-        game.addPlayer(player5);
+        player5.setGlobalBalance(5000);
+        room.addPlayer(player5);
         game.setDealer(player5);
 
-        master.setBalance(1000);
-        player2.setBalance(1000);
-        player3.setBalance(1000);
-        player4.setBalance(1000);
-        player5.setBalance(1000);
 
         game.startGame();
         //P1 and P2 is SB and BB.

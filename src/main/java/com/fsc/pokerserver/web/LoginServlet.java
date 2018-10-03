@@ -57,7 +57,7 @@ public class LoginServlet extends HttpServlet {
         // TODO Auto-generated method stub
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST");
-        resp.setHeader("Access-Control-Allow-Headers", "Content-Type, authorization");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type, authorization,responseType");
         resp.setHeader("Access-Control-Max-Age", "86400");
         resp.setHeader("Cache-Control", "public, max-age=90000");
         // Tell the browser what requests we allow.
