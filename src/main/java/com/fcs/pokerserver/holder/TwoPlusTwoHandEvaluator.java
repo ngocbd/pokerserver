@@ -83,7 +83,7 @@ public class TwoPlusTwoHandEvaluator {
         }
 //        System.out.println("Board flop: " + board.getFlopCards() + " ,turn: " + board.getTurnCard() + " ,river: " + board.getRiverCard());
 //        System.out.println("Hand: " + hand.toString());
-        HandRank hr=new HandRank(p);
+        HandRank hr = new HandRank(p);
 //        System.out.println("handrank: " + hr.getValue());
         return hr;
     }

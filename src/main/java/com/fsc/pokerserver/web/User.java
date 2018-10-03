@@ -47,11 +47,20 @@ public class User {
     private long balance;
     private String avatar_url;
 
+    public User() {
+    }
+
+    public User(String username) {
+        this.username = username;
+    }
+
     /**
      * Return the username
      *
      * @return String username
      */
+
+
     public String getUsername() {
         return username;
     }
