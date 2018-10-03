@@ -680,9 +680,17 @@ public class Game implements AbstractPlayerListener, GameMBean {
      */
     @Override
     public void actionPerformed(AbstractPlayerEvent e) {
+        if (this.status == GameStatus.END_HAND) {
+            System.out.println("Game is ended. Nothing could happens now.");
+            return;
+        }
         Player p = e.getSrc();
         if (p != this.currentPlayer) {
-            System.out.println("This is not current player: "+p.getId()+" current is : "+this.currentPlayer.getId());
+            System.out.println("This is not current player: " + p.getId() + " current is : " + this.currentPlayer.getId());
+            return;
+        }
+        if (p.isSittingOut()) {
+            System.out.println("This player: " + p.getId() + " is folded. Cannot make more actions!");
             return;
         }
         assert p == this.getCurrentPlayer();

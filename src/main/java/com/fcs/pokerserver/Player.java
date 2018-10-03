@@ -69,7 +69,7 @@ public class Player implements PlayerMBean {
     private String avatar_url;
     private Timer countdown = new Timer();
     private CountDownPlayer task = null;
-    private long COUNTDOWN_DELAY = 5 * 1000;
+    private long COUNTDOWN_DELAY = 15 * 1000;
 
     @Override
     public String toString() {
