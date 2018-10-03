@@ -736,10 +736,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 if (i == 1) {
                     temp.getCurrentGame().endGameSoon(temp);
                 } else {
-                    if (isNextRoundReady()) {
-                        this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
-                        autoNextRound();
-                    } else
+//                    if (isNextRoundReady()) {
+//                        this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+//                        autoNextRound();
+//                    } else
                         this.setCurrentPlayer(this.getNextPlayer(p));
                 }
 
@@ -750,10 +750,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
                 ge.setE(pce);
                 this.fireEvent(ge);
-                if (isNextRoundReady()) {
-                    this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
-                    autoNextRound();
-                } else
+//                if (isNextRoundReady()) {
+//                    this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+//                    autoNextRound();
+//                } else
                     this.setCurrentPlayer(this.getNextPlayer(p));
             }
             if (e instanceof GetTurnPlayerEvent) {
