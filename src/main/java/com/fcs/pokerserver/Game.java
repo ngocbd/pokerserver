@@ -199,7 +199,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
         this.fireEvent(gameEvent);
         this.setStatus(GameStatus.FLOP);
 
-        this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+//        this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
         this.setCurrentBet(0);
 
         this.setRound((short) 2);
@@ -223,7 +223,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
         this.fireEvent(gameEvent);
         this.setStatus(GameStatus.TURN);
         //TODO need to check before current player fold or not
-        this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+//        this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
         this.setCurrentBet(0);
 
         //this.setRound((short) 3);
@@ -241,17 +241,17 @@ public class Game implements AbstractPlayerListener, GameMBean {
         RoundGameEvent gameEvent = new RoundGameEvent(this, GameAction.RIVER);
         this.fireEvent(gameEvent);
         this.setStatus(GameStatus.RIVER);
-
-
         //this.setRound((short) 4);
     }
-
 
     /**
      * Finish the game. Show the winner Player.
      */
     public void endGame() {
-//		assert this.isNextRoundReady();
+		assert this.isNextRoundReady();
+        if (this.getStatus() == GameStatus.END_HAND) return;
+        winners = new ArrayList<>();
+        bestHands = new ArrayList<>();
         this.setStatus(GameStatus.END_HAND);
         EndGameEvent gameEvent = new EndGameEvent(this);
 
@@ -259,9 +259,11 @@ public class Game implements AbstractPlayerListener, GameMBean {
         for (int i = 0; i < this.getListPlayer().size(); i++) {
             Player p = this.getListPlayer().get(i);
             if (p.isSittingOut()) continue;
-            list.add(this.getListPlayer().get(i).getPlayerHand());
+            list.add(p.getPlayerHand());
         }
-        Board b = this.getBoard();
+        Board b1 = this.getBoard();
+        Board b = new Board(b1.getFlopCards().get(0), b1.getFlopCards().get(1), b1.getFlopCards().get(2), b1.getTurnCard(), b1.getRiverCard());
+        this.setBoard(b);
 
         list.sort(new Comparator<Hand>() {
             public int compare(Hand o1, Hand o2) {
@@ -269,7 +271,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
             }
         });
-
         TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
         Hand highestHand = list.get(list.size() - 1);
         HandRank highestRank = evaluator.evaluate(b, highestHand);
@@ -284,23 +285,26 @@ public class Game implements AbstractPlayerListener, GameMBean {
         }
         /**
          * Check whether multiple winners case occured*/
-        for (int i = list.size() - 2; i >= 0; i--) {
-            Hand temp = list.get(i);
-            HandRank tempRank = evaluator.evaluate(b, temp);
-            if (tempRank.getValue() < highestRank.getValue()) break;
-            bestHands.add(temp);
-            for (int y = 0; y < this.getListPlayer().size(); y++) {
-                Player p = this.listPlayer.get(y);
-                if (p.isSittingOut()) continue;
-                if (this.getListPlayer().get(y).getPlayerHand() == temp) {
-                    winners.add(this.getListPlayer().get(y));
+        if (list.size() > 1) {
+            for (int i = list.size() - 2; i >= 0; i--) {
+                Hand temp = list.get(i);
+                HandRank tempRank = evaluator.evaluate(b, temp);
+                if (tempRank.getValue() < highestRank.getValue()) break;
+                bestHands.add(temp);
+                for (int y = 0; y < this.getListPlayer().size(); y++) {
+                    Player p = this.listPlayer.get(y);
+                    if (p.isSittingOut()) continue;
+                    if (this.getListPlayer().get(y).getPlayerHand() == temp) {
+                        winners.add(this.getListPlayer().get(y));
+                    }
                 }
             }
         }
         //rank of winner player
         rank = highestRank.toString();
         gameEvent.setBestHands(bestHands);
-        gameEvent.setRank(rank);
+//        gameEvent.setRank(rank);
+        gameEvent.setRank(String.valueOf(highestRank.getValue()));
         gameEvent.setPlayerwins(winners);
 
 /**
@@ -319,6 +323,16 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
 
     }
+
+    public void endGameSoon(Player p) {
+        if (this.getStatus() == GameStatus.END_HAND) return;
+        this.setStatus(GameStatus.END_HAND);
+        winners = new ArrayList<>();
+        bestHands = new ArrayList<>();
+        EndGameEvent gameEvent = new EndGameEvent(this);
+
+    }
+
 
     public void autoNextRound() {
         switch (this.status) {
@@ -492,6 +506,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * @throws AssertionError the list of Players is not contain the Player.
      */
     public Player getNextPlayer(Player p) {
+//        System.out.println(listPlayer.toString());
         assert listPlayer.contains(p);
         Player temp = null;
         for (int i = 0; i < this.getListPlayer().size(); i++) {
@@ -504,6 +519,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
         }
         if (temp.isSittingOut()) {
             return getNextPlayer(temp);
+//            return temp;
         } else
             return temp;
     }
@@ -657,10 +673,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
     @Override
     public void actionPerformed(AbstractPlayerEvent e) {
         Player p = e.getSrc();
-        if (p != this.currentPlayer) {
-            System.out.println("This is not current player");
-            return;
-        }
+//        if (p != this.currentPlayer) {
+//            System.out.println("This is not current player: "+p.getId()+" current is : "+this.currentPlayer.getId());
+//            return;
+//        }
         assert p == this.getCurrentPlayer();
         if (listPlayer.contains(p)) {
             if (e instanceof PlayerBetEvent) {
@@ -687,7 +703,22 @@ public class Game implements AbstractPlayerListener, GameMBean {
             if (e instanceof PlayerFoldEvent) {
                 PlayerFoldEvent pfe = (PlayerFoldEvent) e;
                 p.setSittingOut(true);
-                this.setCurrentPlayer(this.getNextPlayer(p));
+                /**
+                 * Check if there is only 1 player playing after this player fold then endgame immediately*/
+                int i = 0;
+                Player temp = null;
+                for (Player player : this.listPlayer) {
+                    if (!player.isSittingOut()) {
+                        i++;
+                        temp = player;
+                    }
+                }
+                if (i == 1) {
+                    temp.getCurrentGame().endGame();
+                } else {
+                    this.setCurrentPlayer(this.getNextPlayer(p));
+                }
+
                 PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
                 ge.setE(pfe);
                 this.fireEvent(ge);
@@ -726,7 +757,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
     public void setCurrentPlayer(Player p) {
         this.currentPlayer = p;
         this.currentPlayer.myTurn();
-
     }
 
     /**
@@ -821,7 +851,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
     @Override
     public String jmx_getBoard() {
-        return this.board.toString();
+        return "flop: " + board.getFlopCards().toString() + " turn: " + board.getTurnCard() + " river: " + board.getRiverCard();
     }
 
     @Override

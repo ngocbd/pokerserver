@@ -23,6 +23,10 @@ public class CountDownPlayer extends TimerTask {
         return new CountDownPlayer(p, g);
     }
 
+    public String getId() {
+        return id;
+    }
+
     @Override
     public void run() {
         System.out.println("PID: " + player.getId() + " id: " + id);
@@ -30,6 +34,5 @@ public class CountDownPlayer extends TimerTask {
             player.fold();
             System.out.println("IN " + id + " Player: " + player.getId() + " is folded automaticatlly!");
         }
-        this.cancel();
     }
 }

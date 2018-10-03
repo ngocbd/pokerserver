@@ -31,7 +31,9 @@ import java.util.Timer;
 
 import com.fcs.pokerserver.automation.CountDownPlayer;
 import com.fcs.pokerserver.events.*;
+import com.fcs.pokerserver.holder.Board;
 import com.fcs.pokerserver.holder.Hand;
+import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
 import com.google.api.gax.rpc.AlreadyExistsException;
 import com.google.gson.annotations.Expose;
 import com.googlecode.objectify.annotation.Entity;
@@ -66,6 +68,7 @@ public class Player implements PlayerMBean {
     private Game currentGame = null;
     private String avatar_url;
     private Timer countdown = new Timer();
+    private CountDownPlayer task = null;
     private final long COUNTDOWN_DELAY = 3 * 1000;
 
     @Override
@@ -75,7 +78,7 @@ public class Player implements PlayerMBean {
 
     @Override
     public String jmx_info() {
-        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + "}";
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() +",\"hand\":"+playerHand.toString()+"}";
     }
 
     @Override
@@ -111,6 +114,19 @@ public class Player implements PlayerMBean {
     @Override
     public void jmx_setGameBet(long amount) {
         this.gameBet = amount;
+    }
+
+    @Override
+    public int jmx_evaluateHand() {
+        Board b = this.getCurrentGame().getBoard();
+        TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
+        return evaluator.evaluate(b,this.getPlayerHand()).getValue();
+    }
+
+    @Override
+    public String jmx_getBoard() {
+        Board b = this.getCurrentGame().getBoard();
+        return "flop: "+ b.getFlopCards()+" turn: "+b.getTurnCard()+" river: "+b.getRiverCard();
     }
 
     public void registerMbean() {
@@ -168,7 +184,10 @@ public class Player implements PlayerMBean {
         this.setRoundBet(this.getRoundBet() + amount);
         this.gameBet += amount;
         this.balance = this.balance - amount;
-
+        if (task != null) {
+            task.cancel();
+        }
+        ;
         PlayerBetEvent pbe = new PlayerBetEvent(this);
         pbe.setAmount(amount);
         this.triggerEvent(pbe);
@@ -207,6 +226,9 @@ public class Player implements PlayerMBean {
      * The Player want to fold in the game.
      */
     public void fold() {
+        if (task != null) {
+            task.cancel();
+        }
         PlayerFoldEvent pfe = new PlayerFoldEvent(this);
         this.triggerEvent(pfe);
         this.sittingOut = true;
@@ -216,6 +238,10 @@ public class Player implements PlayerMBean {
      * The Player want to check in the game.
      */
     public void check() {
+        if (task != null) {
+            task.cancel();
+        }
+        ;
         PlayerCheckEvent pce = new PlayerCheckEvent(this);
         this.triggerEvent(pce);
     }
@@ -248,11 +274,11 @@ public class Player implements PlayerMBean {
 
 
     public void myTurn() {
-        countdown.schedule(CountDownPlayer.createInstance(this, this.getCurrentGame()), COUNTDOWN_DELAY);
-        System.out.println("My Turn: " + this.getId());
+//        task = CountDownPlayer.createInstance(this, this.getCurrentGame());
+//        countdown.schedule(task, COUNTDOWN_DELAY);
+//        System.out.println("My Turn: " + this.getId() + " ID task: " + task.getId());
         GetTurnPlayerEvent e = new GetTurnPlayerEvent(this);
         this.triggerEvent(e);
-
     }
 
     /**

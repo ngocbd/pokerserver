@@ -345,7 +345,7 @@ public class Room implements GameListener, RoomMBean {
     public String toString() {
         // TODO Auto-generated method stub need to fix
         return "{\"id\":"+this.RoomID+",\"playerCount\":"
-                +listPlayer.size()+",\"blindLevel\":\""
+                +this.listPlayer.size()+",\"blindLevel\":\""
                 +blindLevel+"\",\"master\":\""
                 +master.getId()+"\"}";
     }
