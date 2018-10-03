@@ -344,10 +344,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
     public void autoNextRound() {
         switch (this.status) {
-            case NOT_STARTED:
-            case SEATING:
-                this.preflop();
-                break;
+//            case NOT_STARTED:
+//            case SEATING:
+//                this.preflop();
+//                break;
             case PREFLOP:
                 this.flop();
                 break;
@@ -693,7 +693,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
             System.out.println("This player: " + p.getId() + " is folded. Cannot make more actions!");
             return;
         }
-        assert p == this.getCurrentPlayer();
+//        assert p == this.getCurrentPlayer();
         if (listPlayer.contains(p)) {
             if (e instanceof PlayerBetEvent) {
                 PlayerBetEvent pbe = (PlayerBetEvent) e;
@@ -701,24 +701,28 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
                 this.potBalance += pbe.getAmount();
                 this.currentRoundBet = p.getRoundBet(); // set current bet equal to this bet amount
-
+                PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
+                ge.setE(pbe);
+                this.fireEvent(ge);
                 //TODO Temporary set check next round for game
                 // if next round ready then next Player will be left person of dealer
                 if (isNextRoundReady()) {
                     this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+                    autoNextRound();
                 } else {
                     Player next = this.getNextPlayer(p);
                     if (next != null) {
                         this.setCurrentPlayer(next);
                     }
                 }
-                PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
-                ge.setE(pbe);
-                this.fireEvent(ge);
+
             }
             if (e instanceof PlayerFoldEvent) {
                 PlayerFoldEvent pfe = (PlayerFoldEvent) e;
                 p.setSittingOut(true);
+                PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
+                ge.setE(pfe);
+                this.fireEvent(ge);
                 /**
                  * Check if there is only 1 player playing after this player fold then endgame immediately*/
                 int i = 0;
@@ -732,19 +736,25 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 if (i == 1) {
                     temp.getCurrentGame().endGameSoon(temp);
                 } else {
-                    this.setCurrentPlayer(this.getNextPlayer(p));
+                    if (isNextRoundReady()) {
+                        this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+                        autoNextRound();
+                    } else
+                        this.setCurrentPlayer(this.getNextPlayer(p));
                 }
 
-                PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
-                ge.setE(pfe);
-                this.fireEvent(ge);
+
             }
             if (e instanceof PlayerCheckEvent) {
                 PlayerCheckEvent pce = (PlayerCheckEvent) e;
-                this.setCurrentPlayer(this.getNextPlayer(p));
                 PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
                 ge.setE(pce);
                 this.fireEvent(ge);
+                if (isNextRoundReady()) {
+                    this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+                    autoNextRound();
+                } else
+                    this.setCurrentPlayer(this.getNextPlayer(p));
             }
             if (e instanceof GetTurnPlayerEvent) {
                 GetTurnPlayerEvent gte = (GetTurnPlayerEvent) e;

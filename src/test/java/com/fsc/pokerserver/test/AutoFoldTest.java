@@ -17,7 +17,18 @@ public class AutoFoldTest {
         master.setCOUNTDOWN_DELAY(5 * 1000);
         room = new Room(master, BlindLevel.BLIND_10_20);
     }
-
+    @Test
+    public void TwoP(){
+        Player player2 = new Player("p2");
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
+        Game game = room.getCurrentGame();
+        game.setDealer(player2);
+        game.startGame();
+        game.preflop();
+        master.bet(10);
+        System.out.println("currentP: "+game.getCurrentPlayer());
+    }
     @Test
     public void autoFold_Only1Remaining_endGameSooner() throws Exception {
         Game game = room.createNewGame();
