@@ -267,7 +267,11 @@ public class Room implements GameListener, RoomMBean {
      * @return Game currentGame
      */
     public Game nextGame() {
-        assert this.currentGame.getStatus() == GameStatus.END_HAND;
+        if (this.currentGame.getStatus() != GameStatus.END_HAND) {
+            System.out.println("Game is already started");
+            return null;
+        }
+//        assert this.currentGame.getStatus() == GameStatus.END_HAND;
         Game previous_Game = this.currentGame;
         Player previous_dealer = previous_Game.getDealer();
         int previous_dealer_index = previous_Game.getDealer_index();
@@ -344,10 +348,10 @@ public class Room implements GameListener, RoomMBean {
     @Override
     public String toString() {
         // TODO Auto-generated method stub need to fix
-        return "{\"id\":"+this.RoomID+",\"playerCount\":"
-                +this.listPlayer.size()+",\"blindLevel\":\""
-                +blindLevel+"\",\"master\":\""
-                +master.getId()+"\"}";
+        return "{\"id\":" + this.RoomID + ",\"playerCount\":"
+                + this.listPlayer.size() + ",\"blindLevel\":\""
+                + blindLevel + "\",\"master\":\""
+                + master.getId() + "\"}";
     }
 
     /**
