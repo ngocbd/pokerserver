@@ -147,7 +147,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
      */
     public void preflop() {
         assert this.listPlayer.size() >= 2;
-
+        //reset command flag.
+        this.resetCommandFlag();
         this.setStatus(GameStatus.PREFLOP);
         long betBigBlind = this.getRoom().getBlindLevel().getBigBlind();
         long betSmallBlind = this.getRoom().getBlindLevel().getSmallBlind();
@@ -185,6 +186,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
     public void flop() {
 
         assert this.isNextRoundReady();
+        this.resetCommandFlag();
         for (Player player : listPlayer) {
 
             player.nextRound();
@@ -212,6 +214,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
      */
     public void turn() {
         assert this.isNextRoundReady();
+        this.resetCommandFlag();
+
 //		for (Player player : listPlayer) {
 //			
 //			assert player.isSittingOut() || player.didCommandThisTurn();
@@ -236,6 +240,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
      */
     public void river() {
         assert this.isNextRoundReady();
+        this.resetCommandFlag();
+
         Card card = this.deck.dealCard();
         this.getBoard().addCard(card);
         RoundGameEvent gameEvent = new RoundGameEvent(this, GameAction.RIVER);
@@ -441,6 +447,13 @@ public class Game implements AbstractPlayerListener, GameMBean {
     }
 
     /**
+     * Reset CommmandThisTurn flag of all playing player
+     **/
+    public void resetCommandFlag() {
+        this.listPlayer.stream().filter(p -> !p.isSittingOut()).forEach(p -> p.setCommandThisTurn(false));
+    }
+
+    /**
      * Return List of Player in Game
      *
      * @return List<Player> list
@@ -624,11 +637,14 @@ public class Game implements AbstractPlayerListener, GameMBean {
      */
     public boolean isNextRoundReady() {
         //TODO need more test and code review
-        return !this.listPlayer.stream()
+        boolean hasPlayerNotAct = this.listPlayer.stream()
+                .filter(p -> !p.isSittingOut())
+                .anyMatch(p -> !p.didCommandThisTurn());
+        boolean doAllPlayersBetEqual = !this.listPlayer.stream()
                 .filter(x -> !x.isSittingOut())
-                //.filter(x -> x.getRoundBet() != this.getCurrentRoundBet() || x.getRound() != this.getRound())
                 .filter(x -> x.getRoundBet() != this.getCurrentRoundBet())
                 .findAny().isPresent();
+        return doAllPlayersBetEqual && !hasPlayerNotAct;
     }
 
 
@@ -704,6 +720,9 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
                 ge.setE(pbe);
                 this.fireEvent(ge);
+
+//              This player has action now.
+                p.setCommandThisTurn(true);
                 //TODO Temporary set check next round for game
                 // if next round ready then next Player will be left person of dealer
                 if (isNextRoundReady()) {
@@ -723,6 +742,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
                 ge.setE(pfe);
                 this.fireEvent(ge);
+
+//              This player has action now.
+                p.setCommandThisTurn(true);
+
                 /**
                  * Check if there is only 1 player playing after this player fold then endgame immediately*/
                 int i = 0;
@@ -736,10 +759,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 if (i == 1) {
                     temp.getCurrentGame().endGameSoon(temp);
                 } else {
-//                    if (isNextRoundReady()) {
-//                        this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
-//                        autoNextRound();
-//                    } else
+                    if (isNextRoundReady()) {
+                        this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+                        autoNextRound();
+                    } else
                         this.setCurrentPlayer(this.getNextPlayer(p));
                 }
 
@@ -750,10 +773,13 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
                 ge.setE(pce);
                 this.fireEvent(ge);
-//                if (isNextRoundReady()) {
-//                    this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
-//                    autoNextRound();
-//                } else
+
+//              This player has action now.
+                p.setCommandThisTurn(true);
+                if (isNextRoundReady()) {
+                    this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+                    autoNextRound();
+                } else
                     this.setCurrentPlayer(this.getNextPlayer(p));
             }
             if (e instanceof GetTurnPlayerEvent) {
