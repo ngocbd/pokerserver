@@ -630,6 +630,12 @@ public class Game implements AbstractPlayerListener, GameMBean {
         }
     }
 
+    public void dumpListPlayer() {
+        for (Player p : listPlayer) {
+            p.detachListener();
+        }
+    }
+
     /**
      * Return the Next Round Ready for Player
      *

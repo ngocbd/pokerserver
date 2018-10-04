@@ -69,16 +69,16 @@ public class Player implements PlayerMBean {
     private String avatar_url;
     private Timer countdown = new Timer();
     private CountDownPlayer task = null;
-    private long COUNTDOWN_DELAY = 20 * 1000;
+    private long COUNTDOWN_DELAY = 30 * 1000;
 
     @Override
     public String toString() {
-        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + "}";
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() +",\"isCommandThisTurn\":" + this.didCommandThisTurn() + "}";
     }
 
     @Override
     public String jmx_info() {
-        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() +",\"hand\":"+playerHand.toString()+"}";
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + ",\"hand\":" + playerHand.toString() + "}";
     }
 
     @Override
@@ -120,13 +120,13 @@ public class Player implements PlayerMBean {
     public int jmx_evaluateHand() {
         Board b = this.getCurrentGame().getBoard();
         TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
-        return evaluator.evaluate(b,this.getPlayerHand()).getValue();
+        return evaluator.evaluate(b, this.getPlayerHand()).getValue();
     }
 
     @Override
     public String jmx_getBoard() {
         Board b = this.getCurrentGame().getBoard();
-        return "flop: "+ b.getFlopCards()+" turn: "+b.getTurnCard()+" river: "+b.getRiverCard();
+        return "flop: " + b.getFlopCards() + " turn: " + b.getTurnCard() + " river: " + b.getRiverCard();
     }
 
     public void registerMbean() {
@@ -162,13 +162,8 @@ public class Player implements PlayerMBean {
         listeners.add(listener);
     }
 
-    public AbstractPlayerListener detachListener(AbstractPlayerListener listener) {
-        if (listeners.contains(listener)) {
-            return null;
-        } else {
-            listeners.remove(listener);
-            return listener;
-        }
+    public void detachListener() {
+        listeners = new ArrayList<>();
     }
 
     /**
@@ -279,6 +274,14 @@ public class Player implements PlayerMBean {
         System.out.println("My Turn: " + this.getId() + " ID task: " + task.getId());
         GetTurnPlayerEvent e = new GetTurnPlayerEvent(this);
         this.triggerEvent(e);
+    }
+
+    public void setTask(CountDownPlayer task) {
+        this.task = task;
+    }
+
+    public CountDownPlayer getTask() {
+        return task;
     }
 
     /**
