@@ -121,6 +121,7 @@ public class RoomServlet extends HttpServlet {
         checkNotNull(room, "Room " + id + " not found");
         room.nextGame();
         room.getCurrentGame().startGame();
+        room.getCurrentGame().preflop();
         //TODO return more data ex Blind level ,  player balance  , game status ...
         String data = Joiner.on(",").join(room.getListPlayer());
         response.getWriter().println(data);
