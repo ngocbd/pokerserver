@@ -271,6 +271,7 @@ public class Room implements GameListener, RoomMBean {
             System.out.println("Game is already started");
             return null;
         }
+        System.out.println("Next Game Called");
 //        assert this.currentGame.getStatus() == GameStatus.END_HAND;
         Game previous_Game = this.currentGame;
         Player previous_dealer = previous_Game.getDealer();
@@ -299,7 +300,21 @@ public class Room implements GameListener, RoomMBean {
                 newListPlayer.add(p);
             }
         }
-        this.currentGame.setListPlayer(newListPlayer);
+        previous_Game.dumpListPlayer();
+        for (Player p : newListPlayer) {
+            try {
+                p.getTask().cancel();
+            }catch (NullPointerException e){
+                System.out.println("Task null ");
+            }
+
+            p.setCommandThisTurn(false);
+            p.setSittingOut(false);
+            this.currentGame.addPlayer(p);
+        }
+        System.out.println("New Game status: " + this.currentGame.getStatus());
+        System.out.println("List PLayer new Game: " + currentGame.getListPlayer().toString());
+//        this.currentGame.setListPlayer(newListPlayer);
         /**
          * Set new dealer for new Game
          * In case dealer has not quit yet.
