@@ -60,4 +60,5 @@ jacocoTestReport {
 
 check.dependsOn jacocoTestReport
 
-
+apply plugin: 'application'
+mainClassName='com.fcs.pokerserver.gameserver.MqttServletGameServer'
