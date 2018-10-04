@@ -69,11 +69,11 @@ public class Player implements PlayerMBean {
     private String avatar_url;
     private Timer countdown = new Timer();
     private CountDownPlayer task = null;
-    private long COUNTDOWN_DELAY = 30 * 1000;
+    private long COUNTDOWN_DELAY = 20 * 1000;
 
     @Override
     public String toString() {
-        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() +",\"isCommandThisTurn\":" + this.didCommandThisTurn() + "}";
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + ",\"isCommandThisTurn\":" + this.didCommandThisTurn() + "}";
     }
 
     @Override
@@ -181,6 +181,7 @@ public class Player implements PlayerMBean {
         this.balance = this.balance - amount;
         if (task != null) {
             task.cancel();
+            System.out.println("PLayer: " + this.id + " task is cancelled");
         }
         ;
         PlayerBetEvent pbe = new PlayerBetEvent(this);
@@ -226,7 +227,6 @@ public class Player implements PlayerMBean {
         }
         PlayerFoldEvent pfe = new PlayerFoldEvent(this);
         this.triggerEvent(pfe);
-        this.sittingOut = true;
     }
 
     /**
@@ -272,6 +272,7 @@ public class Player implements PlayerMBean {
         task = CountDownPlayer.createInstance(this, this.getCurrentGame());
         countdown.schedule(task, COUNTDOWN_DELAY);
         System.out.println("My Turn: " + this.getId() + " ID task: " + task.getId());
+        System.out.println("Player " + this.id + " fold: " + this.isSittingOut());
         GetTurnPlayerEvent e = new GetTurnPlayerEvent(this);
         this.triggerEvent(e);
     }

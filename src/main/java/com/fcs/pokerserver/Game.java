@@ -130,6 +130,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * @throws AssertionError if the total of Players < 2.
      */
     public void startGame() {
+        if (this.getStatus() != GameStatus.NOT_STARTED) {
+            System.out.println("Game is already start (Game.java-134)");
+            return;
+        }
         assert this.listPlayer.size() >= 2;
 
         // setting postion of player

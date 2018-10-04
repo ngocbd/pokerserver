@@ -274,6 +274,17 @@ public class Room implements GameListener, RoomMBean {
         System.out.println("Next Game Called");
 //        assert this.currentGame.getStatus() == GameStatus.END_HAND;
         Game previous_Game = this.currentGame;
+        /**
+         * Cancel all Remaining Timer Task of previous game*/
+        for (Player p : previous_Game.getListPlayer()) {
+            try {
+                p.getTask().cancel();
+            } catch (NullPointerException e) {
+                System.out.println("Task null ");
+            }
+        }
+
+
         Player previous_dealer = previous_Game.getDealer();
         int previous_dealer_index = previous_Game.getDealer_index();
         if (this.currentGame != null && this.currentGame.getStatus() != GameStatus.END_HAND) {
@@ -302,14 +313,9 @@ public class Room implements GameListener, RoomMBean {
         }
         previous_Game.dumpListPlayer();
         for (Player p : newListPlayer) {
-            try {
-                p.getTask().cancel();
-            }catch (NullPointerException e){
-                System.out.println("Task null ");
-            }
-
             p.setCommandThisTurn(false);
             p.setSittingOut(false);
+            p.setRoundBet(0);
             this.currentGame.addPlayer(p);
         }
         System.out.println("New Game status: " + this.currentGame.getStatus());
@@ -322,7 +328,7 @@ public class Room implements GameListener, RoomMBean {
 
         if (currentGame.getListPlayer().contains(previous_dealer)) {
             Player newDealer = currentGame.getNextPlayer(previous_dealer);
-            System.out.println(newDealer);
+            System.out.println("New Dealer: " + newDealer);
             currentGame.setDealer(newDealer);
 
         }
