@@ -99,21 +99,21 @@ public class CardEvaluatorTest extends TestCase {
     @Test
     public void testPair1() {
         TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
-        Hand h1 = new Hand(Card.TWO_OF_HEARTS, Card.NINE_OF_DIAMONDS);
+        Hand h1 = new Hand(Card.FIVE_OF_SPADES, Card.FOUR_OF_DIAMONDS);
         Hand h2 = new Hand(Card.JACK_OF_CLUBS, Card.EIGHT_OF_DIAMONDS);
         Board b = new Board();
-        b.addCard(Card.ACE_OF_CLUBS);
-        b.addCard(Card.KING_OF_SPADES);
-        b.addCard(Card.SEVEN_OF_SPADES);
-        b.addCard(Card.EIGHT_OF_SPADES);
-        b.addCard(Card.NINE_OF_HEARTS);
-        Board b1 = new Board(Card.ACE_OF_CLUBS,
-                Card.KING_OF_SPADES,
-                Card.SEVEN_OF_SPADES,
-                Card.EIGHT_OF_SPADES, Card.NINE_OF_HEARTS);
+        b.addCard(Card.JACK_OF_DIAMONDS);
+        b.addCard(Card.SIX_OF_CLUBS);
+        b.addCard(Card.QUEEN_OF_CLUBS);
+        b.addCard(Card.TEN_OF_CLUBS);
+        b.addCard(Card.TWO_OF_CLUBS);
+//        Board b1 = new Board(Card.ACE_OF_CLUBS,
+//                Card.KING_OF_SPADES,
+//                Card.SEVEN_OF_SPADES,
+//                Card.EIGHT_OF_SPADES, Card.NINE_OF_HEARTS);
 //        System.out.println(b.getFlopCards());
         System.out.println("h1: "+evaluator.evaluate(b,h1).getValue());
-        System.out.println("h2: "+evaluator.evaluate(b,h2).getValue());
+//        System.out.println("h2: "+evaluator.evaluate(b,h2).getValue());
 //        Player hbg2 = new Player("hbg2");
 //        Player hbg1 = new Player("hbg1");
 //        hbg2.setGlobalBalance(5000);
