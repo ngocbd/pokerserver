@@ -136,7 +136,7 @@ public class RoomServlet extends HttpServlet {
         room.addPlayer(p);
 
         //TODO return more data ex Blind level ,  player balance  , game status ...
-        String data = "{\"listPlayers\":" + Joiner.on(",").join(room.getListPlayer()) + ",\"roomId\":\"" + room.getRoomID() + "\"}";
+        String data = "{\"listPlayers\":[" + Joiner.on(",").join(room.getListPlayer()) + "],\"roomId\":\"" + room.getRoomID() + "\"}";
         response.getWriter().println(data);
     }
 

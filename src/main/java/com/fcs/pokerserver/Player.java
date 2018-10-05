@@ -78,7 +78,7 @@ public class Player implements PlayerMBean {
 
     @Override
     public String jmx_info() {
-        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + ",\"hand\":" + playerHand.toString() + "}";
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + ",\"hand\":" + playerHand.toString() +",\"isCommandThisTurn\":" + this.didCommandThisTurn()+ "}";
     }
 
     @Override

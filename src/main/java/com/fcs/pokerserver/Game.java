@@ -163,6 +163,9 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
         //this.potBalance += (betBigBlind + betSmallBlind);
 
+        /**VERY IMPORTANT to reset all Hand of Player before deal card to avoid error of evaluator.*/
+        listPlayer.stream().forEach(p->p.setPlayerHand(new Hand()));
+
         //this.deck.dealCard();
         // deal 2 card for each player // unordered // begin from master // need to fix to begin from dealer
         for (int i = 0; i < 2; i++) {
@@ -283,9 +286,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
         });
         TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
         Hand highestHand = list.get(list.size() - 1);
-        HandRank highestRank = evaluator.evaluate(b, highestHand);
         //Add best hand into list.
+        HandRank highestRank = evaluator.evaluate(b, highestHand);
         bestHands.add(highestHand);
+
         //Add Win Player into list Player.
         for (int i = 0; i < this.getListPlayer().size(); i++) {
             if (this.getListPlayer().get(i).getPlayerHand() == highestHand) {
@@ -311,7 +315,9 @@ public class Game implements AbstractPlayerListener, GameMBean {
             }
         }
         //rank of winner player
-        rank = highestRank.toString();
+        System.out.println("GameID: " + this.getId());
+        System.out.println("Highest Rank value: " + highestRank.getValue());
+        rank = highestRank.getHandType().toString();
         gameEvent.setBestHands(bestHands);
 //        gameEvent.setRank(rank);
         gameEvent.setRank(String.valueOf(highestRank.getValue()));
