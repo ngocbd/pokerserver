@@ -255,6 +255,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
         this.fireEvent(gameEvent);
         this.setStatus(GameStatus.RIVER);
         //this.setRound((short) 4);
+        this.setCurrentBet(0);
+
     }
 
     /**
