@@ -78,8 +78,11 @@ public class GameServlet extends HttpServlet {
                 p = (Player) request.getAttribute("player");
                 p.getCurrentGame().setDealer(p);
                 int sizeOfListPlayer = p.getCurrentGame().getListPlayer().size();
-                for (int i = 0; i < sizeOfListPlayer; i++) {
-                    p.getCurrentGame().getListPlayer().get(i).setBalance(1000);
+                if (sizeOfListPlayer < 2) {
+                    System.out.println("Cannot start game due to not enough players");
+                    response.setStatus(403);
+                    response.getWriter().println("{\"error\":\"Not enout player\"}");
+                    return;
                 }
                 p.getCurrentGame().startGame();
                 logger.log(Level.INFO, "Start Game\n\tDealer: " + p.getCurrentGame().getDealer().getName() + "\n\tSmall Blind: " + p.getCurrentGame().getSmallBlind().getName() + "\n\tBig Blind: " + p.getCurrentGame().getBigBlind().getName());

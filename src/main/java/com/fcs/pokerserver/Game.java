@@ -134,7 +134,11 @@ public class Game implements AbstractPlayerListener, GameMBean {
             System.out.println("Game is already start (Game.java-134)");
             return;
         }
-        assert this.listPlayer.size() >= 2;
+        if (this.listPlayer.size() < 2) {
+            System.out.println("Game " + this.getId() + " in Room-" + this.getRoom().getRoomID() + " Cannot start due to not enough players!");
+            return;
+        }
+//        assert this.listPlayer.size() >= 2;
 
         // setting postion of player
         this.setStatus(GameStatus.SEATING);
@@ -142,6 +146,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
         RoundGameEvent gameEvent = new RoundGameEvent(this, GameAction.WAITTING);
         this.fireEvent(gameEvent);
+        this.preflop();
     }
 
     /**
@@ -150,7 +155,11 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * @throws AssertionError if the total of Players < 2.
      */
     public void preflop() {
-        assert this.listPlayer.size() >= 2;
+        if (this.listPlayer.size() < 2) {
+            System.out.println("Game " + this.getId() + " in Room-" + this.getRoom().getRoomID() + " Cannot start due to not enough players!");
+            return;
+        }
+//        assert this.listPlayer.size() >= 2;
         //reset command flag.
         this.resetCommandFlag();
         this.setStatus(GameStatus.PREFLOP);
@@ -164,7 +173,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
         //this.potBalance += (betBigBlind + betSmallBlind);
 
         /**VERY IMPORTANT to reset all Hand of Player before deal card to avoid error of evaluator.*/
-        listPlayer.stream().forEach(p->p.setPlayerHand(new Hand()));
+        listPlayer.stream().forEach(p -> p.setPlayerHand(new Hand()));
 
         //this.deck.dealCard();
         // deal 2 card for each player // unordered // begin from master // need to fix to begin from dealer
