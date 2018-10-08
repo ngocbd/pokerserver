@@ -76,7 +76,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
     private LocalDateTime startTime = null; // meaning not started
 
     private List<GameListener> listeners = new ArrayList<GameListener>();
-    private ScheduledExecutorService commander = null;
 
     @Override
     public String toString() {
@@ -173,7 +172,9 @@ public class Game implements AbstractPlayerListener, GameMBean {
         this.setCurrentPlayer(this.getSmallBlind());
         this.getSmallBlind().bet(betSmallBlind);
         this.getBigBlind().bet(betBigBlind);
-
+        /**
+         * BigBlind will not be count as "Had Action" in his Preflop first bet*/
+        this.getBigBlind().setCommandThisTurn(false);
         // deal 2 card for each player // unordered // begin from master // need to fix to begin from dealer
         for (int i = 0; i < 2; i++) {
             for (Player player : listPlayer) {
@@ -743,12 +744,14 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
                 this.potBalance += pbe.getAmount();
                 this.currentRoundBet = p.getRoundBet(); // set current bet equal to this bet amount
+                p.setCommandThisTurn(true);
                 PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
                 ge.setE(pbe);
                 this.fireEvent(ge);
+                /**
+                 * This player has action now.
+                 **/
 
-//              This player has action now.
-                p.setCommandThisTurn(true);
                 //TODO Temporary set check next round for game
                 // if next round ready then next Player will be left person of dealer
                 if (isNextRoundReady()) {

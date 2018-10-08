@@ -62,6 +62,7 @@ public class Player implements PlayerMBean {
     private Room currentRoom = null;
     private String token = null;
     private boolean commandThisTurn = false;
+    private int action_count = 0;
 
     private Hand playerHand = new Hand();
     private List<AbstractPlayerListener> listeners = new ArrayList<>();
@@ -181,12 +182,13 @@ public class Player implements PlayerMBean {
     public void bet(long amount) {
         assert amount < this.balance;
         assert !this.sittingOut;
+        assert this==this.currentGame.getCurrentPlayer();
         this.setRoundBet(this.getRoundBet() + amount);
         this.gameBet += amount;
         this.balance = this.balance - amount;
         if (task != null) {
             task.cancel();
-            System.out.println("PLayer: " + this.id + " task is cancelled");
+            System.out.println("Player: " + this.id + " task is cancelled");
         }
         ;
         PlayerBetEvent pbe = new PlayerBetEvent(this);
@@ -242,7 +244,6 @@ public class Player implements PlayerMBean {
         if (task != null) {
             task.cancel();
         }
-        Game currentGame = this.getCurrentGame();
         PlayerCheckEvent pce = new PlayerCheckEvent(this);
         this.triggerEvent(pce);
         return true;
