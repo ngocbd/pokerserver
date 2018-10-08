@@ -121,7 +121,6 @@ public class RoomServlet extends HttpServlet {
         checkNotNull(room, "Room " + id + " not found");
         room.nextGame();
         room.getCurrentGame().startGame();
-        room.getCurrentGame().preflop();
         //TODO return more data ex Blind level ,  player balance  , game status ...
         String data = Joiner.on(",").join(room.getListPlayer());
         response.getWriter().println(data);
@@ -147,8 +146,11 @@ public class RoomServlet extends HttpServlet {
     public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Player p = (Player) request.getAttribute("player");
         checkNotNull(p, "Player not found");
+        /**
+         * Create new game after adding room to server to guarantee we attached room to his listener(server)*/
         Room room = new Room(p, BlindLevel.BLIND_10_20);
         server.addRoom(room);
+        room.createNewGame();
         response.getWriter().println(room.getRoomID());
 
     }

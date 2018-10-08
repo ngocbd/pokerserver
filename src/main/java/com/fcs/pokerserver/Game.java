@@ -159,6 +159,11 @@ public class Game implements AbstractPlayerListener, GameMBean {
             System.out.println("Game " + this.getId() + " in Room-" + this.getRoom().getRoomID() + " Cannot start due to not enough players!");
             return;
         }
+        /**VERY IMPORTANT to reset all Hand of Player before deal card to avoid error of evaluator.*/
+        listPlayer.stream().forEach(p -> {
+            p.setPlayerHand(new Hand());
+            p.setRoundBet(0);
+        });
 //        assert this.listPlayer.size() >= 2;
         //reset command flag.
         this.resetCommandFlag();
@@ -169,13 +174,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
         this.getSmallBlind().bet(betSmallBlind);
         this.getBigBlind().bet(betBigBlind);
 
-
-        //this.potBalance += (betBigBlind + betSmallBlind);
-
-        /**VERY IMPORTANT to reset all Hand of Player before deal card to avoid error of evaluator.*/
-        listPlayer.stream().forEach(p -> p.setPlayerHand(new Hand()));
-
-        //this.deck.dealCard();
         // deal 2 card for each player // unordered // begin from master // need to fix to begin from dealer
         for (int i = 0; i < 2; i++) {
             for (Player player : listPlayer) {
@@ -454,6 +452,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
         // check if timeout join after 15 second then Reject
         if (this.startTime == null || Duration.between(this.startTime, LocalDateTime.now()).getSeconds() <= 15) {
             if (listPlayer.size() < 8) {
+                p.setSittingOut(false);
                 this.listPlayer.add(p);
                 p.attachListener(this);
                 p.setCurrentGame(this);

@@ -69,7 +69,7 @@ public class Player implements PlayerMBean {
     private String avatar_url;
     private Timer countdown = new Timer();
     private CountDownPlayer task = null;
-    private long COUNTDOWN_DELAY = 20 * 1000;
+    private long COUNTDOWN_DELAY = 40 * 1000;
 
     @Override
     public String toString() {
@@ -78,12 +78,17 @@ public class Player implements PlayerMBean {
 
     @Override
     public String jmx_info() {
-        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + ",\"hand\":" + playerHand.toString() +",\"isCommandThisTurn\":" + this.didCommandThisTurn()+ "}";
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + ",\"hand\":" + playerHand.toString() + ",\"isCommandThisTurn\":" + this.didCommandThisTurn() + ",\"roundBet\":" + this.getRoundBet() + "}";
     }
 
     @Override
     public long jmx_getBalance() {
         return this.balance;
+    }
+
+    @Override
+    public long jmx_getRoundBet() {
+        return this.roundBet;
     }
 
     @Override
