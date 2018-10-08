@@ -795,6 +795,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
             }
             if (e instanceof PlayerCheckEvent) {
+                Player player = e.getSrc();
+                if (player.getRoundBet() != this.currentRoundBet) return;
                 PlayerCheckEvent pce = (PlayerCheckEvent) e;
                 PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
                 ge.setE(pce);

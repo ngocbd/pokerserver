@@ -237,13 +237,15 @@ public class Player implements PlayerMBean {
     /**
      * The Player want to check in the game.
      */
-    public void check() {
+    public boolean check() {
+        if (this.roundBet != currentGame.getCurrentRoundBet()) return false;
         if (task != null) {
             task.cancel();
         }
-        ;
+        Game currentGame = this.getCurrentGame();
         PlayerCheckEvent pce = new PlayerCheckEvent(this);
         this.triggerEvent(pce);
+        return true;
     }
 
     /**
