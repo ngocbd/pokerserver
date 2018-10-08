@@ -100,7 +100,12 @@ public class GameServlet extends HttpServlet {
                 break;
             case "check":
                 p = (Player) request.getAttribute("player");
-                p.check();
+                if (!p.check()) {
+                    logger.log(Level.WARNING, "The player cannot check: " + p.getName());
+                    response.setStatus(403);
+                    response.getWriter().println("{\"error\":\"You need to bet or call first!\"}");
+                    break;
+                }
                 logger.log(Level.INFO, "The Player checked: " + p.getName());
                 break;
             case "fold":
