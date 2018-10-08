@@ -94,7 +94,7 @@ public class Room implements GameListener, RoomMBean {
         p.buyChip(1000);
         p.setCurrentRoom(this);
 
-        if (this.currentGame.getStatus() == GameStatus.NOT_STARTED && this.currentGame.getListPlayer().size() < 8) {
+        if (this.currentGame!=null&&this.currentGame.getStatus() == GameStatus.NOT_STARTED && this.currentGame.getListPlayer().size() < 8) {
 
             this.currentGame.addPlayer(p);
         } else {
@@ -236,7 +236,7 @@ public class Room implements GameListener, RoomMBean {
         this.blindLevel = blindLevel;
 
         this.RoomID = System.currentTimeMillis();
-        this.createNewGame();
+//        this.createNewGame();
         this.addPlayer(master);
         registerMBean();
     }
@@ -284,7 +284,6 @@ public class Room implements GameListener, RoomMBean {
                 System.out.println("Task null ");
             }
         }
-
 
         Player previous_dealer = previous_Game.getDealer();
         int previous_dealer_index = previous_Game.getDealer_index();
@@ -356,6 +355,7 @@ public class Room implements GameListener, RoomMBean {
         re.setE(new RoundGameEvent(this.currentGame, GameAction.CREATED));
         this.fireEvent(re);
         return this.currentGame;
+
     }
 
     public List<Player> getListPlayers() {

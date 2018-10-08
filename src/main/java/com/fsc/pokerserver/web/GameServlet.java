@@ -81,7 +81,7 @@ public class GameServlet extends HttpServlet {
                 if (sizeOfListPlayer < 2) {
                     System.out.println("Cannot start game due to not enough players");
                     response.setStatus(403);
-                    response.getWriter().println("{\"error\":\"Not enout player\"}");
+                    response.getWriter().println("{\"error\":\"Not enough player\"}");
                     return;
                 }
                 p.getCurrentGame().startGame();

@@ -14,7 +14,12 @@ public interface PlayerMBean {
     public void jmx_setRoundBet(long amount);
 
     public void jmx_setGameBet(long amount);
+
     public String jmx_info();
+
     public int jmx_evaluateHand();
+
     public String jmx_getBoard();
+
+    public long jmx_getRoundBet();
 }
