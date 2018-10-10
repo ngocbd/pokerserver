@@ -25,6 +25,7 @@ import com.fcs.pokerserver.automation.CountDownPlayer;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;

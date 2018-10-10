@@ -741,17 +741,16 @@ public class Game implements AbstractPlayerListener, GameMBean {
             if (e instanceof PlayerBetEvent) {
                 PlayerBetEvent pbe = (PlayerBetEvent) e;
                 assert p.getRoundBet() >= this.currentRoundBet;
-
                 this.potBalance += pbe.getAmount();
                 this.currentRoundBet = p.getRoundBet(); // set current bet equal to this bet amount
-                p.setCommandThisTurn(true);
-                PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
-                ge.setE(pbe);
-                this.fireEvent(ge);
                 /**
                  * This player has action now.
                  **/
 
+                p.setCommandThisTurn(true);
+                PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
+                ge.setE(pbe);
+                this.fireEvent(ge);
                 //TODO Temporary set check next round for game
                 // if next round ready then next Player will be left person of dealer
                 if (isNextRoundReady()) {

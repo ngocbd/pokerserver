@@ -179,11 +179,16 @@ public class Player implements PlayerMBean {
      * @throws AssertionError if the bet amount > the Player's balance or the Player is sitting out
      */
 
-    public void bet(long amount) {
+    public boolean bet(long amount) {
         assert amount < this.balance;
         assert !this.sittingOut;
-        assert this==this.currentGame.getCurrentPlayer();
-        this.setRoundBet(this.getRoundBet() + amount);
+        assert this == this.currentGame.getCurrentPlayer();
+        long newRoundBet = this.getRoundBet() + amount;
+        if (newRoundBet < this.currentGame.getCurrentRoundBet()) {
+            System.out.println("Cannot Bet less than current Round Bet");
+            return false;
+        }
+        this.setRoundBet(newRoundBet);
         this.gameBet += amount;
         this.balance = this.balance - amount;
         if (task != null) {
@@ -194,6 +199,7 @@ public class Player implements PlayerMBean {
         PlayerBetEvent pbe = new PlayerBetEvent(this);
         pbe.setAmount(amount);
         this.triggerEvent(pbe);
+        return true;
     }
 
     /**
@@ -279,8 +285,7 @@ public class Player implements PlayerMBean {
     public void myTurn() {
         task = CountDownPlayer.createInstance(this, this.getCurrentGame());
         countdown.schedule(task, COUNTDOWN_DELAY);
-        System.out.println("My Turn: " + this.getId() + " ID task: " + task.getId());
-        System.out.println("Player " + this.id + " fold: " + this.isSittingOut());
+//        System.out.println("My Turn: " + this.getId() + " ID task: " + task.getId());
         GetTurnPlayerEvent e = new GetTurnPlayerEvent(this);
         this.triggerEvent(e);
     }

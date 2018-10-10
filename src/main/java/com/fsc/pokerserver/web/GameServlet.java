@@ -95,7 +95,11 @@ public class GameServlet extends HttpServlet {
             case "bet":
                 p = (Player) request.getAttribute("player");
                 long betValue = Long.parseLong(request.getParameter("value"));
-                p.bet(betValue);
+                if (!p.bet(betValue)) {
+                    System.out.println("Cannot bet lower than current round bet!");
+                    response.getWriter().println("{\"error\":\"Cannot bet lower than current round bet\"");
+                    return;
+                }
                 logger.log(Level.INFO, "The Player's name : " + p.getName() + "\n\tBet value: " + betValue + "\n\tBalance of Current Player: " + p.getBalance());
                 break;
             case "check":
@@ -103,7 +107,7 @@ public class GameServlet extends HttpServlet {
                 if (!p.check()) {
                     logger.log(Level.WARNING, "The player cannot check: " + p.getName());
                     response.setStatus(403);
-                    response.getWriter().println("{\"error\":\"You need to bet or call first!\"}");
+                    response.getWriter().println("{\"error\":\"You can only bet or call!\"}");
                     break;
                 }
                 logger.log(Level.INFO, "The Player checked: " + p.getName());
