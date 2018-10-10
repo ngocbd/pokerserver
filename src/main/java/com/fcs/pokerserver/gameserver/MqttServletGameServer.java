@@ -469,9 +469,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
                 content += "cmd=" + RoomAction.PLAYERLEFT + "&roomid=" + event.getSrc().getRoomID() + "&pid=" + p.getId();
             }
         }
-        System.out.println("TOPIC LINK: " + MqttServletGameServer.SERVER_TOPIC + "/room/" + event.getSrc().getRoomID());
         this.sender.add(MqttServletGameServer.SERVER_TOPIC + "/room/" + event.getSrc().getRoomID(), content);
-        System.out.println("Content: "+content);
     }
 
     @Override
