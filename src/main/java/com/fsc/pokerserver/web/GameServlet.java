@@ -114,7 +114,12 @@ public class GameServlet extends HttpServlet {
                 break;
             case "fold":
                 p = (Player) request.getAttribute("player");
-                p.fold();
+                if (!p.fold()) {
+                    System.out.println("Player " + p.getId() + " Cannot fold due to not his turn");
+                    response.setStatus(403);
+                    response.getWriter().println("{\"error\":\"Not your turn\"}");
+                    break;
+                }
                 logger.log(Level.INFO, "The Player folded: " + p.getName());
                 break;
             case "flop":

@@ -128,14 +128,18 @@ public class Game implements AbstractPlayerListener, GameMBean {
      *
      * @throws AssertionError if the total of Players < 2.
      */
-    public void startGame() {
+    public boolean startGame() {
         if (this.getStatus() != GameStatus.NOT_STARTED) {
-            System.out.println("Game is already start (Game.java-134)");
-            return;
+            System.out.println("Game is already start (Game.java-132)");
+            return false;
         }
         if (this.listPlayer.size() < 2) {
             System.out.println("Game " + this.getId() + " in Room-" + this.getRoom().getRoomID() + " Cannot start due to not enough players!");
-            return;
+            StartFailedGameEvent event = new StartFailedGameEvent(this, GameAction.FAILEDSTART);
+            event.setMsg("Not enough player!");
+            event.setListPlayers(this.listPlayer);
+            this.fireEvent(event);
+            return false;
         }
 //        assert this.listPlayer.size() >= 2;
 
@@ -149,6 +153,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
         System.out.println("dealer: " + dealer.getId());
         System.out.println("sb: " + smallBlind.getId());
         System.out.println("bb: " + bigBlind.getId());
+        return true;
     }
 
     /**
@@ -340,6 +345,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
  * */
         //Find out the money to be claim for each player.
         long moneyTobeClaim = this.potBalance / (winners.size());
+        System.out.println("moneyTobeClaim: " + moneyTobeClaim);
         for (Player p : winners) {
             p.setBalance(p.getBalance() + moneyTobeClaim);
         }
@@ -371,7 +377,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
 
     public void autoNextRound() {
-        this.listPlayer.stream().filter(x->!x.isSittingOut()).forEach(x->x.setRoundBet(0));
+        this.listPlayer.stream().filter(x -> !x.isSittingOut()).forEach(x -> x.setRoundBet(0));
         switch (this.status) {
 //            case NOT_STARTED:
 //            case SEATING:
@@ -803,8 +809,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
             }
             if (e instanceof PlayerCheckEvent) {
                 Player player = e.getSrc();
-                if (player.getRoundBet() != this.currentRoundBet){
-                    System.out.println("Check cannot happen: player bet: "+player.getRoundBet()+" Roundbet: "+this.currentRoundBet);
+                if (player.getRoundBet() != this.currentRoundBet) {
+                    System.out.println("Check cannot happen: player bet: " + player.getRoundBet() + " Roundbet: " + this.currentRoundBet);
                     return;
                 }
                 PlayerCheckEvent pce = (PlayerCheckEvent) e;

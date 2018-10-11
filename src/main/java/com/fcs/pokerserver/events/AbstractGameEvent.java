@@ -5,7 +5,13 @@ import com.fcs.pokerserver.Game;
 public abstract class AbstractGameEvent {
     private Game src;
     private GameAction type;
-    public AbstractGameEvent(Game src){
+
+    public AbstractGameEvent(Game src) {
+        this.src = src;
+    }
+
+    public AbstractGameEvent(Game src, GameAction type) {
+        this.type = type;
         this.src = src;
     }
 

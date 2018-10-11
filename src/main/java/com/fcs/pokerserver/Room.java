@@ -94,7 +94,10 @@ public class Room implements GameListener, RoomMBean {
         p.buyChip(1000);
         p.setCurrentRoom(this);
 
-        if (this.currentGame!=null&&this.currentGame.getStatus() == GameStatus.NOT_STARTED && this.currentGame.getListPlayer().size() < 8) {
+        if (this.currentGame != null
+                && this.currentGame.getStatus() == GameStatus.NOT_STARTED
+                && this.currentGame.getListPlayer().size() < 8
+                && p.getBalance() > this.getBlindLevel().getBigBlind()) {
 
             this.currentGame.addPlayer(p);
         } else {
@@ -297,7 +300,7 @@ public class Room implements GameListener, RoomMBean {
          * Prioritize players who are currently playing, will be added first into new game players list.
          * */
         for (Player p : previous_Game.getListPlayer()) {
-            if (!p.isSittingOut()) {
+            if (!p.isSittingOut() && (p.getBalance() > this.getBlindLevel().getBigBlind())) {
                 newListPlayer.add(p);
             }
         }
@@ -306,7 +309,7 @@ public class Room implements GameListener, RoomMBean {
          * */
         for (Player p : listPlayer) {
             if (newListPlayer.size() >= 8) break;
-            if (!newListPlayer.contains(p)) {
+            if (!newListPlayer.contains(p) && (p.getBalance() > this.getBlindLevel().getBigBlind())) {
                 p.setSittingOut(false);
                 newListPlayer.add(p);
             }
