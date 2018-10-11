@@ -55,9 +55,7 @@ public class ClientNextGameTest {
         //startgame
         String startGame = host + "api/game?token=" + token[0] + "&method=start";
         this.getStatusCodeFromUrl(startGame);
-        //preflop
-        String preFlop = host + "api/game?token=" + token[0] + "&method=preflop";
-        this.getStatusCodeFromUrl(preFlop);
+
         //Bet
         String utg = host + "api/game?token=" + token[3] + "&method=bet&value=20";
         this.getStatusCodeFromUrl(utg);
@@ -67,10 +65,9 @@ public class ClientNextGameTest {
         this.getStatusCodeFromUrl(toanBet);
         String danhBet = host + "api/game?token=" + token[1] + "&method=bet&value=10";
         this.getStatusCodeFromUrl(danhBet);
+        String bbLinhBet = host + "api/game?token=" + token[2] + "&method=check";
+        this.getStatusCodeFromUrl(bbLinhBet);
 
-        //flop
-        String flop = host + "api/game?token=" + token[0] + "&method=flop";
-        this.getStatusCodeFromUrl(flop);
 
         //Bet and Fold
         String sbDanhBet1 = host + "api/game?token=" + token[1] + "&method=bet&value=20";
@@ -84,10 +81,6 @@ public class ClientNextGameTest {
         String dealerToanBet1 = host + "api/game?token=" + token[0] + "&method=bet&value=20";
         this.getStatusCodeFromUrl(dealerToanBet1);
 
-        //turn
-        String turn = host + "api/game?token=" + token[0] + "&method=turn";
-        this.getStatusCodeFromUrl(turn);
-
         //Bet and Fold
         String sbDanhBet3 = host + "api/game?token=" + token[1] + "&method=bet&value=20";
         this.getStatusCodeFromUrl(sbDanhBet3);
@@ -98,13 +91,6 @@ public class ClientNextGameTest {
         String dealerToanBet3 = host + "api/game?token=" + token[0] + "&method=bet&value=20";
         this.getStatusCodeFromUrl(dealerToanBet3);
 
-        //River
-        String river = host + "api/game?token=" + token[0] + "&method=river";
-        this.getStatusCodeFromUrl(river);
-
-        //End game
-        String endGame = host + "api/game?token=" + token[0] + "&method=end";
-        this.getStatusCodeFromUrl(endGame);
         //Next game
         String nextgame = host + "api/room?token=" + token[0] + "&method=nextgame&id="+roomId;
         assertEquals(200, this.getStatusCodeFromUrl(nextgame));

@@ -82,6 +82,7 @@ public class RegisterServlet extends HttpServlet {
     User user  = new User();
     user.setUsername(username);
     user.setPassword(password);
+    user.setBalance(5000);
 
     ofy().save().entity(user);
 
