@@ -35,16 +35,7 @@ import com.fcs.pokerserver.Room;
  * */
 
 public class FlopAndBetGameTest {
-	private Player master;
-	private Room room;
 
-	@Before
-	public void setUp() throws Exception {
-		master = new Player("Room master");
-		room = new Room(master, BlindLevel.BLIND_10_20);
-		
-	}
-	
 	/*--------------------- Flop And Bet -----------------------*/
 	
 	/**
@@ -55,16 +46,23 @@ public class FlopAndBetGameTest {
 	 * */
 	@Test
 	public void testGetCardsOnTheTableAfterFlop() {
+		Player master = new Player("Room master");
+		master.setGlobalBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		Player player5 = new Player();
-		game.addPlayer(player5);
+		player5.setGlobalBalance(5000);
+		room.addPlayer(player5);
 
 		game.setDealer(player5);
 
@@ -75,8 +73,7 @@ public class FlopAndBetGameTest {
 		player5.setBalance(1000);
 
 		game.startGame();
-		
-		game.preflop();
+
 		player3.bet(20);
 		player4.bet(20);
 		player5.bet(30);
@@ -84,8 +81,6 @@ public class FlopAndBetGameTest {
 		player2.bet(10);
 		player3.bet(10);
 		player4.bet(10);
-		
-		game.flop();
 
 		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 2);
 	}
@@ -96,16 +91,23 @@ public class FlopAndBetGameTest {
 	 * */
 	@Test(expected = AssertionError.class)
 	public void testErrorCardsOnTheTableInFlop() {
+		Player master = new Player("Room master");
+		master.setGlobalBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		Player player5 = new Player();
-		game.addPlayer(player5);
+		player5.setGlobalBalance(5000);
+		room.addPlayer(player5);
 
 		game.setDealer(player5);
 
@@ -116,8 +118,7 @@ public class FlopAndBetGameTest {
 		player5.setBalance(1000);
 
 		game.startGame();
-		
-		game.preflop();
+
 		player3.bet(20);
 		player4.bet(20);
 		player5.bet(30);
@@ -125,8 +126,6 @@ public class FlopAndBetGameTest {
 		player2.bet(10);
 		player3.bet(10);
 		player4.bet(10);
-		
-		game.flop();
 
 		assertEquals(game.getListPlayer().get(0).getPlayerHand().getCardNumber(), 3);
 	}
@@ -135,16 +134,23 @@ public class FlopAndBetGameTest {
 	 * Get current player.
 	 * */
 	public void testTurnGameInPreFlopPlayer3AndPlayer5() {
+		Player master = new Player("Room master");
+		master.setGlobalBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		Player player5 = new Player();
-		game.addPlayer(player5);
+		player5.setGlobalBalance(5000);
+		room.addPlayer(player5);
 
 		game.setDealer(player5);
 
@@ -155,15 +161,12 @@ public class FlopAndBetGameTest {
 		player5.setBalance(1000);
 
 		game.startGame();
-		
-		game.preflop();
+
 //		it's error when player5 bet before player3
 		player5.bet(20);
 		player3.bet(20);
 		player4.bet(20);
 		master.bet(10);
-		
-		game.flop();
 		
 		assertEquals(game.getCurrentPlayer(),master);
 
@@ -173,16 +176,23 @@ public class FlopAndBetGameTest {
 	 * get pot of game from player bet after flop.
 	 * */
 	public void testPlayerBetAfterFlop() {
+		Player master = new Player("Room master");
+		master.setGlobalBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		Player player5 = new Player();
-		game.addPlayer(player5);
+		player5.setGlobalBalance(5000);
+		room.addPlayer(player5);
 
 		game.setDealer(player5);
 
@@ -193,8 +203,7 @@ public class FlopAndBetGameTest {
 		player5.setBalance(1000);
 
 		game.startGame();
-		
-		game.preflop();
+
 		player3.bet(20);
 		player4.bet(20);
 		player5.bet(30);
@@ -202,8 +211,7 @@ public class FlopAndBetGameTest {
 		player2.bet(10);
 		player3.bet(10);
 		player4.bet(10);
-		
-		game.flop();
+
 		master.bet(20);
 		player2.bet(20);
 		player3.bet(20);
@@ -222,28 +230,28 @@ public class FlopAndBetGameTest {
 	 * get pot of game from player bet after flop.
 	 * */
 	public void testPlayerBetCheckFoldAfterFlop() {
+		Player master = new Player("Room master");
+		master.setGlobalBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		Player player5 = new Player();
-		game.addPlayer(player5);
+		player5.setGlobalBalance(5000);
+		room.addPlayer(player5);
 
 		game.setDealer(player5);
 
-		master.setBalance(1000);
-		player2.setBalance(1000);
-		player3.setBalance(1000);
-		player4.setBalance(1000);
-		player5.setBalance(1000);
-
 		game.startGame();
-		
-		game.preflop();
+
 		player3.bet(20);
 		player4.bet(20);
 		player5.bet(30);
@@ -251,8 +259,7 @@ public class FlopAndBetGameTest {
 		player2.bet(10);
 		player3.bet(10);
 		player4.bet(10);
-		
-		game.flop();
+
 		master.check();
 		player2.check();
 		player3.fold();
@@ -275,28 +282,28 @@ public class FlopAndBetGameTest {
 	 * */
 	@Test
 	public void testGetCurrentPlayerFromBetCheckFoldAfterFlop() {
+		Player master = new Player("Room master");
+		master.setGlobalBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		Player player5 = new Player();
-		game.addPlayer(player5);
+		player5.setGlobalBalance(5000);
+		room.addPlayer(player5);
 
 		game.setDealer(player5);
 
-		master.setBalance(1000);
-		player2.setBalance(1000);
-		player3.setBalance(1000);
-		player4.setBalance(1000);
-		player5.setBalance(1000);
-
 		game.startGame();
-		
-		game.preflop();
+
 		player3.fold();
 		player4.bet(20);
 		player5.bet(30);
@@ -304,8 +311,7 @@ public class FlopAndBetGameTest {
 		player2.bet(10);
 //		player3.bet(10);
 		player4.bet(10);
-		
-		game.flop();
+
 		master.check();
 		player2.check();
 //		player3.fold();
@@ -326,28 +332,29 @@ public class FlopAndBetGameTest {
 	 * */
 	@Test(expected = AssertionError.class)
 	public void testCheckPlayer3BetAlthoughFoldAfterFlop() {
+		Player master = new Player("Room master");
+		master.setGlobalBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		Player player5 = new Player();
-		game.addPlayer(player5);
+		player5.setGlobalBalance(5000);
+		room.addPlayer(player5);
 
 		game.setDealer(player5);
 
-		master.setBalance(1000);
-		player2.setBalance(1000);
-		player3.setBalance(1000);
-		player4.setBalance(1000);
-		player5.setBalance(1000);
-
 		game.startGame();
 		
-		game.preflop();
+
 		player3.bet(20);
 		player4.bet(20);
 		player5.bet(30);
@@ -355,8 +362,7 @@ public class FlopAndBetGameTest {
 		player2.bet(10);
 		player3.bet(10);
 		player4.bet(10);
-		
-		game.flop();
+
 		master.check();
 		player2.check();
 		player3.fold();
@@ -375,28 +381,28 @@ public class FlopAndBetGameTest {
 	 * */
 	@Test(expected = AssertionError.class)
 	public void testChangePositionPlayerBetAfterFlop() {
+		Player master = new Player("Room master");
+		master.setGlobalBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		Player player5 = new Player();
-		game.addPlayer(player5);
+		player5.setGlobalBalance(5000);
+		room.addPlayer(player5);
 
 		game.setDealer(player5);
 
-		master.setBalance(1000);
-		player2.setBalance(1000);
-		player3.setBalance(1000);
-		player4.setBalance(1000);
-		player5.setBalance(1000);
-
 		game.startGame();
-		
-		game.preflop();
+
 		player3.bet(20);
 		player4.bet(20);
 		player5.bet(30);
@@ -404,8 +410,7 @@ public class FlopAndBetGameTest {
 		player2.bet(10);
 		player3.bet(10);
 		player4.bet(10);
-		
-		game.flop();
+
 		// master need bet before player2.
 		player2.bet(20);
 		master.bet(20);
@@ -421,47 +426,46 @@ public class FlopAndBetGameTest {
 	/**
 	 * get current pot of game from bet, check, fold after flop.
 	 * */
-	@Test(expected = AssertionError.class)
-	public void testPlayer3ReFoldInFlopAlthoughPlayer3FoldedInPreFlop() {
-		Game game = room.createNewGame();
-
-		Player player2 = new Player();
-		game.addPlayer(player2);
-		Player player3 = new Player();
-		game.addPlayer(player3);
-		Player player4 = new Player();
-		game.addPlayer(player4);
-		Player player5 = new Player();
-		game.addPlayer(player5);
-
-		game.setDealer(player5);
-
-		master.setBalance(1000);
-		player2.setBalance(1000);
-		player3.setBalance(1000);
-		player4.setBalance(1000);
-		player5.setBalance(1000);
-
-		game.startGame();
-		
-		game.preflop();
-		player3.fold();
-		player4.bet(20);
-		player5.bet(30);
-		master.bet(20);
-		player2.bet(10);
-//		player3.bet(10);
-		player4.bet(10);
-		
-		game.flop();
-		master.check();
-		player2.check();
-		player3.fold();
-		player4.fold();
-		player5.bet(10);
-		master.bet(10);
-		player2.bet(10);
-	}
+//	@Test(expected = AssertionError.class)
+//	public void testPlayer3ReFoldInFlopAlthoughPlayer3FoldedInPreFlop() {
+//		Player master = new Player("Room master");
+//		master.setGlobalBalance(5000);
+//		Room room = new Room(master, BlindLevel.BLIND_10_20);
+//		Game game = room.createNewGame();
+//
+//		Player player2 = new Player();
+//		player2.setGlobalBalance(5000);
+//		room.addPlayer(player2);
+//		Player player3 = new Player();
+//		player3.setGlobalBalance(5000);
+//		room.addPlayer(player3);
+//		Player player4 = new Player();
+//		player4.setGlobalBalance(5000);
+//		room.addPlayer(player4);
+//		Player player5 = new Player();
+//		player5.setGlobalBalance(5000);
+//		room.addPlayer(player5);
+//
+//		game.setDealer(player5);
+//
+//		game.startGame();
+//
+//		player3.fold();
+//		player4.bet(20);
+//		player5.bet(30);
+//		master.bet(20);
+//		player2.bet(10);
+////		player3.bet(10);
+//		player4.bet(10);
+//
+//		master.check();
+//		player2.check();
+//		player3.fold();
+//		player4.fold();
+//		player5.bet(10);
+//		master.bet(10);
+//		player2.bet(10);
+//	}
 	
 	/**
 	 * check again the situation.
@@ -470,28 +474,28 @@ public class FlopAndBetGameTest {
 	 * */
 	@Test
 	public void testGetPotFromBetCheckFoldAfterFlop() {
+		Player master = new Player("Room master");
+		master.setGlobalBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		Player player5 = new Player();
-		game.addPlayer(player5);
+		player5.setGlobalBalance(5000);
+		room.addPlayer(player5);
 
 		game.setDealer(player5);
 
-		master.setBalance(1000);
-		player2.setBalance(1000);
-		player3.setBalance(1000);
-		player4.setBalance(1000);
-		player5.setBalance(1000);
-
 		game.startGame();
 		
-		game.preflop();
 		player3.fold();
 		player4.bet(20);
 		player5.bet(30);
@@ -500,7 +504,6 @@ public class FlopAndBetGameTest {
 //		player3.bet(10);
 		player4.bet(10);
 		
-		game.flop();
 		master.check();
 		player2.check();
 //		player3 da fold o vong preflop roi. vi vay, o vong flop, se ko dc. fold tiep.
