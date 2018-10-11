@@ -55,9 +55,7 @@ public class ClientGameRiverTest {
         //startgame
         String startGame = host + "api/game?token=" + token[0] + "&method=start";
         this.getStatusCodeFromUrl(startGame);
-        //preflop
-        String preFlop = host + "api/game?token=" + token[0] + "&method=preflop";
-        this.getStatusCodeFromUrl(preFlop);
+
         //Bet
         String utg = host + "api/game?token=" + token[3] + "&method=bet&value=20";
         this.getStatusCodeFromUrl(utg);
@@ -67,10 +65,8 @@ public class ClientGameRiverTest {
         this.getStatusCodeFromUrl(toanBet);
         String danhBet = host + "api/game?token=" + token[1] + "&method=bet&value=10";
         this.getStatusCodeFromUrl(danhBet);
-
-        //flop
-        String flop = host + "api/game?token=" + token[0] + "&method=flop";
-        this.getStatusCodeFromUrl(flop);
+        String bbLinhBet = host + "api/game?token=" + token[2] + "&method=check";
+        this.getStatusCodeFromUrl(bbLinhBet);
 
         //Bet and Fold
         String sbDanhBet1 = host + "api/game?token=" + token[1] + "&method=bet&value=20";
@@ -84,9 +80,7 @@ public class ClientGameRiverTest {
         String dealerToanBet1 = host + "api/game?token=" + token[0] + "&method=bet&value=20";
         this.getStatusCodeFromUrl(dealerToanBet1);
 
-        //turn
-        String turn = host + "api/game?token=" + token[0] + "&method=turn";
-        this.getStatusCodeFromUrl(turn);
+
 
         //Bet and Fold
         String sbDanhBet3 = host + "api/game?token=" + token[1] + "&method=bet&value=20";
@@ -96,16 +90,9 @@ public class ClientGameRiverTest {
         String utgChauBet3 = host + "api/game?token=" + token[3] + "&method=bet&value=20";
         this.getStatusCodeFromUrl(utgChauBet3);
         String dealerToanBet3 = host + "api/game?token=" + token[0] + "&method=bet&value=20";
-        this.getStatusCodeFromUrl(dealerToanBet3);
+//        this.getStatusCodeFromUrl(dealerToanBet3);
 
-        //River
-        String river = host + "api/game?token=" + token[0] + "&method=river";
-        this.getStatusCodeFromUrl(river);
-
-        //End game
-        String endGame = host + "api/game?token=" + token[0] + "&method=end";
-        this.getStatusCodeFromUrl(endGame);
-        assertEquals(200, this.getStatusCodeFromUrl(endGame));
+        assertEquals(200, this.getStatusCodeFromUrl(dealerToanBet3));
     }
 
 

@@ -235,7 +235,7 @@ public class Room implements GameListener, RoomMBean {
         this.master = master;
         this.blindLevel = blindLevel;
 
-        this.RoomID = System.currentTimeMillis();
+        this.RoomID = System.nanoTime();
 //        this.createNewGame();
         this.addPlayer(master);
         registerMBean();

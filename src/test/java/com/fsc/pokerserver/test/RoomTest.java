@@ -22,9 +22,9 @@ package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
 
+import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fcs.pokerserver.BlindLevel;
@@ -53,7 +53,8 @@ public class RoomTest {
 	 * 
 	 * */
 	Player candidatePlayer ;
-	
+
+
 	@Before
 	public void setUp()
 	{
@@ -65,6 +66,7 @@ public class RoomTest {
 	@Test
 	public void testCreateRoom() {
 		Player master = new Player();
+		master.setGlobalBalance(5000);
 		Room room = new Room(master,BlindLevel.BLIND_10_20);
 		
 		assertEquals(room.getBlindLevel(),BlindLevel.BLIND_10_20);
@@ -76,6 +78,7 @@ public class RoomTest {
 	@Test
 	public void testCreateNewGame() {
 		Player master = new Player();
+		master.setGlobalBalance(5000);
 		Room room = new Room(master,BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 		
@@ -90,6 +93,8 @@ public class RoomTest {
 	public void testJoinRoom1() {
 		Player master = new Player("master");
 		Player player2 = new Player("Player 2");
+		master.setGlobalBalance(5000);
+        player2.setGlobalBalance(5000);
 		Room room = new Room(master,BlindLevel.BLIND_10_20);
 		
 		// for sure candidate is null
@@ -118,6 +123,8 @@ public class RoomTest {
 	public void testJoinRoom2() {
 		Player master = new Player("master");
 		Player player2 = new Player("Player 2");
+		master.setGlobalBalance(5000);
+		player2.setGlobalBalance(5000);
 		Room room = new Room(master,BlindLevel.BLIND_10_20);
 		
 		// for sure candidate is null

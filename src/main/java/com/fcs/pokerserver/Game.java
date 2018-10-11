@@ -114,7 +114,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
      */
     public Game(Room room) {
         this.room = room;
-        this.setId(System.currentTimeMillis());
+        this.setId(System.nanoTime());
         this.deck = new Deck();
         this.deck.initDeck();
         this.deck.shuffleDeck();
@@ -146,6 +146,9 @@ public class Game implements AbstractPlayerListener, GameMBean {
         RoundGameEvent gameEvent = new RoundGameEvent(this, GameAction.WAITTING);
         this.fireEvent(gameEvent);
         this.preflop();
+        System.out.println("dealer: " + dealer.getId());
+        System.out.println("sb: " + smallBlind.getId());
+        System.out.println("bb: " + bigBlind.getId());
     }
 
     /**
@@ -200,7 +203,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
      */
     public void flop() {
 
-        assert this.isNextRoundReady();
+//        assert this.isNextRoundReady();
         this.resetCommandFlag();
         for (Player player : listPlayer) {
 
@@ -228,7 +231,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * @throws AssertionError Next Round of Player is ready
      */
     public void turn() {
-        assert this.isNextRoundReady();
+//        assert this.isNextRoundReady();
         this.resetCommandFlag();
 
 //		for (Player player : listPlayer) {
@@ -254,7 +257,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * @throws AssertionError Next Round of Player is ready.
      */
     public void river() {
-        assert this.isNextRoundReady();
+//        assert this.isNextRoundReady();
         this.resetCommandFlag();
 
         Card card = this.deck.dealCard();
@@ -369,6 +372,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
 
     public void autoNextRound() {
+        this.listPlayer.stream().filter(x->!x.isSittingOut()).forEach(x->x.setRoundBet(0));
         switch (this.status) {
 //            case NOT_STARTED:
 //            case SEATING:
@@ -671,6 +675,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 .filter(x -> !x.isSittingOut())
                 .filter(x -> x.getRoundBet() != this.getCurrentRoundBet())
                 .findAny().isPresent();
+//        System.out.println("doAllPlayersBetEqual: "+doAllPlayersBetEqual);
+//        System.out.println("hasPlayerNotAct: "+hasPlayerNotAct);
         return doAllPlayersBetEqual && !hasPlayerNotAct;
     }
 
@@ -798,7 +804,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
             }
             if (e instanceof PlayerCheckEvent) {
                 Player player = e.getSrc();
-                if (player.getRoundBet() != this.currentRoundBet) return;
+                if (player.getRoundBet() != this.currentRoundBet){
+                    System.out.println("Check cannot happen: player bet: "+player.getRoundBet()+" Roundbet: "+this.currentRoundBet);
+                    return;
+                }
                 PlayerCheckEvent pce = (PlayerCheckEvent) e;
                 PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
                 ge.setE(pce);

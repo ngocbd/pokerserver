@@ -45,11 +45,11 @@ public class ClientStartGameTest {
     }
 
     @Test
-    public void startGame() throws IOException {
+    public void startGame() throws IOException,Exception {
         String[] token = this.getTokenPlayer();
         //create room
         String url = host + "api/room?token=" + token[0] + "&method=put";
-        assertEquals(200, this.getStatusCodeFromUrl(url));
+        assertEquals(200,this.getStatusCodeFromUrl(url));
 
         String urlCreateRoom = host + "api/room?token=" + token[0] + "&method=put";
         String roomId = Jsoup.connect(urlCreateRoom).get().body().text();
@@ -59,6 +59,7 @@ public class ClientStartGameTest {
             String url_1 = host + "api/room?token=" + token[i] + "&method=join&id=" + roomId;
             this.getStatusCodeFromUrl(url_1);
         }
+        Thread.sleep(3000);
         //startgame
         String startGame = host + "api/game?token=" + token[0] + "&method=start";
         assertEquals(200, this.getStatusCodeFromUrl(startGame));
