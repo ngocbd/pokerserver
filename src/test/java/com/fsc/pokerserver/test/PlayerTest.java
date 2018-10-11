@@ -47,11 +47,12 @@ public class PlayerTest implements AbstractPlayerListener {
 		
 		Player p = new Player();
 		p.setName("Kuki");
-		p.setBalance(50000);
+		p.setGlobalBalance(50000);
+		p.setBalance(1000);
 		
 		p.attachListener(this);
 		p.bet(100);
-		assertEquals(p.getBalance(), 50000-100);
+		assertEquals(p.getGlobalBalance(), 50000-100);
 
 	}
 

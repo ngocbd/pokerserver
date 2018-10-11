@@ -31,65 +31,75 @@ import org.junit.Test;
 
 /**
  * The class to test the connect to the game.
+ *
  * @category com > fcs > pokerserver > test
- * */
+ */
 
 public class ConnectGameTest {
-	private Room room;
 
-	@Before
-	public void setUp() throws Exception {
-		Player master;
-		master = new Player("Room master");
-		room = new Room(master, BlindLevel.BLIND_10_20);
-		
-	}
 
-	/**
-	 * Create new Game
-	 * */
-	@Test
-	public void testCreateGame() {
-		Game game = room.createNewGame();
-		assertNotNull(game);
-	}
+    /**
+     * Create new Game
+     */
+    @Test
+    public void testCreateGame() {
+        Player master;
+        master = new Player("Room master");
+        master.setGlobalBalance(1000);
+        Room room = new Room(master, BlindLevel.BLIND_10_20);
+        Game game = room.createNewGame();
+        assertNotNull(game);
+    }
 
-	/**
-	 * Deck of cards is not null
-	 * */
-	@Test
-	public void testGameDeck() {
-		Game game = room.createNewGame();
+    /**
+     * Deck of cards is not null
+     */
+    @Test
+    public void testGameDeck() {
+        Player master;
+        master = new Player("Room master 1");
+        master.setGlobalBalance(1000);
+        Room room = new Room(master, BlindLevel.BLIND_10_20);
+        Game game = room.createNewGame();
 
-		assertNotNull(game.getDeck());
-	}
+        assertNotNull(game.getDeck());
+    }
 
-	/**
-	 * shuffle deck of cards
-	 * */
-	@Test
-	public void testGameShuffleDeck() {
-		Game game = room.createNewGame();
-		Deck deck = new Deck();
-		deck.initDeck();
-		assertNotEquals(game.getDeck().exportDeck(), deck.exportDeck());
-	}
+    /**
+     * shuffle deck of cards
+     */
+    @Test
+    public void testGameShuffleDeck() {
+        Player master;
+        master = new Player("Room master 2");
+        master.setGlobalBalance(1000);
+        Room room = new Room(master, BlindLevel.BLIND_10_20);
+        Game game = room.createNewGame();
+        Deck deck = new Deck();
+        deck.initDeck();
+        assertNotEquals(game.getDeck().exportDeck(), deck.exportDeck());
+    }
 
-	/**
-	 * Game start
-	 * */
-	@Test
-	public void testGameStart() {
-		Game game = room.createNewGame();
+    /**
+     * Game start
+     */
+    @Test
+    public void testGameStart() throws InterruptedException {
+        Player master;
+        master = new Player("Room master 3");
+        master.setGlobalBalance(5000);
+        Room room = new Room(master, BlindLevel.BLIND_10_20);
+        Game game = room.createNewGame();
 
-		Player player2 = new Player();
-		game.addPlayer(player2);
-		Player player3 = new Player();
-		game.addPlayer(player3);
-		game.setDealer(player2);
-		game.startGame();
+        Player player2 = new Player("p2");
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
+        Player player3 = new Player("p3");
+        player3.setGlobalBalance(5000);
+        room.addPlayer(player3);
+        game.setDealer(player2);
+        game.startGame();
+		assertEquals(game.getStatus(), GameStatus.PREFLOP);
+    }
 
-		assertEquals(game.getStatus(), GameStatus.SEATING);
-	}
-	
 }

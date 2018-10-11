@@ -21,6 +21,7 @@ THE SOFTWARE.
 package com.fsc.pokerserver.test;
 
 import com.fcs.pokerserver.*;
+import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
@@ -316,7 +317,7 @@ public class CardEvaluatorTest extends TestCase {
                 Card.JACK_OF_SPADES, Card.EIGHT_OF_DIAMONDS);
         TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
         HandRank rank = evaluator.evaluate(b, h1);
-        assertEquals(HandType.FULL_HOUSE, rank.getHandType());
+        assertEquals(HandType.TWO_PAIR, rank.getHandType());
     }
 
     /**
