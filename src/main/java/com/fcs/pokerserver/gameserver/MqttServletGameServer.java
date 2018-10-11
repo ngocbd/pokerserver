@@ -422,8 +422,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
                     content += "&pid=" + p.getId() + "&playeraction=myturn";
                 }
             }
-            /**
-             * TODO add GameAction.CREATED event*/
+
             if (ge instanceof RoundGameEvent) {
                 RoundGameEvent rge = (RoundGameEvent) ge;
                 Game src = ge.getSrc();
@@ -451,6 +450,10 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
                 if (rge.getType() == GameAction.RIVER) {
                     content += "&rivercard=" + rge.getSrc().getBoard().getRiverCard().toString();
                 }
+            }
+            if (ge instanceof StartFailedGameEvent){
+                StartFailedGameEvent se = (StartFailedGameEvent) ge;
+                content+="&msg="+se.getMsg()+"&listPlayers="+se.getListPlayers().toString();
             }
             if (ge instanceof EndGameEvent) {
                 EndGameEvent ege = (EndGameEvent) ge;

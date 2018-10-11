@@ -180,9 +180,18 @@ public class Player implements PlayerMBean {
      */
 
     public boolean bet(long amount) {
-        assert amount < this.balance;
-        assert !this.sittingOut;
-        assert this == this.currentGame.getCurrentPlayer();
+        if (amount > this.balance) {
+            System.out.println("Player " + this.id + " bet too much!");
+            return false;
+        }
+        if (this.sittingOut) {
+            System.out.println("Player " + this.id + " is sitting out!");
+            return false;
+        }
+        if (this != this.currentGame.getCurrentPlayer()) {
+            System.out.println("Player " + this.id + " is not current player!");
+            return false;
+        }
         long newRoundBet = this.getRoundBet() + amount;
         if (newRoundBet < this.currentGame.getCurrentRoundBet()) {
             System.out.println("Cannot Bet less than current Round Bet");
@@ -234,19 +243,31 @@ public class Player implements PlayerMBean {
     /**
      * The Player want to fold in the game.
      */
-    public void fold() {
+    public boolean fold() {
+        if (this != this.currentGame.getCurrentPlayer()) {
+            System.out.println("Player " + this.getId() + " forbid to fold in the other's turn");
+            return false;
+        }
         if (task != null) {
             task.cancel();
         }
         PlayerFoldEvent pfe = new PlayerFoldEvent(this);
         this.triggerEvent(pfe);
+        return true;
     }
 
     /**
      * The Player want to check in the game.
      */
     public boolean check() {
-        if (this.roundBet != currentGame.getCurrentRoundBet()) return false;
+        if (this != this.currentGame.getCurrentPlayer()) {
+            System.out.println("Player " + this.getId() + " forbid to fold in the other's turn");
+            return false;
+        }
+        if (this.roundBet != currentGame.getCurrentRoundBet()) {
+            System.out.println("Player " + this.getId() + " forbid to check due to unequal betting");
+            return false;
+        }
         if (task != null) {
             task.cancel();
         }
@@ -543,8 +564,14 @@ public class Player implements PlayerMBean {
 
     public void buyChip(long amount) {
         assert this.globalBalance >= amount;
-        this.balance += amount;
-        this.globalBalance -= amount;
+        if (this.globalBalance >= amount) {
+            this.balance += amount;
+            this.globalBalance -= amount;
+        } else {
+            this.balance = this.globalBalance;
+            this.globalBalance = 0;
+        }
+
     }
 
     public void sellChip() {

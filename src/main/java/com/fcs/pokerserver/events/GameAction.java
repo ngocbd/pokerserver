@@ -25,7 +25,7 @@ package com.fcs.pokerserver.events;
  * @category com > fcs > pokerserver > events
  * */
 public enum GameAction {
-
+	FAILEDSTART,
 	CREATED,
 	WAITTING,
 	PREFLOP,
