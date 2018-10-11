@@ -274,7 +274,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * Finish the game. Show the winner Player.
      */
     public void endGame() {
-        assert this.isNextRoundReady();
         if (this.getStatus() == GameStatus.END_HAND) return;
         winners = new ArrayList<>();
         bestHands = new ArrayList<>();
