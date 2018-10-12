@@ -2,8 +2,6 @@ package com.fcs.pokerserver.events;
 
 import com.fcs.pokerserver.Player;
 
-import java.util.HashMap;
-
 public class PlayerCheckEvent extends AbstractPlayerEvent {
 
     public PlayerCheckEvent(Player src) {

@@ -46,7 +46,6 @@ import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.events.*;
 
 import com.fsc.pokerserver.web.*;
-import com.google.common.base.Preconditions;
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
@@ -64,9 +63,7 @@ import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.Room;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.googlecode.objectify.ObjectifyService.begin;
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import static com.google.common.base.Preconditions.checkArgument;
 
 
 /**

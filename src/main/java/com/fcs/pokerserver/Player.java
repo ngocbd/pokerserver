@@ -35,7 +35,6 @@ import com.fcs.pokerserver.holder.Board;
 import com.fcs.pokerserver.holder.Hand;
 import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
 import com.google.api.gax.rpc.AlreadyExistsException;
-import com.google.gson.annotations.Expose;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;

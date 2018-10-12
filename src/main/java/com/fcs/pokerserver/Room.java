@@ -34,12 +34,9 @@ import com.fcs.pokerserver.events.RoomAction;
 import com.fcs.pokerserver.events.RoomListener;
 import com.fcs.pokerserver.events.RoundGameEvent;
 import com.fcs.pokerserver.events.VisitRoomEvent;
-import com.fcs.pokerserver.holder.Hand;
-import com.google.common.base.Joiner;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.sql.rowset.Joinable;
 
 /**
  * An instance of the Room class is created Room when user want to play Poker Game.
