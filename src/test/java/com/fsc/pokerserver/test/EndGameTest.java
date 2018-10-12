@@ -340,6 +340,7 @@ public class EndGameTest {
         master.bet(10);
         player2.check();
 
+        master.check();
         player2.check();
         player3.check();
         player4.check();
@@ -367,7 +368,7 @@ public class EndGameTest {
          * Dealer will be set on player6*/
 
         System.out.println("dl : " +game);
-//        assertSame(game.getDealer(), player6);
+        assertSame(game.getDealer(), player6);
     }
 
     @Test
@@ -679,6 +680,6 @@ public class EndGameTest {
         player5.setPlayerHand(new Hand(Card.THREE_OF_SPADES, Card.SIX_OF_CLUBS));
         master.setPlayerHand(new Hand(Card.FOUR_OF_CLUBS, Card.FIVE_OF_SPADES));
         System.out.println("winners: " + game.getWinners());
-//        assertEquals(1010, master.getBalance());
+        assertEquals(1010, master.getBalance());
     }
 }

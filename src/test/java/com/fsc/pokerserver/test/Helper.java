@@ -8,7 +8,7 @@ import java.io.IOException;
 public class Helper {
 
 
-    public static int getStatusCodeFromUrl(String url) throws IOException {
+    public static int getStatusCodeFromUrl(String url) throws IOException{
         return Jsoup.connect(url).method(Connection.Method.GET).execute().statusCode();
 
     }
