@@ -638,7 +638,6 @@ public class EndGameTest {
 
         game.startGame();
         //P1 and P2 is SB and BB.
-
         //Each P bet 30. P3 folded.
         player3.fold();
         player4.bet(20);
@@ -665,13 +664,6 @@ public class EndGameTest {
         //p2,p5 bet 30 more (90 in total)
         master.bet(30);
         player2.bet(30);
-        System.out.println("currentP: "+game.getCurrentPlayer());
-
-        player5.bet(30);
-        assertEquals(GameStatus.END_HAND,game.getStatus());
-
-        System.out.println("bl5"+player5.getBalance());
-        //total Pot is 250
         /**
          * Setup Playing The Board situation*/
         Board royalFlush = new Board(Card.TEN_OF_HEARTS, Card.JACK_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.KING_OF_HEARTS, Card.ACE_OF_HEARTS);
@@ -679,7 +671,11 @@ public class EndGameTest {
         player2.setPlayerHand(new Hand(Card.THREE_OF_HEARTS, Card.SIX_OF_DIAMONDS));
         player5.setPlayerHand(new Hand(Card.THREE_OF_SPADES, Card.SIX_OF_CLUBS));
         master.setPlayerHand(new Hand(Card.FOUR_OF_CLUBS, Card.FIVE_OF_SPADES));
-        System.out.println("winners: " + game.getWinners());
+        player5.bet(30);
+        assertEquals(GameStatus.END_HAND,game.getStatus());
+
+        //total Pot is 250
+
         assertEquals(1010, master.getBalance());
     }
 }
