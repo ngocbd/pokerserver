@@ -45,13 +45,13 @@ public class RoomTest {
 	 * candidateRoom is temporary object holder for equality check in testcase
 	 * 
 	 * */
-	Room candidateRoom ;
+	private Room candidateRoom ;
 	
 	/**
 	 * candidateRoom is temporary object holder for equality check in testcase
 	 * 
 	 * */
-	Player candidatePlayer ;
+	private Player candidatePlayer ;
 
 
 	@Before

@@ -3,7 +3,7 @@ package com.fcs.pokerserver.events;
 import com.fcs.pokerserver.Game;
 
 public class PlayerActionGameEvent extends AbstractGameEvent {
-    AbstractPlayerEvent pe;
+    private AbstractPlayerEvent pe;
     public PlayerActionGameEvent(Game src) {
         super(src);
         super.setType(GameAction.PLAYEREVENT);
