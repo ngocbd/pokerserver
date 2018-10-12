@@ -373,6 +373,8 @@ public class FlopAndBetGameTest {
 		//player3 not bet because player3 folded
 		player3.bet(10);
 		player4.bet(10);
+
+		assertFalse(true);
 	}
 
 
