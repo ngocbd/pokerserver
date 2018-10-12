@@ -21,16 +21,12 @@ public class ClientCreatedUserTest {
         this.deleteUser();
     }
 
-    private int getStatusCodeFromUrl(String url) throws IOException {
-        return Jsoup.connect(url).method(Connection.Method.GET).execute().statusCode();
-
-    }
 
     @Test
     public void testCreatePlayer() throws IOException {
         for (int i = 0; i < arr.length; i++) {
             String url = host + "api/register?username=" + arr[i] + "&password=123456";
-            assertEquals(200, this.getStatusCodeFromUrl(url));
+            assertEquals(200,  Helper.getStatusCodeFromUrl(url));
         }
 
     }
@@ -38,7 +34,7 @@ public class ClientCreatedUserTest {
     public void deleteUser() throws IOException {
         for (int i = 0; i < arr.length; i++) {
             String url = host + "api/deluser?user=" + arr[i];
-            assertEquals(200, this.getStatusCodeFromUrl(url));
+            assertEquals(200,  Helper.getStatusCodeFromUrl(url));
         }
     }
 

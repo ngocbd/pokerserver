@@ -22,15 +22,10 @@ public class ClientCreatedRoomTest {
         this.deleteUser();
     }
 
-    private int getStatusCodeFromUrl(String url) throws IOException {
-        return Jsoup.connect(url).method(Connection.Method.GET).execute().statusCode();
-
-    }
-
     public String[] getTokenPlayer() throws IOException {
         for (int i = 0; i < arr.length; i++) {
             String url = host + "api/register?username=" + arr[i] + "&password=123456";
-            this.getStatusCodeFromUrl(url);
+            Helper.getStatusCodeFromUrl(url);
         }
         String token[]={"","","","",""};
         for (int i = 0; i < arr.length; i++) {
@@ -46,14 +41,14 @@ public class ClientCreatedRoomTest {
         String[] token = this.getTokenPlayer();
         //create room
         String url = host + "api/room?token=" + token[0] + "&method=put";
-        assertEquals(200, this.getStatusCodeFromUrl(url));
+        assertEquals(200, Helper.getStatusCodeFromUrl(url));
     }
 
 
     public void deleteUser() throws IOException {
         for (int i = 0; i < arr.length; i++) {
             String url = host + "api/deluser?user=" + arr[i];
-            assertEquals(200, this.getStatusCodeFromUrl(url));
+            assertEquals(200, Helper.getStatusCodeFromUrl(url));
         }
     }
 

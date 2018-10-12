@@ -1,7 +1,6 @@
 package com.fsc.pokerserver.test;
 
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Before;
@@ -23,15 +22,11 @@ public class ClientStartGameTest {
         this.deleteUser();
     }
 
-    private int getStatusCodeFromUrl(String url) throws IOException {
-        return Jsoup.connect(url).method(Connection.Method.GET).execute().statusCode();
-
-    }
 
     public String[] getTokenPlayer() throws IOException {
         for (int i = 0; i < arr.length; i++) {
             String url = host + "api/register?username=" + arr[i] + "&password=123456";
-            this.getStatusCodeFromUrl(url);
+            Helper.getStatusCodeFromUrl(url);
         }
         String token[] = {"", "", "", "", ""};
         for (int i = 0; i < arr.length; i++) {
@@ -46,7 +41,7 @@ public class ClientStartGameTest {
         String[] token = this.getTokenPlayer();
         //create room
         String url = host + "api/room?token=" + token[0] + "&method=put";
-        assertEquals(200,this.getStatusCodeFromUrl(url));
+        assertEquals(200,Helper.getStatusCodeFromUrl(url));
 
         String urlCreateRoom = host + "api/room?token=" + token[0] + "&method=put";
         String roomId = Jsoup.connect(urlCreateRoom).get().body().text();
@@ -54,12 +49,12 @@ public class ClientStartGameTest {
         for (int i = 1; i < token.length; i++) {
             System.out.println("token at " + i + ": " + token[i]);
             String url_1 = host + "api/room?token=" + token[i] + "&method=join&id=" + roomId;
-            this.getStatusCodeFromUrl(url_1);
+            Helper.getStatusCodeFromUrl(url);
         }
             Thread.sleep(3000);
         //startgame
         String startGame = host + "api/game?token=" + token[0] + "&method=start";
-        assertEquals(200, this.getStatusCodeFromUrl(startGame));
+        assertEquals(200, Helper.getStatusCodeFromUrl(url));
 
     }
 
@@ -67,7 +62,7 @@ public class ClientStartGameTest {
     public void deleteUser() throws IOException {
         for (int i = 0; i < arr.length; i++) {
             String url = host + "api/deluser?user=" + arr[i];
-            assertEquals(200, this.getStatusCodeFromUrl(url));
+            assertEquals(200, Helper.getStatusCodeFromUrl(url));
         }
     }
 
