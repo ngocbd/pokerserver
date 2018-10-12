@@ -71,6 +71,7 @@ public class Player implements PlayerMBean {
     private Timer countdown = new Timer();
     private CountDownPlayer task = null;
     private long COUNTDOWN_DELAY = 40 * 1000;
+    private boolean didAllIn = false;
 
     @Override
     public String toString() {
@@ -178,6 +179,28 @@ public class Player implements PlayerMBean {
      * @param long amount
      * @throws AssertionError if the bet amount > the Player's balance or the Player is sitting out
      */
+    public void allIn() {
+        if (this.sittingOut) {
+            System.out.println("Cannot All In - Player " + this.id + " is sitting out!");
+            return;
+        }
+        if (this != this.currentGame.getCurrentPlayer()) {
+            System.out.println("Cannot All In - Player " + this.id + " is not current player!");
+            return;
+        }
+        this.setDidAllIn(true);
+        long newRoundBet = this.getRoundBet() + this.getBalance();
+        this.setRoundBet(newRoundBet);
+        this.gameBet += this.getBalance();
+        this.balance = 0;
+        if (task != null) {
+            task.cancel();
+            System.out.println("Player: " + this.id + " task is cancelled");
+        }
+        ;
+        PlayerBetAllEvent pbe = new PlayerBetAllEvent(this);
+        this.triggerEvent(pbe);
+    }
 
     public boolean bet(long amount) {
         if (amount > this.balance) {
@@ -586,5 +609,13 @@ public class Player implements PlayerMBean {
 
     public void setCOUNTDOWN_DELAY(long COUNTDOWN_DELAY) {
         this.COUNTDOWN_DELAY = COUNTDOWN_DELAY;
+    }
+
+    public boolean isDidAllIn() {
+        return didAllIn;
+    }
+
+    public void setDidAllIn(boolean didAllIn) {
+        this.didAllIn = didAllIn;
     }
 }
