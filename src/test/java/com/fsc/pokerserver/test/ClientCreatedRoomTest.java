@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 public class ClientCreatedRoomTest {
     private String host = "http://localhost:8080/";
     private String arr[] = {"toan2", "danh2", "linh2", "chau2", "nghe2"};
-    MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
+    private MqttServletGameServer mqttServletGameServer = MqttServletGameServer.getInstance();
 
     @Before
     public void setUp() throws Exception {
