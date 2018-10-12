@@ -37,7 +37,7 @@ public class ClientStartGameTest {
     }
 
     @Test
-    public void startGame() throws IOException,Exception {
+    public void startGame() throws Exception {
         String[] token = this.getTokenPlayer();
         //create room
         String url = host + "api/room?token=" + token[0] + "&method=put";

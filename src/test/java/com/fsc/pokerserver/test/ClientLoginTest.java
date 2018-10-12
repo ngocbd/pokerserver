@@ -1,8 +1,6 @@
 package com.fsc.pokerserver.test;
 
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.junit.Before;
 import org.junit.Test;
 
