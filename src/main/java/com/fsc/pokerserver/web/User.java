@@ -20,17 +20,11 @@ THE SOFTWARE.
 
 package com.fsc.pokerserver.web;
 
-import com.fcs.pokerserver.*;
-import com.fcs.pokerserver.automation.CountDownPlayer;
+
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import org.junit.Assert;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * The class to the User to login.

@@ -2,8 +2,6 @@ package com.fcs.pokerserver.events;
 
 import com.fcs.pokerserver.Player;
 
-import java.util.HashMap;
-
 public class PlayerFoldEvent extends AbstractPlayerEvent {
 
     public PlayerFoldEvent(Player src) {

@@ -27,8 +27,6 @@ import static org.junit.Assert.assertTrue;
 import com.fcs.pokerserver.*;
 import com.fcs.pokerserver.holder.Board;
 import com.fcs.pokerserver.holder.Hand;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
