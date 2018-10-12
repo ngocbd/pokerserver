@@ -22,7 +22,6 @@ package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
 
-import com.fcs.pokerserver.gameserver.MqttServletGameServer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,13 +45,13 @@ public class RoomTest {
 	 * candidateRoom is temporary object holder for equality check in testcase
 	 * 
 	 * */
-	Room candidateRoom ;
+	private Room candidateRoom ;
 	
 	/**
 	 * candidateRoom is temporary object holder for equality check in testcase
 	 * 
 	 * */
-	Player candidatePlayer ;
+	private Player candidatePlayer ;
 
 
 	@Before

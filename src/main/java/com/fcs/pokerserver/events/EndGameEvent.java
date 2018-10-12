@@ -7,9 +7,9 @@ import com.fcs.pokerserver.holder.Hand;
 import java.util.List;
 
 public class EndGameEvent extends AbstractGameEvent {
-    List<Player> playerwins;
-    String rank;
-    List<Hand> bestHands;
+    private List<Player> playerwins;
+    private String rank;
+    private List<Hand> bestHands;
 
     public EndGameEvent(Game src) {
         super(src);

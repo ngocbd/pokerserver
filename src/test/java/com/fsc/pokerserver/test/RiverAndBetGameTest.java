@@ -1,9 +1,8 @@
 package com.fsc.pokerserver.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Game;
@@ -72,7 +71,8 @@ public class RiverAndBetGameTest {
 		//player2 need bet before player5
 		player5.fold();
 		player2.bet(20);
-		
+
+		assertFalse(true);
 	}
 	
 	/**  
