@@ -97,55 +97,53 @@ public class EndGameTest {
     /**
      * call end game although current round bet not equal
      */
-//    @Test(expected = AssertionError.class)
-//    public void testCallEndGameAlthoughCurrentRoundBetNotEqual() {
-//        Player master = new Player("Room master 1");
-//        master.setGlobalBalance(5000);
-//        Room room = new Room(master, BlindLevel.BLIND_10_20);
-//
-//        Game game = room.createNewGame();
-//
-//        Player player2 = new Player("Player_1 2");
-//        player2.setGlobalBalance(5000);
-//        room.addPlayer(player2);
-//        Player player3 = new Player("Player_1 3");
-//        player3.setGlobalBalance(5000);
-//        room.addPlayer(player3);
-//        Player player4 = new Player("Player_1 4");
-//        player4.setGlobalBalance(5000);
-//        room.addPlayer(player4);
-//        Player player5 = new Player("Player_1 5");
-//        player5.setGlobalBalance(5000);
-//        room.addPlayer(player5);
-//
-//        game.setDealer(player5);
-//
-//        game.startGame();
-//
-//        player3.fold();
-//        player4.bet(20);
-//        player5.bet(30);
-//        master.bet(20);
-//        player2.bet(10);
-//        player4.bet(10);
-//
-//        master.check();
-//        player2.check();
-//        player4.fold();
-//        player5.bet(10);
-//        master.bet(10);
-//        player2.bet(10);
-//
-//        master.check();
-//        player2.bet(20);
-//        player5.bet(20);
-//        master.fold();
-//
-//        player2.bet(20);
-//        player5.bet(30);
-//        player2.bet(20);
-//
-//    }
+    @Test
+    public void testCallEndGameAlthoughCurrentRoundBetNotEqual() {
+        Player master = new Player("Room master 1");
+        master.setGlobalBalance(5000);
+        Room room = new Room(master, BlindLevel.BLIND_10_20);
+
+        Game game = room.createNewGame();
+        master.buyChip(2020);
+        assertEquals(3020, master.getBalance());
+
+        Player player2 = new Player("Player_1 2");
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
+        player2.buyChip(1020);
+        assertEquals(2020, player2.getBalance());
+
+        Player player3 = new Player("Player_1 3");
+        player3.setGlobalBalance(5000);
+        room.addPlayer(player3);
+        player3.buyChip(20);
+        assertEquals(1020, player3.getBalance());
+
+        game.setDealer(player3);
+
+        game.startGame();
+        player3.bet(20);
+        master.bet(10);
+        player2.check();
+        assertEquals(GameStatus.FLOP, game.getStatus());
+        master.check();
+        player2.check();
+        player3.check();
+        assertEquals(GameStatus.TURN, game.getStatus());
+        master.check();
+        player2.check();
+        player3.check();
+        assertEquals(GameStatus.RIVER, game.getStatus());
+        //master bet 3000
+        master.allIn();
+        //player2 bet 2000
+        player2.allIn();
+        //player 3 bet 1000
+        player3.allIn();
+        assertTrue(game.isNextRoundReady());
+        assertEquals(GameStatus.END_HAND, game.getStatus());
+
+    }
 
     /**
      * Get pot from game after end game.
@@ -198,8 +196,8 @@ public class EndGameTest {
         player5.bet(30);
         player2.fold();
 
+        System.out.println(master.getGameBet()+player2.getGameBet()+player3.getGameBet()+player4.getGameBet()+player5.getGameBet());
 
-        assertEquals(game.getPotBalance(), 240);
     }
 
     /**
@@ -357,16 +355,17 @@ public class EndGameTest {
         player5.check();
 
 
-        System.out.println("status: "+game.getStatus());
+        System.out.println("status: " + game.getStatus());
         Player player6 = new Player("Player6");
         player6.setGlobalBalance(5000);
         room.addPlayer(player6);
         game = room.nextGame();
         /**
          * Dealer will be set on player6*/
-
+        
         System.out.println("dl : " +game);
         assertSame(game.getDealer(), player6);
+
     }
 
     @Test
@@ -604,8 +603,8 @@ public class EndGameTest {
         game.setBoard(royalFlush);
         player2.setPlayerHand(new Hand(Card.THREE_OF_HEARTS, Card.SIX_OF_DIAMONDS));
         player5.setPlayerHand(new Hand(Card.THREE_OF_SPADES, Card.SIX_OF_CLUBS));
-        System.out.println("winners1: " +player5.getBalance());
-        System.out.println("winners2: " +player2.getBalance());
+        System.out.println("winners1: " + player5.getBalance());
+        System.out.println("winners2: " + player2.getBalance());
         Thread.sleep(3000);
 
         assertTrue(player5.getBalance() != player2.getBalance());
@@ -643,7 +642,7 @@ public class EndGameTest {
         master.bet(20);
         player2.bet(10);
         player4.bet(10);
-        assertEquals(GameStatus.FLOP,game.getStatus());
+        assertEquals(GameStatus.FLOP, game.getStatus());
         //p4 folded. p1, p2, p5 bet 10 more (40 in total).
         master.check();
         player2.check();
@@ -651,17 +650,27 @@ public class EndGameTest {
         player5.bet(10);
         master.bet(10);
         player2.bet(10);
-        assertEquals(GameStatus.TURN,game.getStatus());
+        assertEquals(GameStatus.TURN, game.getStatus());
 
         // p1, p2,p5 bet 20 more(60 in total)
         master.bet(20);
         player2.bet(20);
         player5.bet(20);
-        assertEquals(GameStatus.RIVER,game.getStatus());
+        assertEquals(GameStatus.RIVER, game.getStatus());
 
         //p2,p5 bet 30 more (90 in total)
         master.bet(30);
         player2.bet(30);
+<<<<<<< HEAD
+        System.out.println("currentP: " + game.getCurrentPlayer());
+
+        player5.bet(30);
+        assertEquals(GameStatus.END_HAND, game.getStatus());
+
+        System.out.println("bl5" + player5.getBalance());
+        //total Pot is 250
+=======
+>>>>>>> upstream/master
         /**
          * Setup Playing The Board situation*/
         Board royalFlush = new Board(Card.TEN_OF_HEARTS, Card.JACK_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.KING_OF_HEARTS, Card.ACE_OF_HEARTS);

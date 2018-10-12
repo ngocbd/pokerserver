@@ -26,13 +26,12 @@ package com.fcs.pokerserver;
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.stream.Collectors;
 
+import com.fcs.pokerserver.Pot.SidePot;
 import com.fcs.pokerserver.events.*;
 import com.fcs.pokerserver.holder.Board;
 import com.fcs.pokerserver.holder.Hand;
@@ -67,6 +66,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
     private Player smallBlind;
     private Player currentPlayer = null;
     private String rank = "";
+    private List<SidePot> listSidePots = new ArrayList<>();
     /**
      * CODE PREPARING FOR SPLIT POT IN CASE OF MULTIPLE WINNERS.
      */
@@ -341,18 +341,26 @@ public class Game implements AbstractPlayerListener, GameMBean {
         gameEvent.setPlayerwins(winners);
 
 /**
- * Temporary add winning money to winner balance (Need enhancement later)
- * */
-        //Find out the money to be claim for each player.
-        long moneyTobeClaim = this.potBalance / (winners.size());
-        System.out.println("moneyTobeClaim: " + moneyTobeClaim);
-        for (Player p : winners) {
-            p.setBalance(p.getBalance() + moneyTobeClaim);
+ * Check all-in situation*/
+        if (this.listPlayer.stream().filter(x -> !x.isSittingOut()).anyMatch(x -> x.isDidAllIn())) {
+            //TODO Code split pot here (only 1 winners case-- Need upgrade later).
+            splitSidePot(listPlayer, winners, b);
+        } else {
+            /**
+             * Temporary add winning money to winner balance (Need enhancement later)
+             * */
+            //Find out the money to be claim for each player.
+            long moneyTobeClaim = this.potBalance / (winners.size());
+            System.out.println("moneyTobeClaim: " + moneyTobeClaim);
+            for (Player p : winners) {
+                p.setBalance(p.getBalance() + moneyTobeClaim);
+            }
         }
+
         /**
          * TODO Here need an event for adding winning money.
          * */
-//        winner.setBalance(winner.getBalance() + this.potBalance);
+
         this.fireEvent(gameEvent);
 
 
@@ -375,6 +383,56 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
     }
 
+    /**
+     * This is the case of only 1 player win-
+     * TODO need upgrade into multiple winners later
+     */
+    public void splitSidePot(List<Player> listPlayer, List<Player> winners, Board b) {
+        if (!this.listPlayer.stream().filter(x -> !x.isSittingOut()).anyMatch(x -> x.isDidAllIn())) {
+            return;
+        }
+        Player winner = winners.get(0);
+        List<Player> temp_list = new ArrayList<>(listPlayer);
+        temp_list.remove(winner);
+        /**
+         * Winners earn all gamebet money that lower than his
+         * and the amount of his gamebet in case competitors bet higher than him.*/
+        for (Player p : temp_list) {
+            if (p.getGameBet() <= winner.getGameBet()) {
+                winner.setBalance(winner.getBalance() + p.getGameBet());
+                p.setGameBet(0);
+            } else {
+                winner.setBalance(winner.getBalance() + winner.getGameBet());
+                p.setGameBet(p.getGameBet() - winner.getGameBet());
+            }
+        }
+        winner.setGameBet(0);
+        winners = new ArrayList<>();
+
+        /**
+         * Now find the list of players in side pot, side pot contains all players that has gamebet remaining*/
+        List<Player> sidePot = temp_list.stream().filter(x -> x.getGameBet() != 0).collect(Collectors.toList());
+        //Side pot is empty then return
+        if (sidePot.isEmpty()) return;
+
+        List<Hand> handlist = new ArrayList<>();
+        sidePot.stream().forEach(x -> handlist.add(x.getPlayerHand()));
+        //Find the winner in side-pot
+        handlist.sort(new Comparator<Hand>() {
+            public int compare(Hand o1, Hand o2) {
+                return TwoPlusTwoHandEvaluator.compare(o1, o2, b);
+            }
+        });
+        Hand bestHand = handlist.get(handlist.size() - 1);
+        for (int i = 0; i < sidePot.size(); i++) {
+            if (sidePot.get(i).getPlayerHand() == bestHand) {
+                winners.add(sidePot.get(i));
+                break;
+            }
+        }
+        splitSidePot(sidePot, winners, b);
+
+    }
 
     public void autoNextRound() {
         this.listPlayer.stream().filter(x -> !x.isSittingOut()).forEach(x -> x.setRoundBet(0));
@@ -677,7 +735,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 .filter(p -> !p.isSittingOut())
                 .anyMatch(p -> !p.didCommandThisTurn());
         boolean doAllPlayersBetEqual = !this.listPlayer.stream()
-                .filter(x -> !x.isSittingOut())
+                .filter(x -> !x.isSittingOut()).filter(x -> !x.isDidAllIn())
                 .filter(x -> x.getRoundBet() != this.getCurrentRoundBet())
                 .findAny().isPresent();
 //        System.out.println("doAllPlayersBetEqual: "+doAllPlayersBetEqual);
@@ -749,6 +807,17 @@ public class Game implements AbstractPlayerListener, GameMBean {
         }
 //        assert p == this.getCurrentPlayer();
         if (listPlayer.contains(p)) {
+            if (e instanceof PlayerBetAllEvent) {
+                PlayerBetAllEvent pae = (PlayerBetAllEvent) e;
+                p.setCommandThisTurn(true);
+                if (this.currentRoundBet < p.getRoundBet()) this.currentRoundBet = p.getRoundBet();
+                if (isNextRoundReady()) {
+                    autoNextRound();
+                    this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
+                } else {
+                    this.setCurrentPlayer(this.getNextPlayer(p));
+                }
+            }
             if (e instanceof PlayerBetEvent) {
                 PlayerBetEvent pbe = (PlayerBetEvent) e;
                 assert p.getRoundBet() >= this.currentRoundBet;
@@ -765,8 +834,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 //TODO Temporary set check next round for game
                 // if next round ready then next Player will be left person of dealer
                 if (isNextRoundReady()) {
-                    this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
                     autoNextRound();
+                    this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
                 } else {
                     Player next = this.getNextPlayer(p);
                     if (next != null) {
@@ -799,8 +868,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
                     temp.getCurrentGame().endGameSoon(temp);
                 } else {
                     if (isNextRoundReady()) {
-                        this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
                         autoNextRound();
+                        this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
                     } else
                         this.setCurrentPlayer(this.getNextPlayer(p));
                 }
@@ -821,8 +890,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
 //              This player has action now.
                 p.setCommandThisTurn(true);
                 if (isNextRoundReady()) {
-                    this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
                     autoNextRound();
+                    this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
                 } else
                     this.setCurrentPlayer(this.getNextPlayer(p));
             }
