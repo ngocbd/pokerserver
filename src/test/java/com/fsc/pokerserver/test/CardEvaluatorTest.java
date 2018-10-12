@@ -21,14 +21,8 @@ THE SOFTWARE.
 package com.fsc.pokerserver.test;
 
 import com.fcs.pokerserver.*;
-import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fcs.pokerserver.holder.Board;

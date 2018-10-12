@@ -21,7 +21,6 @@ THE SOFTWARE.
 package com.fsc.pokerserver.test;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Game;
@@ -309,8 +308,6 @@ public class PreflopAndBetGameTest {
 		player3.bet(10);
 		player4.bet(10);
 		
-//		game.flop();
-
 		assertEquals(game.getPotBalance(), 150);
 	}
 	
@@ -345,7 +342,6 @@ public class PreflopAndBetGameTest {
 		player5.bet(20);
 		master.bet(10);
 		
-//		game.flop();
 	}
 	
 	

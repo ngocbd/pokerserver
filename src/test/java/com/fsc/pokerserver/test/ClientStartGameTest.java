@@ -1,9 +1,6 @@
 package com.fsc.pokerserver.test;
 
 import com.fcs.pokerserver.gameserver.MqttServletGameServer;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,7 +23,7 @@ public class ClientStartGameTest {
         this.deleteUser();
     }
 
-    public int getStatusCodeFromUrl(String url) throws IOException {
+    private int getStatusCodeFromUrl(String url) throws IOException {
         return Jsoup.connect(url).method(Connection.Method.GET).execute().statusCode();
 
     }
@@ -59,7 +56,7 @@ public class ClientStartGameTest {
             String url_1 = host + "api/room?token=" + token[i] + "&method=join&id=" + roomId;
             this.getStatusCodeFromUrl(url_1);
         }
-        Thread.sleep(3000);
+            Thread.sleep(3000);
         //startgame
         String startGame = host + "api/game?token=" + token[0] + "&method=start";
         assertEquals(200, this.getStatusCodeFromUrl(startGame));

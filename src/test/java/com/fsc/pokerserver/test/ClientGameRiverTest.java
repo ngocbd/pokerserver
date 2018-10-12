@@ -22,7 +22,7 @@ public class ClientGameRiverTest {
         this.deleteUser();
     }
 
-    public int getStatusCodeFromUrl(String url) throws IOException {
+    private int getStatusCodeFromUrl(String url) throws IOException {
         return Jsoup.connect(url).method(Connection.Method.GET).execute().statusCode();
 
     }
