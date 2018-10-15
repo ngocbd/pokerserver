@@ -337,7 +337,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
             //TODO Code split pot here (only 1 winners case-- Need upgrade later).
             splitSidePot(listPlayer, winners, b, false);
             return;
-            
+
         } else {
             /**
              * Temporary add winning money to winner balance (Need enhancement later)
@@ -354,8 +354,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
             gameEvent.setPlayerwins(winners);
             this.fireEvent(gameEvent);
         }
-
-
+        
     }
 
     public void endGameSoon(Player p) {

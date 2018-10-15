@@ -87,10 +87,9 @@ public class GameServlet extends HttpServlet {
                 p.getCurrentGame().startGame();
                 logger.log(Level.INFO, "Start Game\n\tDealer: " + p.getCurrentGame().getDealer().getName() + "\n\tSmall Blind: " + p.getCurrentGame().getSmallBlind().getName() + "\n\tBig Blind: " + p.getCurrentGame().getBigBlind().getName());
                 break;
-            case "preflop":
-//                p = (Player) request.getAttribute("player");
-//                p.getCurrentGame().preflop();
-//                logger.log(Level.INFO, "The Preflop of the game\n\tNumber of the cards: " + p.getCurrentGame().getBoard().getCardNumber() + "\n\tSmallBlind's balance: " + p.getCurrentGame().getSmallBlind().getBalance() + "\n\tBigBlind's balance: " + p.getCurrentGame().getBigBlind().getBalance() + "\n\tCurrent Player: " + p.getCurrentGame().getCurrentPlayer().getName());
+            case "allin":
+                p = (Player) request.getAttribute("player");
+                p.allIn();
                 break;
             case "bet":
                 p = (Player) request.getAttribute("player");
@@ -122,47 +121,7 @@ public class GameServlet extends HttpServlet {
                 }
                 logger.log(Level.INFO, "The Player folded: " + p.getName());
                 break;
-            case "flop":
-//                p = (Player) request.getAttribute("player");
-//                p.getCurrentGame().flop();
-//                String strFlop = "The Flop of the game \n\tNumber of cards: " + p.getCurrentGame().getBoard().getCardNumber() + "\n\tThe Cards in the flop: " + p.getCurrentGame().getBoard().getFlopCards().toString();
-//                for (int i = 0; i < p.getCurrentGame().getListPlayer().size(); i++) {
-//                    strFlop += "\n\tCards of Player " + (i + 1) + ": " + p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString() + " " + p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString();
-//                    strFlop += "\n\tBalance of Player " + (i + 1) + ": " + p.getCurrentGame().getListPlayer().get(i).getBalance();
-//                }
-//                logger.log(Level.INFO, strFlop);
-                break;
-            case "turn":
-//                p = (Player) request.getAttribute("player");
-//                p.getCurrentGame().turn();
-//                String strTurn = "The Turn of the game\n\tNumber of cards: " + p.getCurrentGame().getBoard().getCardNumber() + "\n\tThe Cards in the flop: " + p.getCurrentGame().getBoard().getFlopCards().toString() + "\n\tThe Cards in the Turn: " + p.getCurrentGame().getBoard().getTurnCard().toString();
-//                for (int i = 0; i < p.getCurrentGame().getListPlayer().size(); i++) {
-//                    strTurn += "\n\tCards of Player " + (i + 1) + ": " + p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString() + " " + p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString();
-//                    strTurn += "\n\tBalance of Player " + (i + 1) + ": " + p.getCurrentGame().getListPlayer().get(i).getBalance();
-//                }
-//                logger.log(Level.INFO, strTurn);
-                break;
-            case "river":
-//                p = (Player) request.getAttribute("player");
-//                p.getCurrentGame().river();
-//                String strRiver = "The River of the game\n\tNumber of cards: " + p.getCurrentGame().getBoard().getCardNumber() + "\n\tThe Cards in the flop: " + p.getCurrentGame().getBoard().getFlopCards().toString() + "\n\tThe Cards in the Turn: " + p.getCurrentGame().getBoard().getTurnCard().toString() + "\n\tThe Cards in the River: " + p.getCurrentGame().getBoard().getRiverCard().toString();
-//                for (int i = 0; i < p.getCurrentGame().getListPlayer().size(); i++) {
-//                    strRiver += "\n\tCards of Player " + (i + 1) + ": " + p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString() + " " + p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString();
-//                    strRiver += "\n\tBalance of Player " + (i + 1) + ": " + p.getCurrentGame().getListPlayer().get(i).getBalance();
-//                }
-//                logger.log(Level.INFO, strRiver);
-                break;
-            case "end":
-//                p = (Player) request.getAttribute("player");
-//                p.getCurrentGame().endGame();
-//                String strEnd = "The End of the game\n\tNumber of cards: " + p.getCurrentGame().getBoard().getCardNumber() + "\n\tThe Cards in the flop: " + p.getCurrentGame().getBoard().getFlopCards().toString() + "\n\tThe Cards in the Turn: " + p.getCurrentGame().getBoard().getTurnCard().toString() + "\n\tThe Cards in the River: " + p.getCurrentGame().getBoard().getRiverCard().toString();
-//                for (int i = 0; i < p.getCurrentGame().getListPlayer().size(); i++) {
-//                    strEnd += "\n\tCards of Player " + (i + 1) + ": " + p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(0).toString() + " " + p.getCurrentGame().getListPlayer().get(i).getPlayerHand().getCard(1).toString();
-//                    strEnd += "\n\tBalance of Player " + (i + 1) + ": " + p.getCurrentGame().getListPlayer().get(i).getBalance();
-//                }
-//                strEnd += "\n\tThe winner: " + p.getCurrentGame().getWinners() + "\n\tThe rank: " + p.getCurrentGame().getRank() + "\n\tThe best hand:" + p.getCurrentGame().getBestHands();
-//                logger.log(Level.INFO, strEnd);
-                break;
+
             case "roundcheck":
                 p = (Player) request.getAttribute("player");
                 response.setContentType("application/json");
