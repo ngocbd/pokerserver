@@ -388,14 +388,25 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
             if (ge instanceof PlayerActionGameEvent) {
                 PlayerActionGameEvent pge = (PlayerActionGameEvent) ge;
                 AbstractPlayerEvent e = pge.getPE();
-
+                if (e instanceof PlayerBetAllEvent) {
+                    PlayerBetAllEvent pae = (PlayerBetAllEvent) e;
+                    long amount = pae.getAmount();
+                    Player p = pae.getSrc();
+                    /**
+                     * Minus Balance of USER and update to Datastore*/
+                    User user = ofy().load().type(User.class).id(p.getId()).now();
+                    checkNotNull(user, "User is null when loaded from datastore!");
+                    user.setBalance(user.getBalance() - amount);
+                    checkNotNull(ofy().save().entity(user).now(), "Update to datastore failed!");
+                    content += "&pid=" + p.getId() + "&playeraction=allin&amount=" + amount;
+                }
                 if (e instanceof PlayerBetEvent) {
                     PlayerBetEvent pe = (PlayerBetEvent) e;
                     long amount = pe.getAmount();
                     Player p = pe.getSrc();
                     /**
                      * Minus Balance of USER and update to Datastore*/
-                    User user = ofy().load().type(User.class).id(p.getName()).now();
+                    User user = ofy().load().type(User.class).id(p.getId()).now();
                     checkNotNull(user, "User is null when loaded from datastore!");
                     user.setBalance(user.getBalance() - amount);
                     checkNotNull(ofy().save().entity(user).now(), "Update to datastore failed!");

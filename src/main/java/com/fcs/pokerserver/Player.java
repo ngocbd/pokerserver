@@ -217,6 +217,10 @@ public class Player implements PlayerMBean {
             System.out.println("Player " + this.id + " is not current player!");
             return false;
         }
+        if (amount == this.balance) {
+            allIn();
+            return true;
+        }
         long newRoundBet = this.getRoundBet() + amount;
         if (newRoundBet < this.currentGame.getCurrentRoundBet()) {
             System.out.println("Cannot Bet less than current Round Bet");

@@ -22,11 +22,13 @@ package com.fcs.pokerserver.events;
 
 /**
  * The PlayerAction enum the action of the Player.
+ *
  * @category com > fcs > pokerserver > events
- * */
+ */
 public enum PlayerAction {
-	BET,
-	FOLD,
-	CALL,
-	CHECK
+    ALLIN,
+    BET,
+    FOLD,
+    CALL,
+    CHECK
 }
