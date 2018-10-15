@@ -295,7 +295,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
         list.sort(new Comparator<Hand>() {
             public int compare(Hand o1, Hand o2) {
                 return TwoPlusTwoHandEvaluator.compare(o1, o2, b);
-
             }
         });
         TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
@@ -341,7 +340,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
  * Check all-in situation*/
         if (this.listPlayer.stream().filter(x -> !x.isSittingOut()).anyMatch(x -> x.isDidAllIn())) {
             //TODO Code split pot here (only 1 winners case-- Need upgrade later).
-            splitSidePot(listPlayer, winners, b);
+            splitSidePot(listPlayer, winners, b, false);
         } else {
             /**
              * Temporary add winning money to winner balance (Need enhancement later)
@@ -384,7 +383,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * This is the case of only 1 player win-
      * TODO need upgrade into multiple winners later
      */
-    public void splitSidePot(List<Player> listPlayer, List<Player> winners, Board b) {
+    public void splitSidePot(List<Player> listPlayer, List<Player> winners, Board b, boolean sideWinners) {
 //        if (!this.listPlayer.stream().filter(x -> !x.isSittingOut()).anyMatch(x -> x.isDidAllIn())) {
 //            return;
 //        }
@@ -406,16 +405,23 @@ public class Game implements AbstractPlayerListener, GameMBean {
             }
         }
         winner.setGameBet(0);
+        if (sideWinners) {
+            SideWinnerGameEvent e = new SideWinnerGameEvent(this);
+            e.setWinner(winner);
+            e.setHand(winner.getPlayerHand());
+            e.setRank(TwoPlusTwoHandEvaluator.getInstance().evaluate(b, winner.getPlayerHand()).getHandType().toString());
+            this.fireEvent(e);
+        }
         winners = new ArrayList<>();
 
         /**
          * Now find the list of players in side pot, side pot contains all players that has gamebet remaining*/
         List<Player> sidePot = temp_list.stream().filter(x -> x.getGameBet() != 0).collect(Collectors.toList());
         //Side pot is empty then return
-        if (sidePot.isEmpty()){
+        if (sidePot.isEmpty()) {
             return;
-        }else {
-            System.out.println("sidepot: "+sidePot);
+        } else {
+            System.out.println("sidepot: " + sidePot);
         }
 
         List<Hand> handlist = new ArrayList<>();
@@ -433,7 +439,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 break;
             }
         }
-        splitSidePot(sidePot, winners, b);
+        splitSidePot(sidePot, winners, b, true);
+
 
     }
 
@@ -813,6 +820,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
             if (e instanceof PlayerBetAllEvent) {
                 PlayerBetAllEvent pae = (PlayerBetAllEvent) e;
                 p.setCommandThisTurn(true);
+                this.potBalance += pae.getAmount();
                 if (this.currentRoundBet < p.getRoundBet()) this.currentRoundBet = p.getRoundBet();
                 if (isNextRoundReady()) {
                     autoNextRound();

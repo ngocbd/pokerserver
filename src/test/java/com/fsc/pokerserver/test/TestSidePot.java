@@ -68,6 +68,8 @@ public class TestSidePot {
         player3.check();
         player4.check();
         player5.check();
+        System.out.println("Pot: "+game.getPotBalance());
+
         /**
          * RIVER now*/
         Assert.assertEquals(GameStatus.RIVER, game.getStatus());
@@ -75,6 +77,7 @@ public class TestSidePot {
         player2.allIn();
         player3.allIn();
         player4.allIn();
+
         //SET BOARD AND PLAYER HAND IN ORDER TO IDENTIFY WINNERS.
         game.setBoard(new Board(Card.TWO_OF_SPADES
                 , Card.THREE_OF_CLUBS
@@ -89,6 +92,7 @@ public class TestSidePot {
         player3.setPlayerHand(new Hand(Card.QUEEN_OF_SPADES, Card.KING_OF_DIAMONDS));
         player4.setPlayerHand(new Hand(Card.QUEEN_OF_DIAMONDS, Card.JACK_OF_HEARTS));
         player5.setPlayerHand(new Hand(Card.QUEEN_OF_CLUBS, Card.TEN_OF_DIAMONDS));
+        System.out.println("Pot: "+game.getPotBalance());
         player5.allIn();
         System.out.println("winner: " + game.getWinners());
         /**
@@ -101,5 +105,6 @@ public class TestSidePot {
         Assert.assertEquals(2000, player4.getBalance());
         //Finally player 5 get his betting of 1000 back due to nobody can match his bet.
         Assert.assertEquals(1000, player5.getBalance());
+        Assert.assertEquals(master.getBalance()+player2.getBalance()+player3.getBalance()+player4.getBalance()+player5.getBalance(),game.getPotBalance());
     }
 }

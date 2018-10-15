@@ -448,13 +448,17 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
                     content += "&rivercard=" + rge.getSrc().getBoard().getRiverCard().toString();
                 }
             }
-            if (ge instanceof StartFailedGameEvent){
+            if (ge instanceof StartFailedGameEvent) {
                 StartFailedGameEvent se = (StartFailedGameEvent) ge;
-                content+="&msg="+se.getMsg()+"&listPlayers="+se.getListPlayers().toString();
+                content += "&msg=" + se.getMsg() + "&listPlayers=" + se.getListPlayers().toString();
             }
             if (ge instanceof EndGameEvent) {
                 EndGameEvent ege = (EndGameEvent) ge;
                 content += "&playerwin=" + ege.getPlayerwins() + "&rank=" + ege.getRank() + "&besthand=" + ege.getBestHands();
+            }
+            if (ge instanceof SideWinnerGameEvent) {
+                SideWinnerGameEvent se = (SideWinnerGameEvent) ge;
+                content += "&playerwin=" + se.getWinner() + "&rank=" + se.getRank() + "&besthand=" + se.getHand();
             }
 
         } else if (event instanceof VisitRoomEvent) {
