@@ -280,8 +280,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
         winners = new ArrayList<>();
         bestHands = new ArrayList<>();
         this.setStatus(GameStatus.END_HAND);
-        EndGameEvent gameEvent = new EndGameEvent(this);
-
         List<Hand> list = new ArrayList<Hand>();
         for (int i = 0; i < this.getListPlayer().size(); i++) {
             Player p = this.getListPlayer().get(i);
@@ -331,16 +329,15 @@ public class Game implements AbstractPlayerListener, GameMBean {
         System.out.println("GameID: " + this.getId());
         System.out.println("Highest Rank value: " + highestRank.getValue());
         rank = highestRank.getHandType().toString();
-        gameEvent.setBestHands(bestHands);
-//        gameEvent.setRank(rank);
-        gameEvent.setRank(String.valueOf(highestRank.getValue()));
-        gameEvent.setPlayerwins(winners);
+
 
 /**
  * Check all-in situation*/
         if (this.listPlayer.stream().filter(x -> !x.isSittingOut()).anyMatch(x -> x.isDidAllIn())) {
             //TODO Code split pot here (only 1 winners case-- Need upgrade later).
             splitSidePot(listPlayer, winners, b, false);
+            return;
+            
         } else {
             /**
              * Temporary add winning money to winner balance (Need enhancement later)
@@ -351,13 +348,12 @@ public class Game implements AbstractPlayerListener, GameMBean {
             for (Player p : winners) {
                 p.setBalance(p.getBalance() + moneyTobeClaim);
             }
+            EndGameEvent gameEvent = new EndGameEvent(this);
+            gameEvent.setBestHands(bestHands);
+            gameEvent.setRank(String.valueOf(highestRank.getValue()));
+            gameEvent.setPlayerwins(winners);
+            this.fireEvent(gameEvent);
         }
-
-        /**
-         * TODO Here need an event for adding winning money.
-         * */
-
-        this.fireEvent(gameEvent);
 
 
     }
@@ -384,12 +380,11 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * TODO need upgrade into multiple winners later
      */
     public void splitSidePot(List<Player> listPlayer, List<Player> winners, Board b, boolean sideWinners) {
-//        if (!this.listPlayer.stream().filter(x -> !x.isSittingOut()).anyMatch(x -> x.isDidAllIn())) {
-//            return;
-//        }
+        TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
         Player winner = winners.get(0);
         List<Player> temp_list = new ArrayList<>(listPlayer);
         temp_list.remove(winner);
+
         //Firstly, Winner should receive his betting money back.
         winner.setBalance(winner.getBalance() + winner.getGameBet());
         /**
@@ -409,8 +404,18 @@ public class Game implements AbstractPlayerListener, GameMBean {
             SideWinnerGameEvent e = new SideWinnerGameEvent(this);
             e.setWinner(winner);
             e.setHand(winner.getPlayerHand());
-            e.setRank(TwoPlusTwoHandEvaluator.getInstance().evaluate(b, winner.getPlayerHand()).getHandType().toString());
+            e.setRank(evaluator.evaluate(b, winner.getPlayerHand()).getHandType().toString());
             this.fireEvent(e);
+        } else {
+            EndGameEvent gameEvent = new EndGameEvent(this);
+            List<Hand> bestHands = new ArrayList<>();
+            bestHands.add(winner.getPlayerHand());
+            HandRank highestRank = evaluator.evaluate(b, winner.getPlayerHand());
+
+            gameEvent.setBestHands(bestHands);
+            gameEvent.setRank(String.valueOf(highestRank.getValue()));
+            gameEvent.setPlayerwins(winners);
+            this.fireEvent(gameEvent);
         }
         winners = new ArrayList<>();
 
