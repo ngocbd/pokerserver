@@ -354,7 +354,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
             gameEvent.setPlayerwins(winners);
             this.fireEvent(gameEvent);
         }
-        
+
     }
 
     public void endGameSoon(Player p) {
@@ -826,12 +826,16 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 p.setCommandThisTurn(true);
                 this.potBalance += pae.getAmount();
                 if (this.currentRoundBet < p.getRoundBet()) this.currentRoundBet = p.getRoundBet();
+                PlayerActionGameEvent ge = new PlayerActionGameEvent(this);
+                ge.setE(pae);
+                this.fireEvent(ge);
                 if (isNextRoundReady()) {
                     autoNextRound();
                     this.setCurrentPlayer(this.getNextPlayer(this.getDealer()));
                 } else {
                     this.setCurrentPlayer(this.getNextPlayer(p));
                 }
+
             }
             if (e instanceof PlayerBetEvent) {
                 PlayerBetEvent pbe = (PlayerBetEvent) e;
