@@ -81,10 +81,10 @@ public class TwoPlusTwoHandEvaluator {
             Card card = cardIterator.next();
             p = handRanks[p + card.getEvaluation()];
         }
-        System.out.println("Board flop: " + board.getFlopCards() + " ,turn: " + board.getTurnCard() + " ,river: " + board.getRiverCard());
-        System.out.println("Hand: " + hand.toString());
+//        System.out.println("Board flop: " + board.getFlopCards() + " ,turn: " + board.getTurnCard() + " ,river: " + board.getRiverCard());
+//        System.out.println("Hand: " + hand.toString());
         HandRank hr = new HandRank(p);
-        System.out.println("handrank: " + hr.getValue());
+//        System.out.println("handrank: " + hr.getValue());
         return hr;
     }
 

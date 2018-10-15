@@ -74,7 +74,7 @@ public class Player implements PlayerMBean {
 
     @Override
     public String toString() {
-        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + ",\"isCommandThisTurn\":" + this.didCommandThisTurn() + "}";
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + ",\"isCommandThisTurn\":" + this.didCommandThisTurn() + ",\"gamebet\":" + this.getGameBet() + "}";
     }
 
     @Override
