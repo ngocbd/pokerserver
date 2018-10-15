@@ -20,10 +20,9 @@ THE SOFTWARE.
 
 package com.fsc.pokerserver.test;
 
-
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
-import org.junit.Before;
 import org.junit.Test;
 import com.fcs.pokerserver.BlindLevel;
 import com.fcs.pokerserver.Game;
@@ -36,16 +35,6 @@ import com.fcs.pokerserver.Room;
  * */
 
 public class PositionPlayerGameTest {
-	private Player master;
-	private Room room;
-
-	@Before
-	public void setUp() throws Exception {
-		master = new Player("Room master");
-		master.setBalance(5000);
-		room = new Room(master, BlindLevel.BLIND_10_20);
-		
-	}
 
 	/*--------------------- Dealer -----------------------*/
 	
@@ -54,14 +43,17 @@ public class PositionPlayerGameTest {
 	 * */
 	@Test
 	public void testDealer() {
+		Player master = new Player("Room master");
+		master.setBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		player2.setBalance(5000);
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		player3.setBalance(5000);
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		
 		game.setDealer(player2);
 		
@@ -75,20 +67,23 @@ public class PositionPlayerGameTest {
 	 * */
 	@Test
 	public void testDealerOtherPlayer() {
+		Player master = new Player("Room master");
+		master.setBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		player2.setBalance(5000);
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		player3.setBalance(5000);
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		player4.setBalance(5000);
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		Player player5 = new Player();
-		player5.setBalance(5000);
-		game.addPlayer(player5);
+		player5.setGlobalBalance(5000);
+		room.addPlayer(player5);
 		game.setDealer(player5);
 		
 		game.startGame();
@@ -101,16 +96,20 @@ public class PositionPlayerGameTest {
 	 * */
 	@Test(expected = AssertionError.class)
 	public void testDealerNotIngame() {
+		Player master = new Player("Room master");
+		master.setBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		player2.setBalance(5000);
-//		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		player3.setBalance(5000);
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		
 		game.setDealer(player2);
+		assertFalse(true);
 	}
 	
 	
@@ -121,17 +120,20 @@ public class PositionPlayerGameTest {
 	 * */
 	@Test
 	public void testGetSmallBlindFromDealer() {
+		Player master = new Player("Room master");
+		master.setBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 		
 		Player player2 = new Player();
-		player2.setBalance(5000);
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		player3.setBalance(5000);
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		player4.setBalance(5000);
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		
 		game.setDealer(master);
 		game.startGame();
@@ -143,17 +145,20 @@ public class PositionPlayerGameTest {
 	 * */
 	@Test
 	public void testGetBigBlindFromSmallBlind() {
+		Player master = new Player("Room master");
+		master.setBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 		
 		Player player2 = new Player();
-		player2.setBalance(5000);
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		player3.setBalance(5000);
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		player4.setBalance(5000);
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		
 		game.setDealer(master);
 		game.startGame();
@@ -166,17 +171,20 @@ public class PositionPlayerGameTest {
 	 * */
 	@Test
 	public void testGetSmallBlindFromOtherSituation() {
+		Player master = new Player("Room master");
+		master.setBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 		
 		Player player2 = new Player();
-		player2.setBalance(5000);
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		player3.setBalance(5000);
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		player4.setBalance(5000);
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		
 		// set other player(player3) is the Dealer
 		game.setDealer(player3);
@@ -190,17 +198,20 @@ public class PositionPlayerGameTest {
 	 * */
 	@Test
 	public void testGetPlayerInGame() {
+		Player master = new Player("Room master");
+		master.setBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		player2.setBalance(5000);
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		player3.setBalance(5000);
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		player4.setBalance(5000);
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		
 		// set other player(player3) is the Dealer
 		game.setDealer(player3);
@@ -214,17 +225,20 @@ public class PositionPlayerGameTest {
 	 * */
 	@Test
 	public void testGetBigBlindFromOtherSmallBlind() {
+		Player master = new Player("Room master");
+		master.setBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		player2.setBalance(5000);
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		player3.setBalance(5000);
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		player4.setBalance(5000);
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		
 		// set other player(player3) is the Dealer
 		game.setDealer(player3);
@@ -239,17 +253,20 @@ public class PositionPlayerGameTest {
 	 * */
 	@Test
 	public void testGetErrorSmallBlindFromDealer() {
+		Player master = new Player("Room master");
+		master.setBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		player2.setBalance(5000);
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		player3.setBalance(5000);
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		player4.setBalance(5000);
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		
 		game.setDealer(master);
 		game.startGame();
@@ -262,17 +279,20 @@ public class PositionPlayerGameTest {
 	 * */
 	@Test
 	public void testGetErrorBigBlindFromDealer() {
+		Player master = new Player("Room master");
+		master.setBalance(5000);
+		Room room = new Room(master, BlindLevel.BLIND_10_20);
 		Game game = room.createNewGame();
 
 		Player player2 = new Player();
-		player2.setBalance(5000);
-		game.addPlayer(player2);
+		player2.setGlobalBalance(5000);
+		room.addPlayer(player2);
 		Player player3 = new Player();
-		player3.setBalance(5000);
-		game.addPlayer(player3);
+		player3.setGlobalBalance(5000);
+		room.addPlayer(player3);
 		Player player4 = new Player();
-		player4.setBalance(5000);
-		game.addPlayer(player4);
+		player4.setGlobalBalance(5000);
+		room.addPlayer(player4);
 		
 		game.setDealer(master);
 		game.startGame();
