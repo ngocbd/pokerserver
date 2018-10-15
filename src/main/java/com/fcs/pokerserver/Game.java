@@ -28,16 +28,14 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
-import com.fcs.pokerserver.Pot.SidePot;
+
 import com.fcs.pokerserver.events.*;
 import com.fcs.pokerserver.holder.Board;
 import com.fcs.pokerserver.holder.Hand;
 import com.fcs.pokerserver.holder.HandRank;
 import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
-import org.junit.Assert;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -66,7 +64,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
     private Player smallBlind;
     private Player currentPlayer = null;
     private String rank = "";
-    private List<SidePot> listSidePots = new ArrayList<>();
     /**
      * CODE PREPARING FOR SPLIT POT IN CASE OF MULTIPLE WINNERS.
      */
@@ -388,12 +385,14 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * TODO need upgrade into multiple winners later
      */
     public void splitSidePot(List<Player> listPlayer, List<Player> winners, Board b) {
-        if (!this.listPlayer.stream().filter(x -> !x.isSittingOut()).anyMatch(x -> x.isDidAllIn())) {
-            return;
-        }
+//        if (!this.listPlayer.stream().filter(x -> !x.isSittingOut()).anyMatch(x -> x.isDidAllIn())) {
+//            return;
+//        }
         Player winner = winners.get(0);
         List<Player> temp_list = new ArrayList<>(listPlayer);
         temp_list.remove(winner);
+        //Firstly, Winner should receive his betting money back.
+        winner.setBalance(winner.getBalance() + winner.getGameBet());
         /**
          * Winners earn all gamebet money that lower than his
          * and the amount of his gamebet in case competitors bet higher than him.*/
@@ -413,7 +412,11 @@ public class Game implements AbstractPlayerListener, GameMBean {
          * Now find the list of players in side pot, side pot contains all players that has gamebet remaining*/
         List<Player> sidePot = temp_list.stream().filter(x -> x.getGameBet() != 0).collect(Collectors.toList());
         //Side pot is empty then return
-        if (sidePot.isEmpty()) return;
+        if (sidePot.isEmpty()){
+            return;
+        }else {
+            System.out.println("sidepot: "+sidePot);
+        }
 
         List<Hand> handlist = new ArrayList<>();
         sidePot.stream().forEach(x -> handlist.add(x.getPlayerHand()));
