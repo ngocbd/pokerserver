@@ -188,9 +188,10 @@ public class Player implements PlayerMBean {
             return;
         }
         this.setDidAllIn(true);
-        long newRoundBet = this.getRoundBet() + this.getBalance();
+        long betAllin = this.getBalance();
+        long newRoundBet = this.getRoundBet() + betAllin;
         this.setRoundBet(newRoundBet);
-        this.gameBet += this.getBalance();
+        this.gameBet += betAllin;
         this.balance = 0;
         if (task != null) {
             task.cancel();
@@ -198,6 +199,8 @@ public class Player implements PlayerMBean {
         }
         ;
         PlayerBetAllEvent pbe = new PlayerBetAllEvent(this);
+        pbe.setAmount(betAllin);
+        System.out.println("amount: " + pbe.getAmount());
         this.triggerEvent(pbe);
     }
 

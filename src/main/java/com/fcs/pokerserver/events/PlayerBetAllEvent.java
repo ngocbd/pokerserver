@@ -7,7 +7,6 @@ public class PlayerBetAllEvent extends AbstractPlayerEvent {
 
     public PlayerBetAllEvent(Player p) {
         super(p);
-        amount = p.getBalance();
     }
 
     public long getAmount() {

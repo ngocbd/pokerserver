@@ -22,17 +22,19 @@ package com.fcs.pokerserver.events;
 
 /**
  * The GameAction enum the action of the Game.
+ *
  * @category com > fcs > pokerserver > events
- * */
+ */
 public enum GameAction {
-	FAILEDSTART,
-	CREATED,
-	WAITTING,
-	PREFLOP,
-	FLOP,
-	TURN,
-	RIVER,
-	ENDED,
-	PLAYEREVENT
-	
+    SIDEWINNER,
+    FAILEDSTART,
+    CREATED,
+    WAITTING,
+    PREFLOP,
+    FLOP,
+    TURN,
+    RIVER,
+    ENDED,
+    PLAYEREVENT
+
 }
