@@ -97,7 +97,6 @@ public class PreflopAndBetGameTest {
 		
 		assertEquals(game.getNextPlayer(player2), player3);
 
-//		assertEquals(game.getCurrentPlayer(), player3);
 	}
 
 	@Test
@@ -389,11 +388,7 @@ public class PreflopAndBetGameTest {
 		
 		player3.bet(20);
 		player4.bet(20);
-//		player5.bet(20);
-//		master.bet(10);
-		
-//		game.flop();
-		
+
 		assertEquals(game.getCurrentPlayer(), player5);
 	}
 		
