@@ -605,11 +605,10 @@ public class EndGameTest {
         player5.setPlayerHand(new Hand(Card.THREE_OF_SPADES, Card.SIX_OF_CLUBS));
         System.out.println("winners1: " + player5.getBalance());
         System.out.println("winners2: " + player2.getBalance());
-        Thread.sleep(3000);
 
         assertTrue(player5.getBalance() != player2.getBalance());
-
-        assertTrue(1160 == player5.getBalance());
+        Thread.sleep(2000);
+        assertTrue(player5.getBalance() == 1160);
     }
 
     @Test

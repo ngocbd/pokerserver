@@ -3,11 +3,8 @@ package com.fsc.pokerserver.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import com.fcs.pokerserver.*;
 import org.junit.Test;
-import com.fcs.pokerserver.BlindLevel;
-import com.fcs.pokerserver.Game;
-import com.fcs.pokerserver.Player;
-import com.fcs.pokerserver.Room;
 
 /**
  * The class to test the River and Bet in the game.
@@ -55,19 +52,22 @@ public class RiverAndBetGameTest {
 		player2.bet(10);
 		player4.bet(10);
 		player2.check();
-		
+
+		assertEquals(GameStatus.FLOP, game.getStatus());
 		master.check();
 		player2.check();
 		player4.fold();
 		player5.bet(10);
 		master.bet(10);
-		player2.bet(10); 	 
+		player2.bet(10);
 
+		assertEquals(GameStatus.TURN, game.getStatus());
 		master.check();
 		player2.bet(20);
 		player5.bet(20);
 		master.fold();
-		
+
+		assertEquals(GameStatus.RIVER, game.getStatus());
 		//player2 need bet before player5
 		player5.fold();
 		player2.bet(20);
@@ -109,6 +109,7 @@ public class RiverAndBetGameTest {
 		master.bet(10);
 		player2.check();
 
+		assertEquals(GameStatus.FLOP, game.getStatus());
 		//round 2 - FLOP
 		master.check();
 		player2.bet(20);
@@ -117,6 +118,7 @@ public class RiverAndBetGameTest {
 		player5.fold();
 		master.bet(20);
 
+		assertEquals(GameStatus.TURN, game.getStatus());
 		//round 3- TURN
 		System.out.println("Game Status: "+game.getStatus());
 		System.out.println("current: "+game.getCurrentPlayer()+" current bet: "+game.getCurrentRoundBet());
@@ -130,6 +132,7 @@ public class RiverAndBetGameTest {
 		player5.fold();
 		master.bet(10);
 
+		assertEquals(GameStatus.RIVER, game.getStatus());
 		//round 4
 		master.bet(10);
 		player3.fold();
@@ -171,19 +174,22 @@ public class RiverAndBetGameTest {
 		master.bet(20);
 		player2.bet(10);
 		player4.bet(10);
-		
+
+		assertEquals(GameStatus.FLOP, game.getStatus());
 		master.check();
 		player2.check();
 		player4.fold();
 		player5.bet(10);
 		master.bet(10);
-		player2.bet(10); 	 
+		player2.bet(10);
 
+		assertEquals(GameStatus.TURN, game.getStatus());
 		master.check();
 		player2.bet(20);
 		player5.bet(20);
 		master.fold();
-		
+
+		assertEquals(GameStatus.RIVER, game.getStatus());
 		player2.bet(20);
 		player5.bet(30);
 		player2.fold();
