@@ -336,7 +336,6 @@ public class Game implements AbstractPlayerListener, GameMBean {
         if (this.listPlayer.stream().filter(x -> !x.isSittingOut()).anyMatch(x -> x.isDidAllIn())) {
             //TODO Code split pot here (only 1 winners case-- Need upgrade later).
             splitSidePot(listPlayer, winners, b, false);
-            return;
 
         } else {
             /**
@@ -533,7 +532,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
         if (listPlayer.contains(p)) return;
         // check if timeout join after 15 second then Reject
         if (this.startTime == null || Duration.between(this.startTime, LocalDateTime.now()).getSeconds() <= 15) {
-            if (listPlayer.size() < 8) {
+            if (listPlayer.size() < 6) {
                 p.setSittingOut(false);
                 this.listPlayer.add(p);
                 p.attachListener(this);
@@ -806,6 +805,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
      */
     @Override
     public void actionPerformed(AbstractPlayerEvent e) {
+
         if (this.status == GameStatus.END_HAND) {
             System.out.println("Game is ended. Nothing could happens now.");
             return;

@@ -30,5 +30,5 @@ public enum PlayerAction {
     BET,
     FOLD,
     CALL,
-    CHECK
+    CHECK,
 }

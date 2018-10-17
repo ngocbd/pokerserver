@@ -3,6 +3,7 @@ package com.fcs.pokerserver.events;
 import com.fcs.pokerserver.Player;
 
 public class PlayerFoldEvent extends AbstractPlayerEvent {
+    private PlayerAction type = PlayerAction.FOLD;
 
     public PlayerFoldEvent(Player src) {
         super(src);
