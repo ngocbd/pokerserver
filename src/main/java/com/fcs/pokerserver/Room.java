@@ -93,7 +93,7 @@ public class Room implements GameListener, RoomMBean {
 
         if (this.currentGame != null
                 && this.currentGame.getStatus() == GameStatus.NOT_STARTED
-                && this.currentGame.getListPlayer().size() < 8
+                && this.currentGame.getListPlayer().size() < 6
                 && p.getBalance() > this.getBlindLevel().getBigBlind()) {
 
             this.currentGame.addPlayer(p);

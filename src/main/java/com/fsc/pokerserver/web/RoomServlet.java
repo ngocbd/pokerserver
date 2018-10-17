@@ -79,12 +79,31 @@ public class RoomServlet extends HttpServlet {
             case "roomstatus":
                 getRoomStatus(request, response);
                 break;
+            case "buychip":
+                buychip(request, response);
+                break;
             default:
 //			List All room
                 String data = "[" + Joiner.on(",").join(this.server.getListRoom()) + "]";
                 response.getWriter().println(data);
                 return;
         }
+    }
+
+    /**
+     * Buy chip - or transfer money from global balance to balance.
+     */
+    private void buychip(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Player p = (Player) request.getAttribute("player");
+        long amount = Long.parseLong(request.getParameter("amount"));
+        if (!p.buyChip(amount)) {
+            response.setStatus(403);
+            response.getWriter().println("{\"error\":\"Cannot buy " + amount + " chip-Not enough global balance!\"}");
+            return;
+        }
+        response.setStatus(200);
+        response.getWriter().println("{\"msg\":\"Buy " + amount + " chip successfully\",\"pid\":\"" + p.getId() + "\"}");
+
     }
 
     private void doQuit(HttpServletRequest request, HttpServletResponse response) {

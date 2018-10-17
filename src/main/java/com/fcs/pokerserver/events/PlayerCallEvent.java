@@ -4,6 +4,8 @@ import com.fcs.pokerserver.Player;
 
 public class PlayerCallEvent extends AbstractPlayerEvent {
     public long amount;
+    private PlayerAction type = PlayerAction.CALL;
+
 
     public PlayerCallEvent(Player p) {
         super(p);

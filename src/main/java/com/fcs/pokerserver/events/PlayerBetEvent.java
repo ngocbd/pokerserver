@@ -4,6 +4,7 @@ import com.fcs.pokerserver.Player;
 
 public class PlayerBetEvent extends AbstractPlayerEvent {
     public long amount;
+    private PlayerAction type = PlayerAction.BET;
 
     public PlayerBetEvent(Player source) {
         super(source);

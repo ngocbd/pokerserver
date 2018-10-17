@@ -69,7 +69,7 @@ public class Player implements PlayerMBean {
     private String avatar_url;
     private Timer countdown = new Timer();
     private CountDownPlayer task = null;
-    private long COUNTDOWN_DELAY = 40 * 1000;
+    private long COUNTDOWN_DELAY = 35 * 1000;
     private boolean didAllIn = false;
 
     @Override
@@ -315,12 +315,6 @@ public class Player implements PlayerMBean {
         }
     }
 
-//    private void fireEvent(PlayerEvent pe) {
-//        for (Iterator<AbstractPlayerListener> iterator = this.listeners.iterator(); iterator.hasNext(); ) {
-//            AbstractPlayerListener listener = iterator.next();
-//            listener.actionPerformed(pe);
-//        }
-//    }
 
     /**
      * Return the Balance of the Player
@@ -591,16 +585,16 @@ public class Player implements PlayerMBean {
         this.avatar_url = avatar_url;
     }
 
-    public void buyChip(long amount) {
-        assert this.globalBalance >= amount;
+    public boolean buyChip(long amount) {
+        if (this.globalBalance < amount) {
+            System.out.println("Player " + this.id + " cannot buy chip " + amount + "- Not enough global balance");
+            return false;
+        }
         if (this.globalBalance >= amount) {
             this.balance += amount;
             this.globalBalance -= amount;
-        } else {
-            this.balance = this.globalBalance;
-            this.globalBalance = 0;
         }
-
+        return true;
     }
 
     public void sellChip() {
