@@ -21,6 +21,8 @@ THE SOFTWARE.
 package com.fsc.pokerserver.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -137,6 +139,15 @@ public class RoomServlet extends HttpServlet {
         String id = request.getParameter("id");
         Room room = server.getRoomByID(Long.parseLong(id));
         checkNotNull(room, "Room " + id + " not found");
+        /**
+         * Auto Buy-In for testing purpose*/
+        List<Player> list = room.getListPlayer();
+
+        for (Player p : list) {
+            p.buyChip(5000);
+        }
+
+
         room.nextGame();
         room.getCurrentGame().startGame();
 
