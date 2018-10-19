@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class TestSidePot {
     @Test
-    public void sidepot_2PlayersPlaying() {
+    public void sidepot_2PlayersPlaying_nextGameCalled() {
         Player hbg1 = new Player("hbg1");
         hbg1.setGlobalBalance(5000);
         Room room = new Room(hbg1, BlindLevel.BLIND_10_20);
