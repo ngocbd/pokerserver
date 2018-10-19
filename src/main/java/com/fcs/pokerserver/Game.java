@@ -146,7 +146,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
         /**
          * Reset all-in flag of all players*/
-        this.listPlayer.stream().forEach(x -> x.setDidAllIn(false));
+        this.listPlayer.stream().forEach(x -> {
+            x.setDidAllIn(false);
+            x.setCommandThisTurn(false);
+        });
 
         RoundGameEvent gameEvent = new RoundGameEvent(this, GameAction.WAITTING);
         this.fireEvent(gameEvent);
