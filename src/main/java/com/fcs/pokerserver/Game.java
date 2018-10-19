@@ -280,7 +280,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
         winners = new ArrayList<>();
         bestHands = new ArrayList<>();
         this.setStatus(GameStatus.END_HAND);
-        List<Hand> list = new ArrayList<Hand>();
+        List<Hand> list = new ArrayList<>();
         for (int i = 0; i < this.getListPlayer().size(); i++) {
             Player p = this.getListPlayer().get(i);
             if (p.isSittingOut()) continue;
@@ -302,29 +302,13 @@ public class Game implements AbstractPlayerListener, GameMBean {
         bestHands.add(highestHand);
 
         //Add Win Player into list Player.
-        for (int i = 0; i < this.getListPlayer().size(); i++) {
-            if (this.getListPlayer().get(i).getPlayerHand() == highestHand) {
-                winners.add(this.getListPlayer().get(i));
-                break;
-            }
-        }
+        Player player = findPlayerFromHand(this.getListPlayer(), highestHand);
+        winners.add(player);
         /**
          * Check whether multiple winners case occured*/
-        if (list.size() > 1) {
-            for (int i = list.size() - 2; i >= 0; i--) {
-                Hand temp = list.get(i);
-                HandRank tempRank = evaluator.evaluate(b, temp);
-                if (tempRank.getValue() < highestRank.getValue()) break;
-                bestHands.add(temp);
-                for (int y = 0; y < this.getListPlayer().size(); y++) {
-                    Player p = this.listPlayer.get(y);
-                    if (p.isSittingOut()) continue;
-                    if (this.getListPlayer().get(y).getPlayerHand() == temp) {
-                        winners.add(this.getListPlayer().get(y));
-                    }
-                }
-            }
-        }
+        findCo_Winner(bestHands, winners, list, listPlayer, evaluator, b);
+
+
         //rank of winner player
         System.out.println("GameID: " + this.getId());
         System.out.println("Highest Rank value: " + highestRank.getValue());
@@ -334,7 +318,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
 /**
  * Check all-in situation*/
         if (this.listPlayer.stream().filter(x -> !x.isSittingOut()).anyMatch(x -> x.isDidAllIn())) {
-            //TODO Code split pot here (only 1 winners case-- Need upgrade later).
+            //TODO Code split pot here (only 1 winner case-- Need upgrade later).
             splitSidePot(listPlayer, winners, b, false);
 
         } else {
@@ -355,6 +339,33 @@ public class Game implements AbstractPlayerListener, GameMBean {
         }
 
     }
+
+    /**
+     * Find Co Winners needs:
+     *
+     * @param bestHands  List of hands with highest hand already inside
+     * @param winners    List of Winners that have highest-hand winner already inside
+     * @param listHand   List of hands that already sorted (contains best hand as the last element)
+     * @param listPlayer List of Players
+     * @param evaluator  Evaluator used for calculating hand rank
+     * @param b          Board of the game
+     */
+    public void findCo_Winner(List<Hand> bestHands, List<Player> winners, List<Hand> listHand, List<Player> listPlayer, TwoPlusTwoHandEvaluator evaluator, Board b) {
+        if (listHand.size() > 1) {
+            Hand highestHand = bestHands.get(0);
+            HandRank highestRank = evaluator.evaluate(b, highestHand);
+            for (int i = listHand.size() - 2; i >= 0; i--) {
+                Hand temp = listHand.get(i);
+                HandRank tempRank = evaluator.evaluate(b, temp);
+                if (tempRank.getValue() < highestRank.getValue()) break;
+                bestHands.add(temp);
+                Player p = findPlayerFromHand(listPlayer, temp);
+                winners.add(p);
+            }
+        } else System.out.println("Co-winner not exist in game " + this.id);
+
+    }
+
 
     public void endGameSoon(Player p) {
         if (this.getStatus() == GameStatus.END_HAND) return;
@@ -379,46 +390,53 @@ public class Game implements AbstractPlayerListener, GameMBean {
      */
     public void splitSidePot(List<Player> listPlayer, List<Player> winners, Board b, boolean sideWinners) {
         TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
-        /**
-         * If winners contains only 1 winner*/
-//        if (winners.size() < 2) {
-            Player winner = winners.get(0);
-            List<Player> temp_list = new ArrayList<>(listPlayer);
-            temp_list.remove(winner);
 
-            //Firstly, Winner should receive his betting money back.
+
+        List<Player> temp_list = new ArrayList<>(listPlayer);
+        temp_list.removeAll(winners);
+
+        //Firstly, Winners should receive their betting money back.
+        for (Player winner : winners) {
             winner.setBalance(winner.getBalance() + winner.getGameBet());
-            /**
-             * Winners earn all gamebet money that lower than his
-             * and the amount of his gamebet in case competitors bet higher than him.*/
-            for (Player p : temp_list) {
-                if (p.getGameBet() <= winner.getGameBet()) {
-                    winner.setBalance(winner.getBalance() + p.getGameBet());
-                    p.setGameBet(0);
-                } else {
-                    winner.setBalance(winner.getBalance() + winner.getGameBet());
-                    p.setGameBet(p.getGameBet() - winner.getGameBet());
-                }
-            }
-            winner.setGameBet(0);
-            if (sideWinners) {
-                SideWinnerGameEvent e = new SideWinnerGameEvent(this);
-                e.setWinner(winner);
-                e.setHand(winner.getPlayerHand());
-                e.setRank(evaluator.evaluate(b, winner.getPlayerHand()).getHandType().toString());
-                this.fireEvent(e);
-            } else {
-                EndGameEvent gameEvent = new EndGameEvent(this);
-                List<Hand> bestHands = new ArrayList<>();
-                bestHands.add(winner.getPlayerHand());
-                HandRank highestRank = evaluator.evaluate(b, winner.getPlayerHand());
 
-                gameEvent.setBestHands(bestHands);
-                gameEvent.setRank(String.valueOf(highestRank.getValue()));
-                gameEvent.setPlayerwins(winners);
-                this.fireEvent(gameEvent);
+        }
+        /**
+         * List of co-winner need to be sorted according to their gamebet*/
+        winners.sort(new Comparator<Player>() {
+            @Override
+            public int compare(Player o1, Player o2) {
+                if (o1.getGameBet() > o2.getGameBet()) return 1;
+                if (o1.getGameBet() < o2.getGameBet()) return -1;
+                return 0;
             }
-//        }
+        });
+        /**
+         * Logic is :
+         * Find the lowest gamebet winner, find his grant from loser then divide for all co-winners
+         * Remove him from winners list and do similarly until no co-winner left*/
+        /**
+         * Divide winning money for all winners base on lowest bet winner. Stop when no co-winner left */
+        grantForWinners(winners, temp_list);
+
+        if (sideWinners) {
+            SideWinnerGameEvent e = new SideWinnerGameEvent(this);
+            e.setWinners(winners);
+            List<Hand> hands = new ArrayList<>();
+            winners.stream().forEach(x -> hands.add(x.getPlayerHand()));
+            e.setHands(hands);
+            e.setRank(evaluator.evaluate(b, winners.get(0).getPlayerHand()).getHandType().toString());
+            this.fireEvent(e);
+        } else {
+            EndGameEvent gameEvent = new EndGameEvent(this);
+            List<Hand> bestHands = new ArrayList<>();
+            winners.stream().forEach(x -> bestHands.add(x.getPlayerHand()));
+            HandRank highestRank = evaluator.evaluate(b, winners.get(0).getPlayerHand());
+
+            gameEvent.setBestHands(bestHands);
+            gameEvent.setRank(String.valueOf(highestRank.getValue()));
+            gameEvent.setPlayerwins(winners);
+            this.fireEvent(gameEvent);
+        }
 
         winners = new ArrayList<>();
 
@@ -440,16 +458,91 @@ public class Game implements AbstractPlayerListener, GameMBean {
                 return TwoPlusTwoHandEvaluator.compare(o1, o2, b);
             }
         });
-        Hand bestHand = handlist.get(handlist.size() - 1);
+        List<Hand> bestHands = new ArrayList<>();
+        bestHands.add(handlist.get(handlist.size() - 1));
         for (int i = 0; i < sidePot.size(); i++) {
-            if (sidePot.get(i).getPlayerHand() == bestHand) {
+            if (sidePot.get(i).getPlayerHand() == bestHands.get(0)) {
                 winners.add(sidePot.get(i));
                 break;
             }
         }
+        /**
+         * using findCo-Winner to add all co-winner into winners list*/
+        findCo_Winner(bestHands, winners, handlist, listPlayer, evaluator, b);
         splitSidePot(sidePot, winners, b, true);
 
 
+    }
+
+    /**
+     * Grants winning money for all co-winner base on lowest gamebet winner
+     * <p>
+     * stop when no co-winner left.
+     *
+     * @param winners   list of winners that already sorted ascending gamebet.
+     * @param temp_list list of losers.
+     */
+    private void grantForWinners(List<Player> winners, List<Player> temp_list) {
+        //Filter all losers that has no remaining gamebet, remove all of them.
+        List<Player> temp_list_filtered = temp_list.stream().filter(x -> x.getGameBet() != 0).
+                collect(Collectors.toList());
+        Player lowestWinner = winners.get(0);
+
+
+        // Find the grant that divide for all co-winners.
+        long grantMoneyForAll = 0;
+        for (Player p : temp_list_filtered) {
+            if (p.getGameBet() <= lowestWinner.getGameBet()) {
+                grantMoneyForAll += p.getGameBet();
+                p.setGameBet(0);
+            } else {
+                grantMoneyForAll += lowestWinner.getGameBet();
+                p.setGameBet(p.getGameBet() - lowestWinner.getGameBet());
+            }
+        }
+        /**
+         * Now we distribute grantMoneyForAll for all co-winners*/
+        for (Player p : winners) {
+            p.setBalance(p.getBalance() + (grantMoneyForAll / winners.size()));
+        }
+        /**
+         * Subtract lowestWinner gamebet from the other co-winners gamebet and set gamebet of lowestwinner back to 0
+         * Collect new winners list that winners remains gamebet*/
+        for (int i = 0; i < winners.size(); i++) {
+            Player p = winners.get(i);
+            p.setGameBet(p.getGameBet() - lowestWinner.getGameBet());
+        }
+        List<Player> newWinnersList = winners.stream().filter(x -> x.getGameBet() != 0).collect(Collectors.toList());
+
+        if (newWinnersList.isEmpty()) return;
+        /**
+         * Then we sort new winner list base on game bet*/
+        newWinnersList.sort(new Comparator<Player>() {
+            @Override
+            public int compare(Player o1, Player o2) {
+                if (o1.getGameBet() > o2.getGameBet()) return 1;
+                if (o1.getGameBet() < o2.getGameBet()) return -1;
+                return 0;
+            }
+        });
+
+        /**
+         * And finally keep recursively call this method*/
+        grantForWinners(newWinnersList, temp_list);
+
+
+    }
+
+    public Player findPlayerFromHand(List<Player> listPlayer, Hand hand) {
+        Player p = null;
+        for (int y = 0; y < listPlayer.size(); y++) {
+            if (listPlayer.get(y).isSittingOut()) continue;
+            if (listPlayer.get(y).getPlayerHand() == hand) {
+                p = listPlayer.get(y);
+                break;
+            }
+        }
+        return p;
     }
 
     public void autoNextRound() {
@@ -902,7 +995,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
             }
             if (e instanceof PlayerCheckEvent) {
                 Player player = e.getSrc();
-                if (player.getRoundBet() != this.currentRoundBet) {
+                if (player.getRoundBet() != this.currentRoundBet && !p.isDidAllIn()) {
                     System.out.println("Check cannot happen: player bet: " + player.getRoundBet() + " Roundbet: " + this.currentRoundBet);
                     return;
                 }

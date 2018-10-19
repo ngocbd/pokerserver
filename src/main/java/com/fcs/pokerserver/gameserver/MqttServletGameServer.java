@@ -469,7 +469,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
             }
             if (ge instanceof SideWinnerGameEvent) {
                 SideWinnerGameEvent se = (SideWinnerGameEvent) ge;
-                content += "&playerwin=" + se.getWinner() + "&rank=" + se.getRank() + "&besthand=" + se.getHand();
+                content += "&playerwin=" + se.getWinners() + "&rank=" + se.getRank() + "&besthand=" + se.getHands();
             }
 
         } else if (event instanceof VisitRoomEvent) {
