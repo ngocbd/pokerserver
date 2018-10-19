@@ -41,15 +41,17 @@ public class TestSidePot {
 
         room.getCurrentGame().setBoard(new Board(Card.TWO_OF_DIAMONDS, Card.EIGHT_OF_SPADES, Card.FOUR_OF_CLUBS,
                 Card.TEN_OF_HEARTS, Card.NINE_OF_HEARTS));
-        hbg1.setPlayerHand(new Hand(Card.NINE_OF_DIAMONDS, Card.NINE_OF_SPADES));
-        hbg2.setPlayerHand(new Hand(Card.THREE_OF_HEARTS, Card.FOUR_OF_SPADES));
+        hbg2.setPlayerHand(new Hand(Card.NINE_OF_DIAMONDS, Card.NINE_OF_SPADES));
+        hbg1.setPlayerHand(new Hand(Card.THREE_OF_HEARTS, Card.FOUR_OF_SPADES));
 
         hbg1.bet(500);
         hbg2.allIn();
-
+        System.out.println("hbg1 gamebet: " + hbg1.getGameBet());
+        System.out.println("hbg2 gamebet: " + hbg2.getGameBet());
         Assert.assertEquals(GameStatus.END_HAND, game.getStatus());
         Assert.assertEquals(2000, hbg1.getBalance() + hbg2.getBalance());
         System.out.println("hbg1: " + hbg1.getBalance());
+        System.out.println("hbg2: " + hbg2.getBalance());
 
     }
 

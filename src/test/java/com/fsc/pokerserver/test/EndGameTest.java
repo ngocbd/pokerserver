@@ -592,23 +592,24 @@ public class EndGameTest {
         player2.bet(20);
         player5.bet(20);
         master.fold();
-
-        //p2,p5 bet 30 more (90 in total)
-        player2.bet(30);
-        player5.bet(30);
-        //total Pot is 250
-        /**
-         * Setup Playing the Board situation*/
+        //Simulate Royal Flush case
         Board royalFlush = new Board(Card.TEN_OF_HEARTS, Card.JACK_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.KING_OF_HEARTS, Card.ACE_OF_HEARTS);
         game.setBoard(royalFlush);
         player2.setPlayerHand(new Hand(Card.THREE_OF_HEARTS, Card.SIX_OF_DIAMONDS));
         player5.setPlayerHand(new Hand(Card.THREE_OF_SPADES, Card.SIX_OF_CLUBS));
+        //p2,p5 bet 30 more (90 in total)
+        player2.allIn();
+        player5.allIn();
+        System.out.println("POT: " + game.getPotBalance());
+        //total Pot is 250
+
+
         System.out.println("winners1: " + player5.getBalance());
         System.out.println("winners2: " + player2.getBalance());
 
-        assertTrue(player5.getBalance() != player2.getBalance());
+        assertTrue(player5.getBalance() == player2.getBalance());
         Thread.sleep(2000);
-        assertTrue(player5.getBalance() == 1160);
+        assertTrue(player5.getBalance() == 1035);
     }
 
     @Test
@@ -674,5 +675,76 @@ public class EndGameTest {
         //total Pot is 250
 
         assertEquals(1010, master.getBalance());
+    }
+
+    @Test
+    public void allInPlayingTheBoard() {
+        Player master = new Player("Room master 10");
+        master.setGlobalBalance(5000);
+        Room room = new Room(master, BlindLevel.BLIND_10_20);
+        Game game = room.createNewGame();
+        Player player2 = new Player("Player_10 2");
+        player2.setGlobalBalance(5000);
+        room.addPlayer(player2);
+        Player player3 = new Player("Player_10 3");
+        player3.setGlobalBalance(5000);
+        room.addPlayer(player3);
+        Player player4 = new Player("Player_10 4");
+        player4.setGlobalBalance(5000);
+        room.addPlayer(player4);
+        Player player5 = new Player("Player_10 5");
+        player5.setGlobalBalance(5000);
+        room.addPlayer(player5);
+        game.setDealer(player5);
+        master.setBalance(500);
+        player2.setBalance(1000);
+        player3.setBalance(1500);
+        player4.setBalance(2000);
+        player5.setBalance(2500);
+        game.startGame();
+        player3.bet(20);
+        player4.bet(20);
+        player5.bet(20);
+        master.bet(10);
+        player2.check();
+        assertEquals(GameStatus.FLOP, game.getStatus());
+
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+        assertEquals(GameStatus.TURN, game.getStatus());
+
+        master.check();
+        player2.check();
+        player3.check();
+        player4.check();
+        player5.check();
+        assertEquals(GameStatus.RIVER, game.getStatus());
+        /**
+         * Set-up Royal Flush*/
+        Board royalFlush = new Board(Card.TEN_OF_HEARTS, Card.JACK_OF_HEARTS, Card.QUEEN_OF_HEARTS, Card.KING_OF_HEARTS, Card.ACE_OF_HEARTS);
+        game.setBoard(royalFlush);
+        master.setPlayerHand(new Hand(Card.TWO_OF_DIAMONDS, Card.THREE_OF_CLUBS));
+        player2.setPlayerHand(new Hand(Card.THREE_OF_HEARTS, Card.FIVE_OF_CLUBS));
+        player3.setPlayerHand(new Hand(Card.TWO_OF_SPADES, Card.FOUR_OF_DIAMONDS));
+        player4.setPlayerHand(new Hand(Card.SIX_OF_SPADES, Card.SEVEN_OF_DIAMONDS));
+        player5.setPlayerHand(new Hand(Card.FOUR_OF_HEARTS, Card.EIGHT_OF_HEARTS));
+
+        master.allIn();
+        player2.allIn();
+        player3.allIn();
+        player4.allIn();
+        player5.allIn();
+        assertEquals(GameStatus.END_HAND, game.getStatus());
+
+        assertEquals(master.getBalance()
+                + player2.getBalance()
+                + player3.getBalance()
+                + player4.getBalance()
+                + player5.getBalance(), 500 + 1000 + 1500 + 2000 + 2500);
+
+
     }
 }

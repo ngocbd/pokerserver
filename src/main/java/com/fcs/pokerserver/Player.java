@@ -293,7 +293,7 @@ public class Player implements PlayerMBean {
             System.out.println("Player " + this.getId() + " forbid to fold in the other's turn");
             return false;
         }
-        if (this.roundBet != currentGame.getCurrentRoundBet()) {
+        if (this.roundBet != currentGame.getCurrentRoundBet() && !this.isDidAllIn()) {
             System.out.println("Player " + this.getId() + " forbid to check due to unequal betting");
             return false;
         }

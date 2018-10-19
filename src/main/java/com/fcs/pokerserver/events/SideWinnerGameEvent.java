@@ -4,9 +4,11 @@ import com.fcs.pokerserver.Game;
 import com.fcs.pokerserver.Player;
 import com.fcs.pokerserver.holder.Hand;
 
+import java.util.List;
+
 public class SideWinnerGameEvent extends AbstractGameEvent {
-    private Player winner;
-    private Hand Hand;
+    private List<Player> winners;
+    private List<Hand> Hands;
     private String rank;
 
     public SideWinnerGameEvent(Game src) {
@@ -14,20 +16,20 @@ public class SideWinnerGameEvent extends AbstractGameEvent {
         this.setType(GameAction.SIDEWINNER);
     }
 
-    public Player getWinner() {
-        return winner;
+    public List<Player> getWinners() {
+        return winners;
     }
 
-    public void setWinner(Player winner) {
-        this.winner = winner;
+    public void setWinners(List<Player> winners) {
+        this.winners = winners;
     }
 
-    public com.fcs.pokerserver.holder.Hand getHand() {
-        return Hand;
+    public List<Hand> getHands() {
+        return Hands;
     }
 
-    public void setHand(com.fcs.pokerserver.holder.Hand hand) {
-        Hand = hand;
+    public void setHands(List<Hand> hands) {
+        Hands = hands;
     }
 
     public String getRank() {
