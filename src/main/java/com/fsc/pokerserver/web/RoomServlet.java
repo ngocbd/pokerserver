@@ -143,9 +143,7 @@ public class RoomServlet extends HttpServlet {
          * Auto Buy-In for testing purpose*/
         List<Player> list = room.getListPlayer();
 
-        for (Player p : list) {
-            p.buyChip(5000);
-        }
+        list.stream().filter(x -> x.getBalance() == 0).forEach(x -> x.buyChip(5000));
 
 
         room.nextGame();
