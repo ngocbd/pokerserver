@@ -379,42 +379,47 @@ public class Game implements AbstractPlayerListener, GameMBean {
      */
     public void splitSidePot(List<Player> listPlayer, List<Player> winners, Board b, boolean sideWinners) {
         TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
-        Player winner = winners.get(0);
-        List<Player> temp_list = new ArrayList<>(listPlayer);
-        temp_list.remove(winner);
-
-        //Firstly, Winner should receive his betting money back.
-        winner.setBalance(winner.getBalance() + winner.getGameBet());
         /**
-         * Winners earn all gamebet money that lower than his
-         * and the amount of his gamebet in case competitors bet higher than him.*/
-        for (Player p : temp_list) {
-            if (p.getGameBet() <= winner.getGameBet()) {
-                winner.setBalance(winner.getBalance() + p.getGameBet());
-                p.setGameBet(0);
-            } else {
-                winner.setBalance(winner.getBalance() + winner.getGameBet());
-                p.setGameBet(p.getGameBet() - winner.getGameBet());
-            }
-        }
-        winner.setGameBet(0);
-        if (sideWinners) {
-            SideWinnerGameEvent e = new SideWinnerGameEvent(this);
-            e.setWinner(winner);
-            e.setHand(winner.getPlayerHand());
-            e.setRank(evaluator.evaluate(b, winner.getPlayerHand()).getHandType().toString());
-            this.fireEvent(e);
-        } else {
-            EndGameEvent gameEvent = new EndGameEvent(this);
-            List<Hand> bestHands = new ArrayList<>();
-            bestHands.add(winner.getPlayerHand());
-            HandRank highestRank = evaluator.evaluate(b, winner.getPlayerHand());
+         * If winners contains only 1 winner*/
+//        if (winners.size() < 2) {
+            Player winner = winners.get(0);
+            List<Player> temp_list = new ArrayList<>(listPlayer);
+            temp_list.remove(winner);
 
-            gameEvent.setBestHands(bestHands);
-            gameEvent.setRank(String.valueOf(highestRank.getValue()));
-            gameEvent.setPlayerwins(winners);
-            this.fireEvent(gameEvent);
-        }
+            //Firstly, Winner should receive his betting money back.
+            winner.setBalance(winner.getBalance() + winner.getGameBet());
+            /**
+             * Winners earn all gamebet money that lower than his
+             * and the amount of his gamebet in case competitors bet higher than him.*/
+            for (Player p : temp_list) {
+                if (p.getGameBet() <= winner.getGameBet()) {
+                    winner.setBalance(winner.getBalance() + p.getGameBet());
+                    p.setGameBet(0);
+                } else {
+                    winner.setBalance(winner.getBalance() + winner.getGameBet());
+                    p.setGameBet(p.getGameBet() - winner.getGameBet());
+                }
+            }
+            winner.setGameBet(0);
+            if (sideWinners) {
+                SideWinnerGameEvent e = new SideWinnerGameEvent(this);
+                e.setWinner(winner);
+                e.setHand(winner.getPlayerHand());
+                e.setRank(evaluator.evaluate(b, winner.getPlayerHand()).getHandType().toString());
+                this.fireEvent(e);
+            } else {
+                EndGameEvent gameEvent = new EndGameEvent(this);
+                List<Hand> bestHands = new ArrayList<>();
+                bestHands.add(winner.getPlayerHand());
+                HandRank highestRank = evaluator.evaluate(b, winner.getPlayerHand());
+
+                gameEvent.setBestHands(bestHands);
+                gameEvent.setRank(String.valueOf(highestRank.getValue()));
+                gameEvent.setPlayerwins(winners);
+                this.fireEvent(gameEvent);
+            }
+//        }
+
         winners = new ArrayList<>();
 
         /**

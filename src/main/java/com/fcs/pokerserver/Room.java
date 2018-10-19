@@ -316,6 +316,7 @@ public class Room implements GameListener, RoomMBean {
             p.setCommandThisTurn(false);
             p.setSittingOut(false);
             p.setRoundBet(0);
+            p.setGameBet(0);
             this.currentGame.addPlayer(p);
         }
         System.out.println("New Game status: " + this.currentGame.getStatus());
