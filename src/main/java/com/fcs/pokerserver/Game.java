@@ -385,12 +385,11 @@ public class Game implements AbstractPlayerListener, GameMBean {
     }
 
     /**
-     * This is the case of only 1 player win-
+     * This is the case of only 1 player win
      * TODO need upgrade into multiple winners later
      */
     public void splitSidePot(List<Player> listPlayer, List<Player> winners, Board b, boolean sideWinners) {
         TwoPlusTwoHandEvaluator evaluator = TwoPlusTwoHandEvaluator.getInstance();
-
 
         List<Player> temp_list = new ArrayList<>(listPlayer);
         temp_list.removeAll(winners);

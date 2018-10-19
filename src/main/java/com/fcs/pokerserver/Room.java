@@ -88,7 +88,7 @@ public class Room implements GameListener, RoomMBean {
         this.listPlayer.add(p);
         //Buy 1000 chip for default in any room.
         p.sellChip();
-        p.buyChip(1000);
+        p.buyChip(5000);
         p.setCurrentRoom(this);
 
         if (this.currentGame != null
@@ -138,7 +138,7 @@ public class Room implements GameListener, RoomMBean {
      * @return List<Player> listPlayer
      */
     public List<Player> getListPlayer() {
-        return listPlayer;
+        return this.listPlayer;
     }
 
     /**
@@ -359,9 +359,6 @@ public class Room implements GameListener, RoomMBean {
 
     }
 
-    public List<Player> getListPlayers() {
-        return listPlayer;
-    }
 
     /**
      * Returns the id of the room.
