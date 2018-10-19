@@ -144,6 +144,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
         this.setStatus(GameStatus.SEATING);
         this.startTime = LocalDateTime.now();
 
+        /**
+         * Reset all-in flag of all players*/
+        this.listPlayer.stream().forEach(x -> x.setDidAllIn(false));
+
         RoundGameEvent gameEvent = new RoundGameEvent(this, GameAction.WAITTING);
         this.fireEvent(gameEvent);
         this.preflop();
@@ -648,7 +652,9 @@ public class Game implements AbstractPlayerListener, GameMBean {
      * Reset CommmandThisTurn flag of all playing player
      **/
     public void resetCommandFlag() {
-        this.listPlayer.stream().filter(p -> !p.isSittingOut()).forEach(p -> p.setCommandThisTurn(false));
+        this.listPlayer.stream().filter(p -> !p.isSittingOut()).forEach(p -> {
+            p.setCommandThisTurn(false);
+        });
     }
 
     /**
