@@ -8,6 +8,52 @@ import org.junit.Test;
 
 public class TestSidePot {
     @Test
+    public void sidepot_2PlayersPlaying_nextGameCalled() {
+        Player hbg1 = new Player("hbg1");
+        hbg1.setGlobalBalance(5000);
+        Room room = new Room(hbg1, BlindLevel.BLIND_10_20);
+        Game game = room.createNewGame();
+        Player hbg2 = new Player("hbg2");
+        hbg2.setGlobalBalance(5000);
+        room.addPlayer(hbg2);
+
+        game.setDealer(hbg1);
+        game.startGame();
+        //In Preflop, master bet 10, player2 bet 20.
+        hbg2.bet(500);
+        hbg1.bet(490);
+        //Now is flop.
+        hbg2.fold();
+
+        //NNext Game. hbg1 - 1510, hbg2- 490
+        room.nextGame();
+        room.getCurrentGame().startGame();
+        System.out.println("hbg1 gamebet: " + hbg1.getGameBet());
+        System.out.println("hbg2 gamebet: " + hbg2.getGameBet());
+        hbg1.bet(10);
+        hbg2.check();
+
+        hbg1.check();
+        hbg2.check();
+        Assert.assertEquals(GameStatus.TURN, room.getCurrentGame().getStatus());
+        hbg1.check();
+        hbg2.check();
+
+        room.getCurrentGame().setBoard(new Board(Card.TWO_OF_DIAMONDS, Card.EIGHT_OF_SPADES, Card.FOUR_OF_CLUBS,
+                Card.TEN_OF_HEARTS, Card.NINE_OF_HEARTS));
+        hbg1.setPlayerHand(new Hand(Card.NINE_OF_DIAMONDS, Card.NINE_OF_SPADES));
+        hbg2.setPlayerHand(new Hand(Card.THREE_OF_HEARTS, Card.FOUR_OF_SPADES));
+
+        hbg1.bet(500);
+        hbg2.allIn();
+
+        Assert.assertEquals(GameStatus.END_HAND, game.getStatus());
+        Assert.assertEquals(2000, hbg1.getBalance() + hbg2.getBalance());
+        System.out.println("hbg1: " + hbg1.getBalance());
+
+    }
+
+    @Test
     public void sidePot_1Winner() {
         Player master = new Player("Master-P1");
         master.setGlobalBalance(5000);
@@ -106,6 +152,7 @@ public class TestSidePot {
         //Finally player 5 get his betting of 1000 back due to nobody can match his bet.
         Assert.assertEquals(1000, player5.getBalance());
         Assert.assertEquals(master.getBalance() + player2.getBalance() + player3.getBalance() + player4.getBalance() + player5.getBalance(), game.getPotBalance());
+
     }
 
     @Test
@@ -196,7 +243,5 @@ public class TestSidePot {
         System.out.println("winner: " + game.getWinners());
 
 //        Assert.assertEquals(GameStatus.END_HAND, game.getStatus());
-
-
     }
 }
