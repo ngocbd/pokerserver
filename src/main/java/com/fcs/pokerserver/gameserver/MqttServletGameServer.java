@@ -439,15 +439,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
                             + "&listPlayers=" + src.getListPlayer();
                 }
                 if (rge.getType() == GameAction.PREFLOP) {
-                    List<Player> players = rge.getSrc().getListPlayer();
-                    StringBuffer playerHands = new StringBuffer();
-                    playerHands.append("[");
-                    for (Player player : players) {
-                        if (!player.isSittingOut()) playerHands.append(player.toJson() + ",");
-                    }
-                    playerHands.setLength(playerHands.length() - 1);
-                    playerHands.append("]");
-                    content += "&preflopHands=" + playerHands.toString();
+                    content += "&listPlayers=" + src.getDataPlayers();
                 }
                 if (rge.getType() == GameAction.FLOP) {
                     content += "&flopcard=" + rge.getSrc().getBoard().getFlopCards().toString();
@@ -465,7 +457,7 @@ public class MqttServletGameServer implements MqttCallback, RoomListener, MqttSe
             }
             if (ge instanceof EndGameEvent) {
                 EndGameEvent ege = (EndGameEvent) ge;
-                content += "&playerwin=" + ege.getPlayerwins() + "&rank=" + ege.getRank() + "&besthand=" + ege.getBestHands();
+                content += "&playerwin=" + ege.getPlayerwins() + "&rank=" + ege.getRank() + "&besthand=" + ege.getBestHands() + "&listPlayers=" + ege.getSrc().getListPlayer();
             }
             if (ge instanceof SideWinnerGameEvent) {
                 SideWinnerGameEvent se = (SideWinnerGameEvent) ge;

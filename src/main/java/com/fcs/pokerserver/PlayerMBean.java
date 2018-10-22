@@ -22,4 +22,5 @@ public interface PlayerMBean {
     public String jmx_getBoard();
 
     public long jmx_getRoundBet();
+    public String jmx_getToken();
 }
