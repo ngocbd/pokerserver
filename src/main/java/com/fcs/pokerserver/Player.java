@@ -34,6 +34,7 @@ import com.fcs.pokerserver.events.*;
 import com.fcs.pokerserver.holder.Board;
 import com.fcs.pokerserver.holder.Hand;
 import com.fcs.pokerserver.holder.TwoPlusTwoHandEvaluator;
+import com.fcs.pokerserver.utility.EncryptionEngine;
 import com.google.api.gax.rpc.AlreadyExistsException;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -80,6 +81,11 @@ public class Player implements PlayerMBean {
     @Override
     public String jmx_info() {
         return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + ",\"hand\":" + playerHand.toString() + ",\"isCommandThisTurn\":" + this.didCommandThisTurn() + ",\"roundBet\":" + this.getRoundBet() + "}";
+    }
+
+    @Override
+    public String jmx_getToken() {
+        return this.token;
     }
 
     @Override
@@ -412,6 +418,20 @@ public class Player implements PlayerMBean {
      */
     public Hand getPlayerHand() {
         return playerHand;
+    }
+
+    /**
+     * Encrypted the Hand of the Player. The player has 2 cards in the hand.
+     *
+     * @return String encrypted hand of player with secret key is his token
+     */
+    public String getEncryptedHand(String algorithm) {
+        if (this.playerHand == null) {
+            System.out.println("Hand is null");
+            return null;
+        }
+        EncryptionEngine encryption = EncryptionEngine.getInstance();
+        return encryption.encrypt(this.playerHand.toString(), token, algorithm);
     }
 
     /**

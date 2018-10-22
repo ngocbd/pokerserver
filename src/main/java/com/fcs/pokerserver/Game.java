@@ -146,7 +146,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
 
         /**
          * Reset all-in flag of all players*/
-        this.listPlayer.stream().forEach(x -> x.setDidAllIn(false));
+        this.listPlayer.stream().forEach(x -> {
+            x.setDidAllIn(false);
+            x.setCommandThisTurn(false);
+        });
 
         RoundGameEvent gameEvent = new RoundGameEvent(this, GameAction.WAITTING);
         this.fireEvent(gameEvent);
@@ -664,6 +667,32 @@ public class Game implements AbstractPlayerListener, GameMBean {
      */
     public List<Player> getListPlayer() {
         return listPlayer;
+    }
+
+    /**
+     * Return data of all Players in Game, with hand encrypted via AES algorithm
+     *
+     * @return String Players information in game with encrypted hand.
+     */
+    public String getDataPlayers() {
+        StringBuilder builder = new StringBuilder("[");
+        for (Player p : this.listPlayer) {
+            builder.append("{\"id\":\"");
+            builder.append(p.getId());
+            builder.append("\",");
+            builder.append("\"balance\":");
+            builder.append(p.getBalance());
+            builder.append(",");
+            builder.append("\"globalBalance\":");
+            builder.append(p.getGlobalBalance());
+            builder.append(",");
+            builder.append("\"hand\":\"");
+            builder.append(p.getEncryptedHand("AES"));
+            builder.append("\"},");
+        }
+        builder.setLength(builder.length() - 1);
+        builder.append("]");
+        return builder.toString();
     }
 
 //	private void setListPlayer(List<Player> listPlayer) {
