@@ -61,6 +61,7 @@ public class Player implements PlayerMBean {
     private boolean sittingOut = false;
     private Room currentRoom = null;
     private String token = null;
+    private String iv = "default";
     private boolean commandThisTurn = false;
     private int action_count = 0;
 
@@ -422,16 +423,18 @@ public class Player implements PlayerMBean {
 
     /**
      * Encrypted the Hand of the Player. The player has 2 cards in the hand.
+     * Encryption Algorithm is AES/CBC/PKCS5Padding
+     * IV does not need to be random (fixed) due to only 1 message - 1 secretKey relationship.
      *
      * @return String encrypted hand of player with secret key is his token
      */
-    public String getEncryptedHand(String algorithm) {
+    public String getEncryptedHand() {
         if (this.playerHand == null) {
             System.out.println("Hand is null");
             return null;
         }
         EncryptionEngine encryption = EncryptionEngine.getInstance();
-        return encryption.encrypt(this.playerHand.toString(), token, algorithm);
+        return encryption.encrypt(this.playerHand.toString(), token, iv, "AES/CBC/PKCS5Padding");
     }
 
     /**
