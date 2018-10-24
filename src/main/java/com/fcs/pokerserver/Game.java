@@ -687,7 +687,7 @@ public class Game implements AbstractPlayerListener, GameMBean {
             builder.append(p.getGlobalBalance());
             builder.append(",");
             builder.append("\"hand\":\"");
-            builder.append(p.getEncryptedHand("AES"));
+            builder.append(p.getEncryptedHand());
             builder.append("\"},");
         }
         builder.setLength(builder.length() - 1);
