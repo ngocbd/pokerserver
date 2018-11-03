@@ -95,6 +95,11 @@ public class GameServlet extends HttpServlet {
                 p.bet(betValue);
                 logger.log(Level.INFO, "The Player's name : " + p.getName() + "\n\tBet value: " + betValue + "\n\tBalance of Current Player: " + p.getBalance());
                 break;
+            case "check":
+                p = (Player) request.getAttribute("player");
+                p.check();
+                logger.log(Level.INFO, "The Player checked: " + p.getName());
+                break;
             case "fold":
                 p = (Player) request.getAttribute("player");
                 p.fold();
