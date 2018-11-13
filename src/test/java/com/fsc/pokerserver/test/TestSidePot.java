@@ -428,7 +428,15 @@ public class TestSidePot {
         player4.check();
         player5.check();
 
+        Assert.assertEquals(3980, master.getBalance());
+        Assert.assertEquals(100, player2.getBalance());
+        Assert.assertEquals(870, player3.getBalance());
+        Assert.assertEquals(0, player4.getBalance());
+        Assert.assertEquals(150, player5.getBalance());
+
         Assert.assertEquals(GameStatus.END_HAND, game.getStatus());
 
     }
+
+
 }
