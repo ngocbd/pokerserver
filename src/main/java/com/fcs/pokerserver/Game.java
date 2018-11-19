@@ -319,7 +319,10 @@ public class Game implements AbstractPlayerListener, GameMBean {
         //rank of winner player
         System.out.println("GameID: " + this.getId());
         System.out.println("Highest Rank value: " + highestRank.getValue());
-        rank = highestRank.getHandType().toString();
+        if (highestRank.getValue() == 36874) {
+            rank = "ROYAL_FLUSH";
+        } else
+            rank = highestRank.getHandType().toString();
 
 
 /**
@@ -554,11 +557,13 @@ public class Game implements AbstractPlayerListener, GameMBean {
     public void autoNextRound() {
         this.listPlayer.stream().filter(x -> !x.isSittingOut()).forEach(x -> x.setRoundBet(0));
         switch (this.status) {
-//            case NOT_STARTED:
-//            case SEATING:
-//                this.preflop();
-//                break;
             case PREFLOP:
+                long playerNum = (long) this.getListPlayer().size();
+                try {
+                    Thread.currentThread().sleep(playerNum * 500);
+                } catch (InterruptedException e) {
+                    System.out.println("Cannot next to flop :" + e.toString());
+                }
                 this.flop();
                 break;
             case FLOP:
