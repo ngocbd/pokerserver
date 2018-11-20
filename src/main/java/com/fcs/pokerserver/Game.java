@@ -1078,6 +1078,8 @@ public class Game implements AbstractPlayerListener, GameMBean {
     public void setCurrentPlayer(Player p) {
         this.currentPlayer = p;
         this.currentPlayer.myTurn();
+        if (this.currentPlayer.isDidAllIn())
+            this.currentPlayer.check();
     }
 
     /**

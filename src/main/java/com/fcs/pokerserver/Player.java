@@ -76,7 +76,7 @@ public class Player implements PlayerMBean {
 
     @Override
     public String toString() {
-        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + ",\"isCommandThisTurn\":" + this.didCommandThisTurn() + ",\"gamebet\":" + this.getGameBet() +",\"hand\":"+this.playerHand +"}";
+        return "{\"id\":\"" + this.getId() + "\",\"name\":\"" + this.getName() + "\",\"balance\":" + this.getBalance() + ",\"globalBalance\":" + this.getGlobalBalance() + ",\"isSittingOut\":" + this.isSittingOut() + ",\"isCommandThisTurn\":" + this.didCommandThisTurn() + ",\"gamebet\":" + this.getGameBet() + ",\"hand\":" + this.playerHand + "}";
     }
 
     @Override
@@ -212,10 +212,6 @@ public class Player implements PlayerMBean {
     }
 
     public boolean bet(long amount) {
-        if (amount > this.balance) {
-            System.out.println("Player " + this.id + " bet too much!");
-            return false;
-        }
         if (this.sittingOut) {
             System.out.println("Player " + this.id + " is sitting out!");
             return false;
@@ -224,7 +220,7 @@ public class Player implements PlayerMBean {
             System.out.println("Player " + this.id + " is not current player!");
             return false;
         }
-        if (amount == this.balance) {
+        if (amount >= this.balance) {
             allIn();
             return true;
         }
