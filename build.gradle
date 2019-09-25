@@ -35,7 +35,7 @@ dependencies {
     implementation 'junit:junit:4.12'
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
     implementation 'com.google.cloud:google-cloud-datastore:1.56.0'
-    implementation 'com.auth0:java-jwt:3.7.0'
+    implementation 'com.auth0:java-jwt:3.8.3'
     // https://mvnrepository.com/artifact/com.googlecode.objectify/objectify
 	implementation group: 'com.googlecode.objectify', name: 'objectify', version: '6.0.2'
     implementation group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.14.v20181114'
