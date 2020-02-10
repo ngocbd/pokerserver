@@ -45,7 +45,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-util
 	compile group: 'org.eclipse.jetty', name: 'jetty-util', version: '9.4.14.v20181114'
     
-    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'org.jsoup:jsoup:1.12.2'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
     implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 
