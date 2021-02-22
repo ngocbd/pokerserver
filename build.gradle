@@ -41,7 +41,7 @@ dependencies {
     implementation group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.14.v20181114'
     implementation group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.14.v20181114'
     // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-jmx
-	compile group: 'org.eclipse.jetty', name: 'jetty-jmx', version: '9.4.14.v20181114'
+	compile group: 'org.eclipse.jetty', name: 'jetty-jmx', version: '11.0.1'
     // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-util
 	compile group: 'org.eclipse.jetty', name: 'jetty-util', version: '9.4.14.v20181114'
     
